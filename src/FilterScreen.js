@@ -23,13 +23,7 @@ import CalendarPicker from 'react-native-calendar-picker'
 let week = []
 let months = []
 
-if (this.props.navigation.state.params.lang.indexOf("pt") === 0) {
-  week = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
-  months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-} else {
-  week = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-  months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dec']
-}
+
 
 
 class FilterScreen extends Component {
@@ -39,6 +33,14 @@ class FilterScreen extends Component {
       selectedStartDate: null,
       selectedEndDate: null,
       originScreen: this.props.navigation.state.params.originScreen
+    }
+
+    if (this.props.navigation.state.params.lang.indexOf("pt") === 0) {
+      week = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
+      months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+    } else {
+      week = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+      months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dec']
     }
 
     //Get the lang from props. If hasn't lang in props, default is pt-BR

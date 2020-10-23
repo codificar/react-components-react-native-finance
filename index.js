@@ -3,16 +3,16 @@ import { View, StyleSheet, BackHandler,Platform, Text } from 'react-native'
 
 
 // Custom Components
-import Loader from "./Functions/Loader"
-import Toolbar from './Functions/Toolbar'
-import TitleHeader from './Functions/TitleHeader'
-import ReportScreen from './ReportScreen'
+import Loader from "./src/Functions/Loader"
+import Toolbar from './src/Functions/Toolbar'
+import TitleHeader from './src/Functions/TitleHeader'
+import ReportScreen from './src/ReportScreen'
 
 //moment date
 import moment from 'moment'
 
 // Provider API
-import Api from "./Functions/Api";
+import Api from "./src/Functions/Api";
 
 
 class Finance extends Component {
@@ -33,14 +33,14 @@ class Finance extends Component {
         this.api = new Api();
 
         //Get the lang from props. If hasn't lang in props, default is pt-BR
-        this.strings = require('./langs/pt-BR.json');
+        this.strings = require('./src/langs/pt-BR.json');
         if(this.props.lang) {
             if(this.props.lang == "pt-BR") {
-                this.strings = require('./langs/pt-BR.json');
+                this.strings = require('./src/langs/pt-BR.json');
             } 
             // if is english
             else if(this.props.lang.indexOf("en") != -1) {
-                this.strings = require('./langs/en.json');
+                this.strings = require('./src/langs/en.json');
             }
         }
 
