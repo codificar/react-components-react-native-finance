@@ -19,11 +19,10 @@ import TitleHeader from './Functions/TitleHeader'
 //Calendar
 import CalendarPicker from 'react-native-calendar-picker'
 
+import GLOBAL from './Functions/Global.js'
 
 let week = []
 let months = []
-
-
 
 
 class FilterScreen extends Component {
@@ -35,24 +34,24 @@ class FilterScreen extends Component {
       originScreen: this.props.navigation.state.params.originScreen
     }
 
-    if (this.props.navigation.state.params.lang.indexOf("pt") === 0) {
+    //Get the lang from props. If hasn't lang in props, default is pt-BR
+    this.strings = require('./langs/pt-BR.json');
+    if(GLOBAL.lang) {
+      if(GLOBAL.lang == "pt-BR") {
+          this.strings = require('./langs/pt-BR.json');
+      } 
+      // if is english
+      else if(GLOBAL.lang.indexOf("en") != -1) {
+          this.strings = require('./langs/en.json');
+      }
+    }
+
+    if (GLOBAL.lang.indexOf("pt") === 0) {
       week = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
       months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
     } else {
       week = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
       months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dec']
-    }
-
-    //Get the lang from props. If hasn't lang in props, default is pt-BR
-    this.strings = require('./langs/pt-BR.json');
-    if(this.props.lang) {
-      if(this.props.lang == "pt-BR") {
-          this.strings = require('./langs/pt-BR.json');
-      } 
-      // if is english
-      else if(this.props.lang.indexOf("en") != -1) {
-          this.strings = require('./langs/en.json');
-      }
     }
 
   }
@@ -101,7 +100,6 @@ class FilterScreen extends Component {
     }
 
     if (this.state.originScreen == 'EarningsPeriodScreen') {
-      console.log("teste: ", startDate, " - ", endDate, " - ", formattedEndDate, " - ", formattedStartDate);
       this.props.navigation.navigate('EarningsPeriodScreen', {
         startDate: startDate,
         endDate: endDate,
@@ -126,7 +124,7 @@ class FilterScreen extends Component {
             nextPress={() => { }}
           />
           <TitleHeader
-            text={strings('checkingAccount.filterSearch')}
+            text={this.strings.filterSearch}
             align="flex-start"
           />
         </View>
@@ -134,8 +132,8 @@ class FilterScreen extends Component {
         <View>
           <CalendarPicker
             weekdays={week} months={months}
-            nextTitle={strings('checkingAccount.next')}
-            previousTitle={strings('checkingAccount.previous')}
+            nextTitle={this.strings.next}
+            previousTitle={this.strings.previous}
             maxDate={today}
             allowRangeSelection={true}
             selectedDayColor={this.props.navigation.state.params.PrimaryButton}
@@ -144,7 +142,7 @@ class FilterScreen extends Component {
             selectedRangeStartStyle={{ borderBottomRightRadius: borderSelectedDay, borderTopRightRadius: borderSelectedDay }}
           />
           <TouchableOpacity style={[styles.btnOverlay, {backgroundColor: this.props.navigation.state.params.PrimaryButton}]} onPress={() => this.sendIntervalDates()}>
-            <Text style={styles.txtSend}>{strings('general.send')}</Text>
+            <Text style={styles.txtSend}>{this.strings.send}</Text>
           </TouchableOpacity>
         </View>
       </View>

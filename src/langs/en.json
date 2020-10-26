@@ -14,6 +14,8 @@
   "coin": "R$",
   "currentBalance": "View current balance",
   "totalByPeriod": "Balance by period",
+  "total": "Total",
+  "send": "Send",
   "outstanding_debt": "Outstanding Debt",
   "blank_state_message": "We didn't found any data for this filter",
   "reportDetail": "Period details",
@@ -33,5 +35,6 @@
   "recentTransaction": "Recent transactions",
   "balanceOf": "Balance of",
   "transactions": "Transactions",
-  "help": "Ajuda"
+  "help": "Ajuda",
+  "loading_message": "Loading..."
 }

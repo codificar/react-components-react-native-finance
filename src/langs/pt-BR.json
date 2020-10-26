@@ -14,6 +14,8 @@
   "coin": "R$",
   "currentBalance": "Saldo atual",
   "totalByPeriod": "Saldo do período",
+  "total": "Total",
+  "send": "Enviar",
   "outstanding_debt": "Dívida pendente",
   "blank_state_message": "Não encontramos registros para o filtro utilizado",
   "reportDetail": "Detalhes do período",
@@ -33,5 +35,6 @@
   "recentTransaction": "Transações recentes",
   "balanceOf": "Saldo de",
   "transactions": "Transações",
-  "help": "Ajuda"
+  "help": "Ajuda",
+  "loading_message": "Carregando..."
 }

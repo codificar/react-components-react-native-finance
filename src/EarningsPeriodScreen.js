@@ -24,15 +24,15 @@ import Loader from "./Functions/Loader"
 import Toolbar from './Functions/Toolbar'
 import TitleHeader from './Functions/TitleHeader'
 
+import GLOBAL from './Functions/Global.js';
 
 class EarningsPeriodScreen extends Component {
     constructor(props) {
         super(props)
 
-        this.loading_message = strings("load.Loading");
+        
 
         this.param = this.props.navigation.state.params;
-
         this.state = {
             iniciate: 0,
             dateInitial: this.props.navigation.state.params.startDate,
@@ -59,15 +59,17 @@ class EarningsPeriodScreen extends Component {
 
         //Get the lang from props. If hasn't lang in props, default is pt-BR
         this.strings = require('./langs/pt-BR.json');
-        if(this.props.lang) {
-            if(this.props.lang == "pt-BR") {
+        if(GLOBAL.lang) {
+            if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./langs/pt-BR.json');
             } 
             // if is english
-            else if(this.props.lang.indexOf("en") != -1) {
+            else if(GLOBAL.lang.indexOf("en") != -1) {
                 this.strings = require('./langs/en.json');
             }
         }
+
+        this.loading_message = this.strings.Loading;
 
     }
 
@@ -216,13 +218,13 @@ class EarningsPeriodScreen extends Component {
         if (typeValue == 'credit') {
             return (
                 <Text style={styles.positiveValue}>
-                    {strings('profileProvider.coin')} {parseFloat(item.value).toFixed(2)}
+                    {this.strings.coin} {parseFloat(item.value).toFixed(2)}
                 </Text>
             )
         } else {
             return (
                 <Text style={styles.negativeValue}>
-                    ({strings('profileProvider.coin')} {parseFloat(item.value).toFixed(2)})
+                    ({this.strings.coin} {parseFloat(item.value).toFixed(2)})
                 </Text>
             )
         }
@@ -232,8 +234,7 @@ class EarningsPeriodScreen extends Component {
     openFilter() {
         this.props.navigation.navigate('FilterScreen', { 
             originScreen: 'EarningsPeriodScreen', 
-            PrimaryButton: this.param.PrimaryButton ,
-            lang: this.param.lang
+            PrimaryButton: this.param.PrimaryButton 
         })
     }
 
@@ -266,7 +267,7 @@ class EarningsPeriodScreen extends Component {
     render() {
         return (
             <View style={styles.parentContainer}>
-                <Loader loading={this.state.isLoading} message={this.loading_message} />
+                <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
                 <View style={{ marginTop: Platform.OS === 'android' ? 0 : 25 }}>
                     <Toolbar
                         back={true}
@@ -279,7 +280,7 @@ class EarningsPeriodScreen extends Component {
                         helpPress={() => this.openHelp()}
                     />
                     <TitleHeader
-                        text={strings('checkingAccount.reportDetail')}
+                        text={this.strings.reportDetail}
                         align="flex-start"
                     />
                 </View>
@@ -294,17 +295,17 @@ class EarningsPeriodScreen extends Component {
                                 />
                                 <Text style={styles.txtBlankState}>
                                     {" "}
-                                    {strings("checkingAccount.blank_state_message")}{" "}
+                                    {this.strings.blank_state_message}{" "}
                                 </Text>
                             </View>
                             :
                             <View style={styles.flatListViewContainer}>
                                 <View style={styles.contSubtitle}>
-                                    <Text style={styles.textPeriodValues}>{strings('checkingAccount.periodValues')}</Text>
+                                    <Text style={styles.textPeriodValues}>{this.strings.periodValues}</Text>
                                     <Text style={styles.textPeriodValues}>
                                         {this.param.formattedStartDate} - {this.param.formattedEndDate}
                                     </Text>
-                                    <Text style={{ fontFamily: 'Roboto', fontSize: 20, fontWeight: 'bold', color: "#2E2E2E", marginTop: 10 }}>{strings('profileProvider.coin')} {parseFloat(this.state.totalByPeriod).toFixed(2)}</Text>
+                                    <Text style={{ fontFamily: 'Roboto', fontSize: 20, fontWeight: 'bold', color: "#2E2E2E", marginTop: 10 }}>{this.strings.coin} {parseFloat(this.state.totalByPeriod).toFixed(2)}</Text>
                                 </View>
                                 <FlatList
                                     style={styles.flat}

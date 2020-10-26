@@ -15,7 +15,7 @@ import moment from 'moment'
 import Toolbar from './Functions/Toolbar'
 import TitleHeader from './Functions/TitleHeader'
 
-
+import GLOBAL from './Functions/Global.js'
 
 class EarningDetailScreen extends Component {
     constructor(props) {
@@ -26,12 +26,12 @@ class EarningDetailScreen extends Component {
 
         //Get the lang from props. If hasn't lang in props, default is pt-BR
         this.strings = require('./langs/pt-BR.json');
-        if(this.props.lang) {
-            if(this.props.lang == "pt-BR") {
+        if(GLOBAL.lang) {
+            if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./langs/pt-BR.json');
             } 
             // if is english
-            else if(this.props.lang.indexOf("en") != -1) {
+            else if(GLOBAL.lang.indexOf("en") != -1) {
                 this.strings = require('./langs/en.json');
             }
         }
@@ -60,7 +60,7 @@ class EarningDetailScreen extends Component {
             case "RIDE_CANCELLATION_CREDIT":
             case "RIDE_PAYMENT":
             case "AUTO_WITHDRAW":
-                return strings("checkingAccount.credit")
+                return this.strings.credit
                 break
             case "RIDE_DEBIT":
             case "RIDE_CREDIT":
@@ -68,7 +68,7 @@ class EarningDetailScreen extends Component {
             case "SEPARATE_DEBIT":
             case "RIDE_CANCELLATION_DEBIT":
             case "RIDE_PAYMENT_FAIL_DEBIT":
-                return strings("checkingAccount.debit")
+                return this.strings.debit
                 break
         }
     }
@@ -86,23 +86,23 @@ class EarningDetailScreen extends Component {
                         nextPress={() => { }}
                     />
                     <TitleHeader
-                        text={strings('checkingAccount.details')}
+                        text={this.strings.details}
                         align="flex-start"
                     />
                 </View>
                 {this.state.item ? (
                     <View>
-                        <Text style={styles.totalTitle}>{strings('profileProvider.coin')} {parseFloat(this.state.item.value).toFixed(2)}</Text>
+                        <Text style={styles.totalTitle}>{this.strings.coin} {parseFloat(this.state.item.value).toFixed(2)}</Text>
                         <Text style={styles.dateTitle}>
-                            {moment(this.state.item.created_at).format('dddd')}, {moment(this.state.item.created_at).format('DD')} {strings('general.of')} {moment(this.state.item.created_at).format('MMMM')}
+                            {moment(this.state.item.created_at).format('dddd')}, {moment(this.state.item.created_at).format('DD')} {this.strings.of} {moment(this.state.item.created_at).format('MMMM')}
                         </Text>
                         <View style={styles.contInfo}>
                             <View style={styles.rowOne}>
-                                <Text style={styles.labelInfo}>{strings('checkingAccount.typeService')}</Text>
+                                <Text style={styles.labelInfo}>{this.strings.typeService}</Text>
                                 <Text style={styles.textDesc}>{this.nameReason(this.state.item.reason)}</Text>
                             </View>
                             <View style={styles.rowTwo}>
-                                <Text style={styles.labelInfo}>{strings('checkingAccount.description')}</Text>
+                                <Text style={styles.labelInfo}>{this.strings.description}</Text>
                                 <Text style={styles.textDesc}>
                                     {this.state.item.description} 
                                     {this.state.item.request_id ? " " + this.state.item.request_id : ""}
@@ -110,8 +110,8 @@ class EarningDetailScreen extends Component {
                             </View>
                             <Divider style={styles.divider} />
                             <View style={styles.rowTotal}>
-                                <Text style={styles.labelTotal}>{strings('serviceFinished.total')}</Text>
-                                <Text style={styles.textTotal}>{strings('profileProvider.coin')} {parseFloat(this.state.item.value).toFixed(2)}</Text>
+                                <Text style={styles.labelTotal}>{this.strings.total}</Text>
+                                <Text style={styles.textTotal}>{this.strings.coin} {parseFloat(this.state.item.value).toFixed(2)}</Text>
                             </View>
                         </View>
                     </View>

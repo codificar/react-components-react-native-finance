@@ -11,6 +11,8 @@ import moment from "moment"
 //Graphic
 import { BarChart } from "react-native-chart-kit"
 
+import GLOBAL from './Functions/Global.js'
+
 class ReportScreen extends Component {
     constructor(props) {
         super(props)
@@ -20,12 +22,12 @@ class ReportScreen extends Component {
 
         //Get the lang from props. If hasn't lang in props, default is pt-BR
         this.strings = require('./langs/pt-BR.json');
-        if(this.props.lang) {
-            if(this.props.lang == "pt-BR") {
+        if(GLOBAL.lang) {
+            if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./langs/pt-BR.json');
             } 
             // if is english
-            else if(this.props.lang.indexOf("en") != -1) {
+            else if(GLOBAL.lang.indexOf("en") != -1) {
                 this.strings = require('./langs/en.json');
             }
         }
@@ -40,7 +42,7 @@ class ReportScreen extends Component {
 
     listYears() {
         let currentYear = moment().format('YYYY')
-        arrayDropDownYears = [{ value: currentYear }, { value: currentYear - 1 }, { value: currentYear - 2 }]
+        let arrayDropDownYears = [{ value: currentYear }, { value: currentYear - 1 }, { value: currentYear - 2 }]
         this.setState({ listYears: arrayDropDownYears })
     }
 
@@ -91,27 +93,27 @@ class ReportScreen extends Component {
                             <View style={styles.contTravel}>
                                 <Text style={styles.textQuantTravel}>{reportData.rides_count}</Text>
                                 {reportData.rides_count > 1 ? (
-                                <Text style={styles.textTravel}>{strings('checkingAccount.racings')}</Text>
+                                <Text style={styles.textTravel}>{this.strings.racings}</Text>
                                 ): (
-                                    <Text style={styles.textTravel}>{strings('checkingAccount.racing')}</Text>
+                                    <Text style={styles.textTravel}>{this.strings.racing}</Text>
                                 )}
                             </View>
                             <View style={styles.divider} />
                             <View style={styles.contOnline}>
                                 <Text style={styles.textHours}>{reportData.online_time_text}</Text>
-                                <Text style={styles.textOnline}>{strings('checkingAccount.onlineHours')}</Text>
+                                <Text style={styles.textOnline}>{this.strings.onlineHours}</Text>
                             </View>
                             <View style={styles.divider} />
                             <View style={styles.contTravelCash}>
                                 <Text style={styles.textTravelCash}>{currency} {reportData.total_money_week}</Text>
-                                <Text style={styles.textTravelCashDesc}>{strings('checkingAccount.cashTravels')}</Text>
+                                <Text style={styles.textTravelCashDesc}>{this.strings.cashTravels}</Text>
                             </View>
                         </View>
 
                         <TouchableOpacity style={styles.btnAccountExtract}
                             onPress={() => this.props.openEarnings()}>
                             <View style={styles.contRowItem}>
-                                <Text style={styles.textExtract}>{strings('checkingAccount.currentAccount')}</Text>
+                                <Text style={styles.textExtract}>{this.strings.currentAccount}</Text>
                                 <Text style={styles.textExtracDates}>{firstDayWeek} - {lastDayWeek}</Text>
                             </View>
                             <View style={styles.contArrow}>
@@ -123,7 +125,7 @@ class ReportScreen extends Component {
                             <TouchableOpacity style={styles.btnTransactions}
                                 onPress={() => this.props.openTransactions()}>
                                 <View style={styles.contRowItem}>
-                                    <Text style={styles.textRecentTransac}>{strings('checkingAccount.recentTransaction')}</Text>
+                                    <Text style={styles.textRecentTransac}>{this.strings.recentTransaction}</Text>
                                     {/*<Text style={styles.textTransacSald}>{strings('checkingAccount.balanceOf')} {currency} 250,00</Text>*/}
                                 </View>
                                 <View style={styles.contArrow}>

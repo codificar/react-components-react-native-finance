@@ -15,6 +15,8 @@ import moment from 'moment'
 import Api from "./src/Functions/Api";
 
 
+import GLOBAL from './src/Functions/Global.js'
+
 class Finance extends Component {
     constructor(props) {
         super(props)
@@ -30,16 +32,18 @@ class Finance extends Component {
             reportData: null
         }
 
+        GLOBAL.lang = this.props.lang;
+
         this.api = new Api();
 
         //Get the lang from props. If hasn't lang in props, default is pt-BR
         this.strings = require('./src/langs/pt-BR.json');
-        if(this.props.lang) {
-            if(this.props.lang == "pt-BR") {
+        if(GLOBAL.lang) {
+            if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./src/langs/pt-BR.json');
             } 
             // if is english
-            else if(this.props.lang.indexOf("en") != -1) {
+            else if(GLOBAL.lang.indexOf("en") != -1) {
                 this.strings = require('./src/langs/en.json');
             }
         }
@@ -78,7 +82,7 @@ class Finance extends Component {
      */
     calcDaysWeek() {
         
-        if (this.props.lang.indexOf("pt") === 0) {
+        if (GLOBAL.lang.indexOf("pt") === 0) {
             momentLocal = "pt"
         } else {
             momentLocal = "en"
@@ -119,7 +123,7 @@ class Finance extends Component {
                 arrayResponse = json.finance
 
                 let momentLocal = ''
-                if (this.props.lang.indexOf("pt") === 0) {
+                if (GLOBAL.lang.indexOf("pt") === 0) {
                     momentLocal = "pt"
                 } else {
                     momentLocal = "en"
@@ -167,7 +171,6 @@ class Finance extends Component {
     openEarnings = () => {
         console.log("app url no index: ", this.props.appUrl);
         if (this.state.firstDate !== null && this.state.lastDate !== null) {
-            console.log("antes de navegar: ", this.props.providerId);
             this.props.navigation.navigate('EarningsPeriodScreen',
                 {
                     providerId: this.props.providerId,
@@ -198,7 +201,7 @@ class Finance extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Loader loading={this.state.isLoading} message={this.loading_message} />
+                <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
                 <View style={{ marginTop: Platform.OS === 'android' ? 0 : 25 }}>
                     <Toolbar
                         back={true}
@@ -222,7 +225,7 @@ class Finance extends Component {
                         getReport={this.getReport.bind(this)}
                         arrayReport={this.state.arrayReport}
                         lineGraphic={this.state.arrayLineGraphic}
-                        currency={this.strings.profileProvider}
+                        currency={this.strings.coin}
                         firstDayWeek={this.state.firstDayWeek}
                         lastDayWeek={this.state.lastDayWeek}
                         reportData={this.state.reportData}
