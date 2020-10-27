@@ -44,6 +44,7 @@ class EarningsPeriodScreen extends Component {
             isLoadingSummary: false,
             valueTotal: 0,
             totalByPeriod: 0,
+            current_balance: 0,
             nextPageUrl: null,
             providerId: this.props.navigation.state.params.providerId,
             token: this.props.navigation.state.params.token,
@@ -184,12 +185,14 @@ class EarningsPeriodScreen extends Component {
                     financialData: finances,
                     valueTotal: currentBalance,
                     totalByPeriod: json.period_balance,
+                    current_balance: json.current_balance,
                     iniciate: 1
                 })
             } else {
                 this.setState({
                     financialData: finances,
-                    totalByPeriod: json.period_balance 
+                    totalByPeriod: json.period_balance,
+                    current_balance: json.current_balance
                 })
             }
         })
@@ -217,7 +220,7 @@ class EarningsPeriodScreen extends Component {
         //console.log('typeValue: ', typeValue)
         if (typeValue == 'credit') {
             return (
-                <Text style={styles.positiveValue}>
+                <Text style={{color: GLOBAL.color, fontFamily: 'Roboto',fontSize: 16,fontWeight: 'bold', marginRight: 15}}>
                     {this.strings.coin} {parseFloat(item.value).toFixed(2)}
                 </Text>
             )
@@ -286,53 +289,57 @@ class EarningsPeriodScreen extends Component {
                 </View>
 
                 <ScrollView style={styles.summaryContainer}>
-                    {
-                        this.state.financialData == '' ?
+                    <View style={styles.flatListViewContainer}>
+
+                        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                            <View style={{paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
+                                <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
+                                <Text style={styles.currentValueText}>{this.strings.currentBalanceMsg}</Text>
+                                <Text style={styles.currentValue}>{this.strings.coin} {parseFloat(this.state.current_balance).toFixed(2)}</Text>
+                            </View>
+                            <View style={{ paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
+                                <Text style={styles.currentValueText}>{this.strings.periodValues}</Text>
+                                <Text style={styles.currentValueText}>{this.param.formattedStartDate} - {this.param.formattedEndDate}</Text>
+                                <Text style={styles.currentValue}>{this.strings.coin} {parseFloat(this.state.totalByPeriod).toFixed(2)}</Text>
+                            </View>
+                        </View>
+                        {this.state.financialData == '' ?
                             <View style={styles.areaBlankState}>
                                 <Image
                                     source={require('./img/icon_balnk_state.png')} 
                                     style={styles.imgBlankState}
                                 />
                                 <Text style={styles.txtBlankState}>
-                                    {" "}
-                                    {this.strings.blank_state_message}{" "}
+                                    {this.strings.blank_state_message_filter}
                                 </Text>
                             </View>
-                            :
-                            <View style={styles.flatListViewContainer}>
-                                <View style={styles.contSubtitle}>
-                                    <Text style={styles.textPeriodValues}>{this.strings.periodValues}</Text>
-                                    <Text style={styles.textPeriodValues}>
-                                        {this.param.formattedStartDate} - {this.param.formattedEndDate}
-                                    </Text>
-                                    <Text style={{ fontFamily: 'Roboto', fontSize: 20, fontWeight: 'bold', color: "#2E2E2E", marginTop: 10 }}>{this.strings.coin} {parseFloat(this.state.totalByPeriod).toFixed(2)}</Text>
-                                </View>
-                                <FlatList
-                                    style={styles.flat}
-                                    data={this.state.financialData}
-                                    onEndReached={() => this.getAccountSummary()}
-                                    onEndReachedThreshold={0.1}
-                                    ref={(ref) => { this.flatListRef = ref }}
-                                    keyExtractor={(x, i) => i.toString()}
-                                    ListFooterComponent={() => this.renderFooter()}
-                                    renderItem={({ item, index }) => (
-                                        <TouchableOpacity onPress={() => this.openEarningDetail(item)}>
-                                            <View style={styles.itemList}>
-                                                <View>
-                                                    <Text style={styles.textDate}>{moment(item.compensation_date).format('DD MMM')}</Text>
-                                                    <Text style={styles.textHour}>{moment(item.compensation_date).format('HH:mm')}</Text>
-                                                </View>
-                                                <View style={styles.contLastColumn}>
-                                                    {this.renderValue(item)}
-                                                    <Icon type='ionicon' name='ios-arrow-forward' size={20} />
-                                                </View>
+                        :
+                            <FlatList
+                                style={styles.flat}
+                                data={this.state.financialData}
+                                onEndReached={() => this.getAccountSummary()}
+                                onEndReachedThreshold={0.1}
+                                ref={(ref) => { this.flatListRef = ref }}
+                                keyExtractor={(x, i) => i.toString()}
+                                ListFooterComponent={() => this.renderFooter()}
+                                renderItem={({ item, index }) => (
+                                    <TouchableOpacity onPress={() => this.openEarningDetail(item)}>
+                                        <View style={styles.itemList}>
+                                            <View>
+                                                <Text style={styles.textDate}>{moment(item.compensation_date).format('DD MMM')}</Text>
+                                                <Text style={styles.textHour}>{moment(item.compensation_date).format('HH:mm')}</Text>
                                             </View>
-                                            <Divider style={styles.divider} />
-                                        </TouchableOpacity>
-                                    )}
-                                />
-                            </View>
-                    }
+                                            <View style={styles.contLastColumn}>
+                                                {this.renderValue(item)}
+                                                <Icon type='ionicon' name='ios-arrow-forward' size={20} />
+                                            </View>
+                                        </View>
+                                        <Divider style={styles.divider} />
+                                    </TouchableOpacity>
+                                )}
+                            />
+                        }
+                    </View>
                 </ScrollView>
             </View>
         )
@@ -356,6 +363,10 @@ const styles = StyleSheet.create({
         paddingTop: 100,
     },
     txtBlankState: {
+        fontSize: 17,
+        textAlign: "center",
+        fontWeight: "bold",
+        paddingHorizontal: 30,
         color: "#cccccc"
     },
     areaDatepicker: {
@@ -596,19 +607,24 @@ const styles = StyleSheet.create({
     contLastColumn: {
         flexDirection: 'row'
     },
-    positiveValue: {
-        fontFamily: 'Roboto',
-        fontSize: 16,
-        color: "#ffff00",
-        fontWeight: 'bold',
-        marginRight: 15
-    },
     negativeValue: {
         fontFamily: 'Roboto',
         fontSize: 16,
         color: 'tomato',
         fontWeight: 'bold',
         marginRight: 15
+    },
+
+    currentValueText: {
+        fontSize: 15,
+        color: "#bfbfbf",
+        marginLeft: 5
+      },
+    currentValue: {
+        fontSize: 20,
+        color: "black",
+        marginLeft: 5,
+        fontWeight: "bold"
     },
 
 })

@@ -4,6 +4,8 @@ import { View, Image, StyleSheet, TouchableOpacity, Dimensions, Platform } from 
 import Icon from 'react-native-vector-icons/Feather';
 import { Icon as ElementIcon } from 'react-native-elements';
 
+import GLOBAL from './Global.js';
+
 var { width } = Dimensions.get('window');
 
 export default function Toolbar({ handlePress, nextPress, filterPress, helpPress, back = false, isMain = false, nextStep = false, isFilter = false, isHelp = false, img, PrimaryButton }) {
@@ -30,7 +32,7 @@ export default function Toolbar({ handlePress, nextPress, filterPress, helpPress
                             isFilter ?
                                 (<View style={{ height: 40, flexDirection: 'row' }}>
                                     <TouchableOpacity style={{ marginRight: 30 }} onPress={filterPress}>
-                                        <ElementIcon type='font-awesome' name='filter' size={26} color={PrimaryButton} />
+                                        <ElementIcon type='font-awesome' name='filter' size={26} color={GLOBAL.color} />
                                     </TouchableOpacity>
                                 </View>) : null
                         }

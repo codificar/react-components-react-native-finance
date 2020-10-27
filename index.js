@@ -33,6 +33,7 @@ class Finance extends Component {
         }
 
         GLOBAL.lang = this.props.lang;
+        GLOBAL.color = this.props.PrimaryButton;
 
         this.api = new Api();
 
