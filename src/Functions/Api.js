@@ -36,8 +36,7 @@ export default class Api {
             start_date: start_date,
             end_date: end_date
         });
-        console.log(app_url + "/api/v3/provider/financial/summary/" + provider_id + "?" + params);
-        return fetch(app_url + "/api/v3/provider/financial/summary/" + provider_id + "?" + params, this.get).then((response) => response.json());
+        return fetch(app_url + "/libs/finance/provider/financial/summary/" + provider_id + "?" + params, this.get).then((response) => response.json());
     }
 
     GetReport(app_url, provider_id, token, year) {
@@ -46,8 +45,7 @@ export default class Api {
             token: token, 
             year: year
         });
-        console.log(app_url + "/api/v3/provider/profits" + "?" + params);
-        return fetch(app_url + "/api/v3/provider/profits" + "?" + params, this.get).then((response) => response.json());
+        return fetch(app_url + "/libs/finance/provider/profits" + "?" + params, this.get).then((response) => response.json());
     }
 
 }
