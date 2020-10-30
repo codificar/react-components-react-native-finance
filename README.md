@@ -1,6 +1,7 @@
 # react-native-finance
 A component for earnings report and account statement
 
+
 ## Install
 add in package.json:
 ```bash
