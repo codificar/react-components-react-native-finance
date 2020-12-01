@@ -76,6 +76,7 @@ class ReportScreen extends Component {
                                         backgroundGradientTo: "#FFFFFF",
                                         fillShadowGradientOpacity: 5,
                                         decimalPlaces: 1,
+                                        data: lineGraphic.datasets,
                                         color: (opacity = 1) => `rgba(110, 185, 134, ${opacity})`,
                                         labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                                         propsForBackgroundLines: {
