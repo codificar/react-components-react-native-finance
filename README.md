@@ -20,7 +20,6 @@ import FinanceComponent from "react-native-finance";
 	token={this.state.token}
 />
 
-
 ```
 
 ## Properties
@@ -29,5 +28,4 @@ import FinanceComponent from "react-native-finance";
 | :------------ |:---------------:| :---------------:| :-----|
 | route | '' | `string` | rota para pegar o relatorio de saques|
 | providerId | - | `number` | id do prestador |
-| providerId | - | `string` | token do prestador |
 
