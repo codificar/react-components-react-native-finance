@@ -19,6 +19,7 @@ export default class Api {
     GetAccountSummary(nextPageUrl, provider_id, token, start_date, end_date) {
         let params = new URLSearchParams({ 
             provider_id: provider_id,
+            id: provider_id,
             token: token,
             holder_type: 'provider',
             start_date: start_date,
@@ -31,17 +32,19 @@ export default class Api {
     GetCheckingAccount(app_url, provider_id, token, start_date, end_date) {
         let params = new URLSearchParams({ 
             provider_id: provider_id,
+            id: provider_id,
             token: token,
             holder_type: 'provider',
             start_date: start_date,
             end_date: end_date
         });
-        return fetch(app_url + "/libs/finance/provider/financial/summary/" + provider_id + "?" + params, this.get).then((response) => response.json());
+        return fetch(app_url + "/libs/finance/provider/financial/provider_summary?" + params, this.get).then((response) => response.json());
     }
 
     GetReport(app_url, provider_id, token, year) {
         let params = new URLSearchParams({ 
             provider_id: provider_id, 
+            id: provider_id,
             token: token, 
             year: year
         });
