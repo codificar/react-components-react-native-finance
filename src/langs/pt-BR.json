@@ -38,5 +38,6 @@
   "balanceOf": "Saldo de",
   "transactions": "Transações",
   "help": "Ajuda",
-  "loading_message": "Carregando..."
+  "loading_message": "Carregando...",
+  "add_balance": "Adicionar Saldo"
 }

@@ -241,6 +241,13 @@ class EarningsPeriodScreen extends Component {
         })
     }
 
+    openAddBalanceScreen() {
+        this.props.navigation.navigate('AddBalanceScreen',
+            {
+                originScreen: 'EarningsPeriodScreen',
+            }
+        )
+    }
 
     openEarningDetail(item) {
         this.props.navigation.navigate('EarningDetailScreen', { item: item })
@@ -270,77 +277,90 @@ class EarningsPeriodScreen extends Component {
     render() {
         return (
             <View style={styles.parentContainer}>
-                <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
-                <View style={{ marginTop: Platform.OS === 'android' ? 0 : 25 }}>
-                    <Toolbar
-                        back={true}
-                        nextStep={false}
-                        isFilter={true}
-                        isHelp={this.param.isHelp}
-                        handlePress={() => this.props.navigation.goBack()}
-                        nextPress={() => { }}
-                        filterPress={() => this.openFilter()}
-                        helpPress={() => this.openHelp()}
-                    />
-                    <TitleHeader
-                        text={this.strings.reportDetail}
-                        align="flex-start"
-                    />
+                {/* Flex 8/10 */}
+                <View style={{flex: 9}}>
+                    <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
+                    <View style={{ marginTop: Platform.OS === 'android' ? 0 : 25 }}>
+                        <Toolbar
+                            back={true}
+                            nextStep={false}
+                            isFilter={true}
+                            isHelp={this.param.isHelp}
+                            handlePress={() => this.props.navigation.goBack()}
+                            nextPress={() => { }}
+                            filterPress={() => this.openFilter()}
+                            helpPress={() => this.openHelp()}
+                        />
+                        <TitleHeader
+                            text={this.strings.reportDetail}
+                            align="flex-start"
+                        />
+                    </View>
+
+                    <ScrollView style={styles.summaryContainer}>
+                        <View style={styles.flatListViewContainer}>
+
+                            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                                <View style={{paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
+                                    <Text style={styles.currentValueText}>{this.strings.currentBalanceMsg}</Text>
+                                    <Text style={styles.currentValue}>{this.strings.coin} {parseFloat(this.state.current_balance).toFixed(2)}</Text>
+                                </View>
+                                <View style={{ paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={styles.currentValueText}>{this.strings.periodValues}</Text>
+                                    <Text style={styles.currentValueText}>{this.param.formattedStartDate} - {this.param.formattedEndDate}</Text>
+                                    <Text style={styles.currentValue}>{this.strings.coin} {parseFloat(this.state.totalByPeriod).toFixed(2)}</Text>
+                                </View>
+                            </View>
+                            {this.state.financialData == '' ?
+                                <View style={styles.areaBlankState}>
+                                    <Image
+                                        source={require('./img/icon_balnk_state.png')} 
+                                        style={styles.imgBlankState}
+                                    />
+                                    <Text style={styles.txtBlankState}>
+                                        {this.strings.blank_state_message_filter}
+                                    </Text>
+                                </View>
+                            :
+                                <FlatList
+                                    style={styles.flat}
+                                    data={this.state.financialData}
+                                    onEndReached={() => this.getAccountSummary()}
+                                    onEndReachedThreshold={0.1}
+                                    ref={(ref) => { this.flatListRef = ref }}
+                                    keyExtractor={(x, i) => i.toString()}
+                                    ListFooterComponent={() => this.renderFooter()}
+                                    renderItem={({ item, index }) => (
+                                        <TouchableOpacity onPress={() => this.openEarningDetail(item)}>
+                                            <View style={styles.itemList}>
+                                                <View>
+                                                    <Text style={styles.textDate}>{moment(item.compensation_date).format('DD MMM')}</Text>
+                                                    <Text style={styles.textHour}>{moment(item.compensation_date).format('HH:mm')}</Text>
+                                                </View>
+                                                <View style={styles.contLastColumn}>
+                                                    {this.renderValue(item)}
+                                                    <Icon type='ionicon' name='ios-arrow-forward' size={20} />
+                                                </View>
+                                            </View>
+                                            <Divider style={styles.divider} />
+                                        </TouchableOpacity>
+                                    )}
+                                />
+                            }
+                        </View>
+                    </ScrollView>
+                </View>
+                {/* Flex 1/10 */}
+                <View style={{ flex: 1, justifyContent: 'center' }}>{/* Flex vertical of 1/10 */}
+                    <TouchableOpacity
+                        style={{ borderRadius: 3, padding: 10, elevation: 2,marginHorizontal: 30, backgroundColor: GLOBAL.color }}
+                        onPress={() =>  this.openAddBalanceScreen()} 
+                    >
+                        <Text style={{color: 'white', fontSize: 16, fontWeight: "bold", textAlign: "center" }}>{this.strings.add_balance}</Text>
+                    </TouchableOpacity>
                 </View>
 
-                <ScrollView style={styles.summaryContainer}>
-                    <View style={styles.flatListViewContainer}>
-
-                        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                            <View style={{paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
-                                <Text style={styles.currentValueText}>{this.strings.currentBalanceMsg}</Text>
-                                <Text style={styles.currentValue}>{this.strings.coin} {parseFloat(this.state.current_balance).toFixed(2)}</Text>
-                            </View>
-                            <View style={{ paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={styles.currentValueText}>{this.strings.periodValues}</Text>
-                                <Text style={styles.currentValueText}>{this.param.formattedStartDate} - {this.param.formattedEndDate}</Text>
-                                <Text style={styles.currentValue}>{this.strings.coin} {parseFloat(this.state.totalByPeriod).toFixed(2)}</Text>
-                            </View>
-                        </View>
-                        {this.state.financialData == '' ?
-                            <View style={styles.areaBlankState}>
-                                <Image
-                                    source={require('./img/icon_balnk_state.png')} 
-                                    style={styles.imgBlankState}
-                                />
-                                <Text style={styles.txtBlankState}>
-                                    {this.strings.blank_state_message_filter}
-                                </Text>
-                            </View>
-                        :
-                            <FlatList
-                                style={styles.flat}
-                                data={this.state.financialData}
-                                onEndReached={() => this.getAccountSummary()}
-                                onEndReachedThreshold={0.1}
-                                ref={(ref) => { this.flatListRef = ref }}
-                                keyExtractor={(x, i) => i.toString()}
-                                ListFooterComponent={() => this.renderFooter()}
-                                renderItem={({ item, index }) => (
-                                    <TouchableOpacity onPress={() => this.openEarningDetail(item)}>
-                                        <View style={styles.itemList}>
-                                            <View>
-                                                <Text style={styles.textDate}>{moment(item.compensation_date).format('DD MMM')}</Text>
-                                                <Text style={styles.textHour}>{moment(item.compensation_date).format('HH:mm')}</Text>
-                                            </View>
-                                            <View style={styles.contLastColumn}>
-                                                {this.renderValue(item)}
-                                                <Icon type='ionicon' name='ios-arrow-forward' size={20} />
-                                            </View>
-                                        </View>
-                                        <Divider style={styles.divider} />
-                                    </TouchableOpacity>
-                                )}
-                            />
-                        }
-                    </View>
-                </ScrollView>
             </View>
         )
     }

@@ -38,5 +38,6 @@
   "balanceOf": "Balance of",
   "transactions": "Transactions",
   "help": "Ajuda",
-  "loading_message": "Loading..."
+  "loading_message": "Loading...",
+  "add_balance": "Add Balance"
 }
