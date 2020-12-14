@@ -51,4 +51,24 @@ export default class Api {
         return fetch(app_url + "/libs/finance/provider/profits" + "?" + params, this.get).then((response) => response.json());
     }
 
+    GetCardsAndBalance(app_url, provider_id, token) {
+        let params = new URLSearchParams({ 
+            provider_id: provider_id, 
+            id: provider_id,
+            token: token
+        });
+        return fetch(app_url + "/libs/finance/user/get_cards_and_balance" + "?" + params, this.get).then((response) => response.json());
+    }
+
+    AddCreditCardBalance(app_url, provider_id, token, value, card_id) {
+        let params = new URLSearchParams({ 
+            provider_id: provider_id, 
+            id: provider_id,
+            token: token,
+            value: value,
+            card_id: card_id
+        });
+        return fetch(app_url + "/libs/finance/user/add_credit_card_balance" + "?" + params, this.get).then((response) => response.json());
+    }
+
 }

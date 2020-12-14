@@ -39,5 +39,10 @@
   "transactions": "Transações",
   "help": "Ajuda",
   "loading_message": "Carregando...",
-  "add_balance": "Adicionar Saldo"
+  "add_balance": "Adicionar Saldo",
+  "manage_cards": "Adicionar cartões de pagamento",
+  "digit_value": "Digite o valor",
+  "add_balance_msg": "Adicionar saldo avulso na conta",
+  "pay_with_billet": "Pagar com Boleto",
+  "please_digit_value": "Por favor, digite um valor maior que 0"
 }
