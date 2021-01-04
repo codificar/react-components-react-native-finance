@@ -44,5 +44,5 @@
   "digit_value": "Digite o valor",
   "add_balance_msg": "Adicionar saldo avulso na conta",
   "pay_with_billet": "Pagar com Boleto",
-  "please_digit_value": "Por favor, digite um valor maior que 0"
+  "please_digit_value": "Por favor, digite um valor maior que "
 }

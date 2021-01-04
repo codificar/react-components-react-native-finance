@@ -10,7 +10,10 @@ import {
     FlatList,
     Image,
     ScrollView,
-    Alert
+    Alert,
+    Modal,
+    Linking,
+    Clipboard
 } from "react-native";
 const listWidth = Dimensions.get('window').width - 60;
 
@@ -45,7 +48,18 @@ class AddBalanceScreen extends Component {
             totalToAddBalance: "",
             cards: [],
             isLoading: false,
-            currentBalance: 0
+            currentBalance: 0,
+            modalVisible: false,
+            billet_barcode: "",
+            billet_url: "",
+            settings: {
+                addBalanceBilletTax: "0",
+                addBalanceMin: "0",
+                addBilletBalanceUser: "0",
+                addCardBalanceUser: "0"
+                
+            },
+            addBalanceActive: false
         }
         //Get the lang from props. If hasn't lang in props, default is pt-BR
         this.strings = require('./langs/pt-BR.json');
@@ -98,9 +112,12 @@ class AddBalanceScreen extends Component {
             GLOBAL.userToken, 
         )
         .then((json) => {
+            console.log("resposta: ", json);
             this.setState({
                 cards: json.cards,
-                currentBalance: json.current_balance
+                currentBalance: json.current_balance,
+                settings: json.settings,
+                addBalanceActive: json.settings.addBilletBalanceUser == "1" || json.settings.addCardBalanceUser == "1" ? true : false
             });
         })
         .catch((error) => {
@@ -150,26 +167,60 @@ class AddBalanceScreen extends Component {
         });
             
     }
+
+    setModalVisible = (visible) => {
+        this.setState({ modalVisible: visible });
+    }
+      
     addBalanceBillet(valueToAdd) {
         this.setState({ isLoading: true })
-        console.log("chamar api de pagar boleto");
+        console.log("chamar api de pagar com boleto");
 
-        let that = this;
-        setTimeout(function(){
-            that.setState({ isLoading: false })
-            that.alertOk("Boleto", "Boleto gerado com sucesso. Ele foi enviado para o seu email.");
-        }, 2000)
+        this.api.AddBilletBalance(
+            GLOBAL.appUrl,
+            GLOBAL.userId, 
+            GLOBAL.userToken,
+            valueToAdd
+        )
+        .then((json) => {
+            if(json.success) {
+               
+                this.setState({
+                    isLoading: false,
+                    billet_barcode: json.billet_barcode,
+                    billet_url: json.billet_url,
+                    modalVisible: true
+                });
+            } else {
+                console.log("json: ", json);
+                this.setState({
+                    isLoading: false
+                });
+                if(json.error){
+                    Toast.showToast(json.error);
+                }
+                else {
+                    Toast.showToast('Erro ao gerar boleto');
+                }
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
     }
 
     alertAddBalanceBillet() {
         //Valor a adicionar formatado (convertido em float). Remove as virgulas e substitui por ponto.
         var valueToAdd = parseFloat(this.state.totalToAddBalance.toString().replace(',', '.')).toFixed(2);
-
-        if(valueToAdd > 0) {
+        var msg = "Tem certeza que deseja gerar um boleto no valor de " + valueToAdd + "?";
+        if(parseFloat(this.state.settings.addBalanceBilletTax) > 0) {
+            msg += "Haverá um acréscimo de " + this.state.settings.addBalanceBilletTax;
+        }
+        if(valueToAdd >= parseFloat(this.state.settings.addBalanceMin)) {
             console.log("adicionar saldo com boleto!");
             Alert.alert(
                 "Pagar com boleto",
-                "Tem certeza que deseja gerar um boleto no valor de " + valueToAdd + "?",
+                msg,
                 [
                     { text: "Cancelar", style: "cancel" },
                     { text: "Sim", onPress: () => this.addBalanceBillet(valueToAdd) }
@@ -177,14 +228,14 @@ class AddBalanceScreen extends Component {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(this.strings.please_digit_value);
+            Toast.showToast(this.strings.please_digit_value + this.state.settings.addBalanceMin);
         }
     }
     alertAddBalanceCard(card) {
         //Valor a adicionar formatado (convertido em float). Remove as virgulas e substitui por ponto.
         var valueToAdd = parseFloat(this.state.totalToAddBalance.toString().replace(',', '.')).toFixed(2);
 
-        if(valueToAdd > 0) {
+        if(valueToAdd >= parseFloat(this.state.settings.addBalanceMin)) {
             console.log("adicionar saldo com cartao: ", card);
             Alert.alert(
                 "Pagar com cartão",
@@ -196,9 +247,13 @@ class AddBalanceScreen extends Component {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(this.strings.please_digit_value);
+            Toast.showToast(this.strings.please_digit_value + this.state.settings.addBalanceMin);
         }
        
+    }
+    copyClipBoard() {
+        Clipboard.setString(this.state.billet_barcode);
+        Toast.showToast('Boleto copiado com sucesso!');
     }
 
     goToAddCardScreen() {
@@ -210,9 +265,42 @@ class AddBalanceScreen extends Component {
         )
     }
     
-    render() {       
+    render() {  
         return (
-            <View style={{flex: 1}}>
+            <View style={[styles.container]}>
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={this.state.modalVisible}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Boleto gerado com sucesso. Ele foi enviado para o seu email.</Text>
+                        <Text style={{color: 'blue', fontSize: 15}} onPress={() => Linking.openURL(this.state.billet_url)}>Clique aqui para baixar</Text>
+                       
+                        <TouchableOpacity
+                            onPress={() => this.copyClipBoard()}
+                        >
+                            <View style={{flexDirection: "row", marginVertical: 20}}>
+                                <Text style={{fontSize: 17}}>{this.state.billet_barcode}</Text>
+                                <Icon style={{marginLeft: 10}} name="clipboard" size={25} />
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                            onPress={() => {
+                                this.setModalVisible(false);
+                            }}
+                        >
+                            <Text style={styles.textStyle}>Fechar</Text>
+                        </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
+
                 <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
                 {/* Flex vertical of 1/10 */}
                 <View style={{flex: 1, flexDirection: "row"}}>
@@ -238,23 +326,27 @@ class AddBalanceScreen extends Component {
                             <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
                             <Text style={styles.currentValue}>{this.state.currentBalance}</Text>
                         </View>
-                        <View style={{marginTop: 20}}>
-                            <Text style={styles.formText}>{this.strings.add_balance_msg}</Text>
-                            
-                        </View>
-
-                        <View style={{marginTop: 20}}>
-                            <Text style={styles.formValueTransfer}>{this.strings.digit_value}</Text>
-                            <View style={styles.form}>
-                                <TextInput
-                                    style={{fontSize: 16, paddingLeft: 10}}
-                                    keyboardType='numeric'
-                                    placeholder={'0,00'}
-                                    onChangeText={text => this.setState({ totalToAddBalance: text })}
-                                    value={this.state.totalToAddBalance ? String(this.state.totalToAddBalance) : null}
-                                />
+                        {this.state.addBalanceActive ? (
+                            <View style={{flex: 1}}>
+                                <View style={{marginTop: 20}}>
+                                    <Text style={styles.formText}>{this.strings.add_balance_msg}</Text>
+                                    
+                                </View>
+                                
+                                <View style={{marginTop: 20}}>
+                                    <Text style={styles.formValueTransfer}>{this.strings.digit_value}</Text>
+                                    <View style={styles.form}>
+                                        <TextInput
+                                            style={{fontSize: 16, paddingLeft: 10}}
+                                            keyboardType='numeric'
+                                            placeholder={'0,00'}
+                                            onChangeText={text => this.setState({ totalToAddBalance: text })}
+                                            value={this.state.totalToAddBalance ? String(this.state.totalToAddBalance) : null}
+                                        />
+                                    </View>
+                                </View>
                             </View>
-                        </View>
+                        ) : ( null ) }
 
                     </View>
                 </View>
@@ -262,62 +354,78 @@ class AddBalanceScreen extends Component {
                 {/* Flex vertical of 5/10 */}
                 <View style={{ flex: 5, justifyContent: 'center', alignItems: 'center' }}>
                     <ScrollView>
-                        {/* Add card button */}
-                        <TouchableOpacity
-                            style={{marginBottom: 10}}
-                            onPress={ () => this.goToAddCardScreen() }
-                        >
-                            <Text style={styles.manageCardText}>{this.strings.manage_cards}</Text>
-                        </TouchableOpacity>
-
+                        
                         {/* Billet */}
-                        <TouchableOpacity
-                            style={styles.listTypes}
-                            onPress={() => {
-                                this.alertAddBalanceBillet();
-                            }}
-                        >
-                            <View style={{ flex: 0.2 }}>
-                                <Icon name="barcode" size={40} />
-                            </View>
+                        {this.state.addBalanceActive && this.state.settings.addBilletBalanceUser == "1" ? (
+                            <TouchableOpacity
+                                style={styles.listTypes}
+                                onPress={() => {
+                                    this.alertAddBalanceBillet();
+                                }}
+                            >
+                                <View style={{ flex: 0.2 }}>
+                                    <Icon name="barcode" size={40} />
+                                </View>
 
-                            <View style={{ flex: 0.7 }}>
-                                <Text style={{ fontWeight: 'bold' }}>{this.strings.pay_with_billet}</Text>
-                            </View>
+                                <View style={{ flex: 0.7 }}>
+                                    <Text style={{ fontWeight: 'bold' }}>{this.strings.pay_with_billet}</Text>
+                                </View>
 
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                        ) : ( null ) }
 
-                        <FlatList
-                            style={{ marginBottom: 30 }}
-                            data={this.state.cards}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity 
+
+                        {/* Add card button */}
+                        {this.state.addBalanceActive && this.state.settings.addCardBalanceUser == "1" ? (
+                             <View style={{ flex: 1 }}>
+                                <TouchableOpacity
                                     style={styles.listTypes}
                                     onPress={() => {
-                                        this.alertAddBalanceCard(item);
+                                        this.goToAddCardScreen();
                                     }}
                                 >
                                     <View style={{ flex: 0.2 }}>
-                                        {!item.card_type || item.card_type == "unknown" ? (
-                                            <Icon name="credit-card" size={40} />
-                                        ) : (
-                                            <Image source={this.arrayIconsType[item.card_type]}
-                                                style={{
-                                                width: 40,
-                                                height: 28,
-                                                resizeMode: "contain"
-                                            }} />
-                                        )}
+                                        <Icon name="credit-card" size={40} />
                                     </View>
 
                                     <View style={{ flex: 0.7 }}>
-                                        <Text style={{ fontWeight: 'bold' }}>**** **** **** {item.last_four}</Text>
+                                        <Text style={{ fontWeight: 'bold' }}>{this.strings.manage_cards}</Text>
                                     </View>
-
                                 </TouchableOpacity>
-                            )}
-                            keyExtractor={(item, index) => `${index}`}
-                        />
+
+                                <FlatList
+                                    style={{ marginBottom: 30 }}
+                                    data={this.state.cards}
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity 
+                                            style={styles.listTypes}
+                                            onPress={() => {
+                                                this.alertAddBalanceCard(item);
+                                            }}
+                                        >
+                                            <View style={{ flex: 0.2 }}>
+                                                {!item.card_type || item.card_type == "unknown" ? (
+                                                    <Icon name="credit-card" size={40} />
+                                                ) : (
+                                                    <Image source={this.arrayIconsType[item.card_type]}
+                                                        style={{
+                                                        width: 40,
+                                                        height: 28,
+                                                        resizeMode: "contain"
+                                                    }} />
+                                                )}
+                                            </View>
+
+                                            <View style={{ flex: 0.7 }}>
+                                                <Text style={{ fontWeight: 'bold' }}>**** **** **** {item.last_four}</Text>
+                                            </View>
+
+                                        </TouchableOpacity>
+                                    )}
+                                    keyExtractor={(item, index) => `${index}`}
+                                />
+                            </View>
+                        ) : ( null ) }
                     </ScrollView>
                 </View>
             </View>
@@ -331,49 +439,51 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "flex-start",
         marginTop: 22
-      },
-
-      text: {
+    },
+    container: {
+        flex: 1
+    },
+    text: {
         marginBottom: 15,
         fontSize: 15,
         paddingLeft: 10
-      },
-      textTitle: {
+    },
+    textTitle: {
         marginBottom: 15,
         fontSize: 17,
         paddingLeft: 10,
         fontWeight: "bold"
-      },
-      formText: {
+    },
+    formText: {
         fontSize: 14,
         color: "#bfbfbf",
         marginLeft: 5
-      },
-      currentValueText: {
+    },
+    currentValueText: {
         fontSize: 17,
         color: "#bfbfbf",
         marginLeft: 5
-      },
-      currentValue: {
+    },
+    currentValue: {
         fontSize: 30,
         color: "black",
         marginLeft: 5,
         fontWeight: "bold"
-      },
-      formValueTransfer: {
+    },
+    formValueTransfer: {
         fontSize: 17,
         color: "black",
         marginLeft: 5,
         fontWeight: "bold"
-      },
-      form: {
+    },
+    form: {
         height: 40,
         fontSize: 16,
         marginHorizontal: 7,
         marginBottom: 15,
         borderBottomWidth: 0.2
-      },
-      hr: {
+    },
+    hr: {
         paddingVertical: 5, 
         borderBottomWidth: 0.7,
         borderBottomColor: '#C4C4C4'
@@ -409,6 +519,44 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
+
+    centeredView: {
+        flex: 1,
+        alignItems: "center",
+        flexDirection: "column",
+        justifyContent: "space-around",
+        backgroundColor: "#00000040"
+      },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
+    },
+    openButton: {
+        backgroundColor: "#F194FF",
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+    }
 
 });
 
