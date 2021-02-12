@@ -53,10 +53,12 @@ class AddBalanceScreen extends Component {
             billet_barcode: "",
             billet_url: "",
             settings: {
-                addBalanceBilletTax: "0",
-                addBalanceMin: "0",
-                addBilletBalanceUser: "0",
-                addCardBalanceUser: "0"
+                prepaid_min_billet_value: "0",
+                prepaid_tax_billet: "0",
+                prepaid_billet_user: "0",
+                prepaid_billet_provider: "0",
+                prepaid_card_user: "0",
+                prepaid_card_provider: "0"
                 
             },
             addBalanceActive: false
@@ -112,12 +114,12 @@ class AddBalanceScreen extends Component {
             GLOBAL.userToken, 
         )
         .then((json) => {
-            console.log("resposta: ", json);
+            console.log("resposta add balance: ", json);
             this.setState({
                 cards: json.cards,
                 currentBalance: json.current_balance,
                 settings: json.settings,
-                addBalanceActive: json.settings.addBilletBalanceUser == "1" || json.settings.addCardBalanceUser == "1" ? true : false
+                addBalanceActive: json.settings.prepaid_billet_user == "1" || json.settings.prepaid_card_user == "1" ? true : false
             });
         })
         .catch((error) => {
@@ -213,10 +215,10 @@ class AddBalanceScreen extends Component {
         //Valor a adicionar formatado (convertido em float). Remove as virgulas e substitui por ponto.
         var valueToAdd = parseFloat(this.state.totalToAddBalance.toString().replace(',', '.')).toFixed(2);
         var msg = "Tem certeza que deseja gerar um boleto no valor de " + valueToAdd + "?";
-        if(parseFloat(this.state.settings.addBalanceBilletTax) > 0) {
-            msg += "Haverá um acréscimo de " + this.state.settings.addBalanceBilletTax;
+        if(parseFloat(this.state.settings.prepaid_tax_billet) > 0) {
+            msg += "Haverá um acréscimo de " + this.state.settings.prepaid_tax_billet;
         }
-        if(valueToAdd >= parseFloat(this.state.settings.addBalanceMin)) {
+        if(valueToAdd >= parseFloat(this.state.settings.prepaid_min_billet_value)) {
             console.log("adicionar saldo com boleto!");
             Alert.alert(
                 "Pagar com boleto",
@@ -228,14 +230,14 @@ class AddBalanceScreen extends Component {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(this.strings.please_digit_value + this.state.settings.addBalanceMin);
+            Toast.showToast(this.strings.please_digit_value + this.state.settings.prepaid_min_billet_value);
         }
     }
     alertAddBalanceCard(card) {
         //Valor a adicionar formatado (convertido em float). Remove as virgulas e substitui por ponto.
         var valueToAdd = parseFloat(this.state.totalToAddBalance.toString().replace(',', '.')).toFixed(2);
 
-        if(valueToAdd >= parseFloat(this.state.settings.addBalanceMin)) {
+        if(valueToAdd >= parseFloat(this.state.settings.prepaid_min_billet_value)) {
             console.log("adicionar saldo com cartao: ", card);
             Alert.alert(
                 "Pagar com cartão",
@@ -247,7 +249,7 @@ class AddBalanceScreen extends Component {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(this.strings.please_digit_value + this.state.settings.addBalanceMin);
+            Toast.showToast(this.strings.please_digit_value + this.state.settings.prepaid_min_billet_value);
         }
        
     }
@@ -356,7 +358,7 @@ class AddBalanceScreen extends Component {
                     <ScrollView>
                         
                         {/* Billet */}
-                        {this.state.addBalanceActive && this.state.settings.addBilletBalanceUser == "1" ? (
+                        {this.state.addBalanceActive && this.state.settings.prepaid_billet_user == "1" ? (
                             <TouchableOpacity
                                 style={styles.listTypes}
                                 onPress={() => {
@@ -376,7 +378,7 @@ class AddBalanceScreen extends Component {
 
 
                         {/* Add card button */}
-                        {this.state.addBalanceActive && this.state.settings.addCardBalanceUser == "1" ? (
+                        {this.state.addBalanceActive && this.state.settings.prepaid_card_user == "1" ? (
                              <View style={{ flex: 1 }}>
                                 <TouchableOpacity
                                     style={styles.listTypes}
