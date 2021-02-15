@@ -40,9 +40,13 @@ class AddBalanceScreen extends Component {
         this.arrayIconsType["jcb"] = Images.icon_ub_creditcard_jcb;
         this.arrayIconsType["terracard"] = Images.terra_card;
 
+        GLOBAL.lang = GLOBAL.lang ? GLOBAL.lang : this.props.lang;
+        GLOBAL.color = GLOBAL.color ? GLOBAL.color : this.props.color;
+
         GLOBAL.appUrl = GLOBAL.appUrl ? GLOBAL.appUrl : this.props.appUrl;
         GLOBAL.id = GLOBAL.id ? GLOBAL.id : this.props.id;
         GLOBAL.token = GLOBAL.token ? GLOBAL.token : this.props.token;
+        GLOBAL.type = GLOBAL.type ? GLOBAL.type : this.props.type;
 
         this.state = {
             totalToAddBalance: "",
@@ -225,7 +229,7 @@ class AddBalanceScreen extends Component {
         var valueToAdd = parseFloat(this.state.totalToAddBalance.toString().replace(',', '.')).toFixed(2);
         var msg = "Tem certeza que deseja gerar um boleto no valor de " + valueToAdd + "?";
         if(parseFloat(this.state.settings.prepaid_tax_billet) > 0) {
-            msg += "Haverá um acréscimo de " + this.state.settings.prepaid_tax_billet;
+            msg += " Haverá um acréscimo de " + this.state.settings.prepaid_tax_billet;
         }
         if(valueToAdd >= parseFloat(this.state.settings.prepaid_min_billet_value)) {
             console.log("adicionar saldo com boleto!");

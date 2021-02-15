@@ -343,6 +343,7 @@ const styles = StyleSheet.create({
     parentContainer: {
         flex: 1,
         padding: 0,
+        backgroundColor: "white"
     },
     DefaultInputStyle: {
         height: 40,
