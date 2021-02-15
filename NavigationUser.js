@@ -2,9 +2,11 @@
 //Este arquivo deve ser importado pelo projeto pai que utiliza esse modolo para funcionar a navegacao
 
 import AddBalanceScreen from './src/AddBalanceScreen'
+import AddCardScreenLib from './src/AddCardScreenLib'
 
     const screens = {
-        AddBalanceScreen: { screen: AddBalanceScreen }
+        AddBalanceScreen: { screen: AddBalanceScreen },
+        AddCardScreenLib: { screen: AddCardScreenLib }
     };
 
 export default screens;

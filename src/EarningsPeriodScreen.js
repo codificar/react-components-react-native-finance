@@ -46,8 +46,9 @@ class EarningsPeriodScreen extends Component {
             totalByPeriod: 0,
             current_balance: 0,
             nextPageUrl: null,
-            providerId: this.props.navigation.state.params.providerId,
-            token: this.props.navigation.state.params.token,
+            providerId: GLOBAL.id,
+            token: GLOBAL.token,
+            provider_prepaid: false
         }
 
         this.api = new Api();
@@ -175,7 +176,11 @@ class EarningsPeriodScreen extends Component {
             this.setState({ isLoading: false })
             console.log('json check account: ', json)
             let finances = json.detailed_balance.data
-            this.setState({ nextPageUrl: json.detailed_balance.next_page_url, isLoading: false })
+            this.setState({ 
+                nextPageUrl: json.detailed_balance.next_page_url, 
+                provider_prepaid: json.provider_prepaid,
+                isLoading: false 
+            });
             if (this.state.iniciate == 0) {
                 let currentBalance = json.current_balance
                 if (currentBalance == null) {
@@ -352,15 +357,16 @@ class EarningsPeriodScreen extends Component {
                     </ScrollView>
                 </View>
                 {/* Flex 1/10 */}
-                <View style={{ flex: 1, justifyContent: 'center' }}>{/* Flex vertical of 1/10 */}
-                    <TouchableOpacity
-                        style={{ borderRadius: 3, padding: 10, elevation: 2,marginHorizontal: 30, backgroundColor: GLOBAL.color }}
-                        onPress={() =>  this.openAddBalanceScreen()} 
-                    >
-                        <Text style={{color: 'white', fontSize: 16, fontWeight: "bold", textAlign: "center" }}>{this.strings.add_balance}</Text>
-                    </TouchableOpacity>
-                </View>
-
+                {this.state.provider_prepaid ?
+                    <View style={{ flex: 1, justifyContent: 'center' }}>{/* Flex vertical of 1/10 */}
+                        <TouchableOpacity
+                            style={{ borderRadius: 3, padding: 10, elevation: 2,marginHorizontal: 30, backgroundColor: GLOBAL.color }}
+                            onPress={() =>  this.openAddBalanceScreen()} 
+                        >
+                            <Text style={{color: 'white', fontSize: 16, fontWeight: "bold", textAlign: "center" }}>{this.strings.add_balance}</Text>
+                        </TouchableOpacity>
+                    </View>
+                : null}
             </View>
         )
     }

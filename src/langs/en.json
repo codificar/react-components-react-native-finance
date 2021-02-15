@@ -39,5 +39,22 @@
   "transactions": "Transactions",
   "help": "Ajuda",
   "loading_message": "Loading...",
-  "add_balance": "Add Balance"
+  "add_balance": "Add Balance",
+  "manage_cards": "Manage Cards",
+  "digit_value": "Digit a value",
+  "add_balance_msg": "Add balance",
+  "pay_with_billet": "Pay with billet",
+  "please_digit_value": "Please, digit a value more than",
+  "addCardTitle": "Add Card",
+  "name": "Name",
+  "namePlaceholder": "Digit the card name",
+  "nameError": "Insert a correct value",
+  "number": "Card number",
+  "numberPlaceholder": "Card number",
+  "numberError": "Insert a valid card.",
+  "exp": "Exp date",
+  "expError": "Insert a valid date.",
+  "cvv": "Cvv",
+  "cvvError": "Insert a valid cvv.",
+  "save": "Save"
 }

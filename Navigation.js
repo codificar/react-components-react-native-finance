@@ -5,12 +5,14 @@ import EarningsPeriodScreen from './src/EarningsPeriodScreen'
 import EarningDetailScreen from './src/EarningDetailScreen'
 import FilterScreen from './src/FilterScreen'
 import AddBalanceScreen from './src/AddBalanceScreen'
+import AddCardScreenLib from './src/AddCardScreenLib'
 
     const screens = {
         EarningsPeriodScreen: { screen: EarningsPeriodScreen },
         EarningDetailScreen: { screen: EarningDetailScreen },
         FilterScreen: { screen: FilterScreen },
-        AddBalanceScreen: { screen: AddBalanceScreen }
+        AddBalanceScreen: { screen: AddBalanceScreen },
+        AddCardScreenLib: { screen: AddCardScreenLib }
     };
 
 export default screens;

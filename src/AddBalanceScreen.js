@@ -40,9 +40,9 @@ class AddBalanceScreen extends Component {
         this.arrayIconsType["jcb"] = Images.icon_ub_creditcard_jcb;
         this.arrayIconsType["terracard"] = Images.terra_card;
 
-        GLOBAL.appUrl = this.props.appUrl;
-        GLOBAL.userId = this.props.userId;
-        GLOBAL.userToken = this.props.userToken;
+        GLOBAL.appUrl = GLOBAL.appUrl ? GLOBAL.appUrl : this.props.appUrl;
+        GLOBAL.id = GLOBAL.id ? GLOBAL.id : this.props.id;
+        GLOBAL.token = GLOBAL.token ? GLOBAL.token : this.props.token;
 
         this.state = {
             totalToAddBalance: "",
@@ -110,16 +110,23 @@ class AddBalanceScreen extends Component {
     getCardsAndBalanceInfo() {
         this.api.GetCardsAndBalance(
             GLOBAL.appUrl,
-            GLOBAL.userId, 
-            GLOBAL.userToken, 
+            GLOBAL.id, 
+            GLOBAL.token, 
+            GLOBAL.type
         )
         .then((json) => {
             console.log("resposta add balance: ", json);
+            var isBalanceActive = false;
+            if(GLOBAL.type == "user") {
+                isBalanceActive = json.settings.prepaid_billet_user == "1" || json.settings.prepaid_card_user == "1" ? true : false;
+            } else if(GLOBAL.type == "provider") {
+                isBalanceActive = json.settings.prepaid_billet_provider == "1" || json.settings.prepaid_card_provider == "1" ? true : false;
+            }
             this.setState({
                 cards: json.cards,
                 currentBalance: json.current_balance,
                 settings: json.settings,
-                addBalanceActive: json.settings.prepaid_billet_user == "1" || json.settings.prepaid_card_user == "1" ? true : false
+                addBalanceActive: isBalanceActive
             });
         })
         .catch((error) => {
@@ -140,10 +147,11 @@ class AddBalanceScreen extends Component {
 
         this.api.AddCreditCardBalance(
             GLOBAL.appUrl,
-            GLOBAL.userId, 
-            GLOBAL.userToken,
+            GLOBAL.id, 
+            GLOBAL.token,
             valueToAdd,
-            cardId
+            cardId,
+            GLOBAL.type
         )
         .then((json) => {
             if(json.success) {
@@ -180,9 +188,10 @@ class AddBalanceScreen extends Component {
 
         this.api.AddBilletBalance(
             GLOBAL.appUrl,
-            GLOBAL.userId, 
-            GLOBAL.userToken,
-            valueToAdd
+            GLOBAL.id, 
+            GLOBAL.token,
+            valueToAdd,
+            GLOBAL.type
         )
         .then((json) => {
             if(json.success) {
@@ -259,7 +268,7 @@ class AddBalanceScreen extends Component {
     }
 
     goToAddCardScreen() {
-        this.props.navigation.navigate('AddCardScreen',
+        this.props.navigation.navigate('AddCardScreenLib',
             {
                 originScreen: 'AddBalanceScreen',
                 cards: this.state.cards
@@ -358,7 +367,13 @@ class AddBalanceScreen extends Component {
                     <ScrollView>
                         
                         {/* Billet */}
-                        {this.state.addBalanceActive && this.state.settings.prepaid_billet_user == "1" ? (
+
+                        {
+                            this.state.addBalanceActive && (
+                                (GLOBAL.type == "user" && this.state.settings.prepaid_billet_user == "1") ||
+                                (GLOBAL.type == "provider" && this.state.settings.prepaid_billet_provider == "1")
+                            )
+                        ? (
                             <TouchableOpacity
                                 style={styles.listTypes}
                                 onPress={() => {
@@ -378,7 +393,12 @@ class AddBalanceScreen extends Component {
 
 
                         {/* Add card button */}
-                        {this.state.addBalanceActive && this.state.settings.prepaid_card_user == "1" ? (
+                        {
+                            this.state.addBalanceActive && (
+                                (GLOBAL.type == "user" && this.state.settings.prepaid_card_user == "1") ||
+                                (GLOBAL.type == "provider" && this.state.settings.prepaid_card_provider == "1") 
+                            )
+                        ? (
                              <View style={{ flex: 1 }}>
                                 <TouchableOpacity
                                     style={styles.listTypes}

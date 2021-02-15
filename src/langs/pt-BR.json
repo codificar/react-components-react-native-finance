@@ -44,5 +44,17 @@
   "digit_value": "Digite o valor",
   "add_balance_msg": "Adicionar saldo avulso na conta",
   "pay_with_billet": "Pagar com Boleto",
-  "please_digit_value": "Por favor, digite um valor maior que "
+  "please_digit_value": "Por favor, digite um valor maior que ",
+  "addCardTitle": "Adicionar cartão",
+  "name": "Nome",
+  "namePlaceholder": "Digite o nome cadastrado no cartão",
+  "nameError": "Insira um nome válido.",
+  "number": "Número do cartão",
+  "numberPlaceholder": "Número do seu cartão",
+  "numberError": "Insira um número de cartão válido.",
+  "exp": "Data de validade",
+  "expError": "Insira uma data válida.",
+  "cvv": "Cvv",
+  "cvvError": "Insira um cvv válido.",
+  "save": "Salvar"
 }

@@ -51,16 +51,16 @@ export default class Api {
         return fetch(app_url + "/libs/finance/provider/profits" + "?" + params, this.get).then((response) => response.json());
     }
 
-    GetCardsAndBalance(app_url, provider_id, token) {
+    GetCardsAndBalance(app_url, provider_id, token, type) {
         let params = new URLSearchParams({ 
             provider_id: provider_id, 
             id: provider_id,
             token: token
         });
-        return fetch(app_url + "/libs/finance/user/get_cards_and_balance" + "?" + params, this.get).then((response) => response.json());
+        return fetch(app_url + "/libs/finance/" + type + "/get_cards_and_balance" + "?" + params, this.get).then((response) => response.json());
     }
 
-    AddCreditCardBalance(app_url, provider_id, token, value, card_id) {
+    AddCreditCardBalance(app_url, provider_id, token, value, card_id, type) {
         let params = new URLSearchParams({ 
             provider_id: provider_id, 
             id: provider_id,
@@ -68,17 +68,37 @@ export default class Api {
             value: value,
             card_id: card_id
         });
-        return fetch(app_url + "/libs/finance/user/add_credit_card_balance" + "?" + params, this.get).then((response) => response.json());
+        return fetch(app_url + "/libs/finance/" + type + "/add_credit_card_balance" + "?" + params, this.get).then((response) => response.json());
     }
 
-    AddBilletBalance(app_url, provider_id, token, value) {
+    AddBilletBalance(app_url, provider_id, token, value, type) {
         let params = new URLSearchParams({ 
             provider_id: provider_id, 
             id: provider_id,
             token: token,
             value: value
         });
-        return fetch(app_url + "/libs/finance/user/add_billet_balance" + "?" + params, this.get).then((response) => response.json());
+        return fetch(app_url + "/libs/finance/" + type + "/add_billet_balance" + "?" + params, this.get).then((response) => response.json());
+    }
+
+    AddCard(app_url, id, token, type, card_holder, card_number, card_cvv, card_expiration_year, card_expiration_month) {
+        let params = {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id, 
+                token: token,
+                card_holder: card_holder,
+                card_number: card_number,
+                card_cvv: card_cvv,
+                card_expiration_year: card_expiration_year,
+                card_expiration_month:card_expiration_month
+            })
+        }
+        return fetch(app_url + "/libs/finance/" + type + "/add_credit_card", params).then((response) => response.json());
     }
 
 }

@@ -35,6 +35,11 @@ class Finance extends Component {
         GLOBAL.lang = this.props.lang;
         GLOBAL.color = this.props.PrimaryButton;
 
+        GLOBAL.appUrl = this.props.appUrl;
+        GLOBAL.id = this.props.id;
+        GLOBAL.token = this.props.token;
+        GLOBAL.type = this.props.type;
+
         this.api = new Api();
 
         //Get the lang from props. If hasn't lang in props, default is pt-BR
@@ -103,12 +108,11 @@ class Finance extends Component {
 
     getReport(year) {
         this.setState({ isLoading: true })
-        console.log("provider id da tela finance: ", this.props.providerId);
 
         this.api.GetReport(
-            this.props.appUrl,
-            this.props.providerId, 
-            this.props.providerToken, 
+            GLOBAL.appUrl,
+            GLOBAL.id, 
+            GLOBAL.token, 
             year
         )
         .then((json) => {
@@ -170,18 +174,15 @@ class Finance extends Component {
 
 
     openEarnings = () => {
-        console.log("app url no index: ", this.props.appUrl);
         if (this.state.firstDate !== null && this.state.lastDate !== null) {
             this.props.navigation.navigate('EarningsPeriodScreen',
                 {
-                    providerId: this.props.providerId,
-                    token: this.props.providerToken,
                     startDate: this.state.firstDate.format('DD/MM/YYYY'),
                     endDate: this.state.lastDate.format('DD/MM/YYYY'),
                     formattedStartDate: this.state.firstDayWeek,
                     formattedEndDate: this.state.lastDayWeek,
                     isHelp: this.props.isHelp,
-                    appUrl: this.props.appUrl,
+                    appUrl: GLOBAL.appUrl,
                     PrimaryButton: this.props.PrimaryButton
                 }
             )
