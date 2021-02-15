@@ -12,6 +12,9 @@
       "type": "git",
       "url": "git+https://git.codificar.com.br/react-components/react-native-finance"
     },
+    "dependencies": {
+      "react-native-elements": "^3.0.0-alpha.1"
+    },
     
     "peerDependencies": {
         "react-native": ">=0.47.0"
