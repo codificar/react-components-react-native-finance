@@ -54,7 +54,7 @@ class AddBalanceScreen extends Component {
             isLoading: false,
             currentBalance: 0,
             modalVisible: false,
-            billet_barcode: "",
+            digitable_line: "",
             billet_url: "",
             settings: {
                 prepaid_min_billet_value: "0",
@@ -202,7 +202,7 @@ class AddBalanceScreen extends Component {
                
                 this.setState({
                     isLoading: false,
-                    billet_barcode: json.billet_barcode,
+                    digitable_line: json.digitable_line,
                     billet_url: json.billet_url,
                     modalVisible: true
                 });
@@ -267,7 +267,7 @@ class AddBalanceScreen extends Component {
        
     }
     copyClipBoard() {
-        Clipboard.setString(this.state.billet_barcode);
+        Clipboard.setString(this.state.digitable_line);
         Toast.showToast('Boleto copiado com sucesso!');
     }
 
@@ -298,7 +298,7 @@ class AddBalanceScreen extends Component {
                             onPress={() => this.copyClipBoard()}
                         >
                             <View style={{flexDirection: "row", marginVertical: 20}}>
-                                <Text style={{fontSize: 17}}>{this.state.billet_barcode}</Text>
+                                <Text style={{fontSize: 17}}>{this.state.digitable_line}</Text>
                                 <Icon style={{marginLeft: 10}} name="clipboard" size={25} />
                             </View>
                         </TouchableOpacity>
