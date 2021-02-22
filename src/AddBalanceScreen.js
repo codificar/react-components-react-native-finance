@@ -94,6 +94,7 @@ class AddBalanceScreen extends Component {
     }
 
     componentDidMount() {
+        this.getCardsAndBalanceInfo();
         this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
             this.props.navigation.goBack()
             return true
