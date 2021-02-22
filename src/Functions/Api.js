@@ -90,6 +90,8 @@ export default class Api {
             },
             body: JSON.stringify({
                 id: id, 
+                provider_id: id,
+                user_id: id,
                 token: token,
                 card_holder: card_holder,
                 card_number: card_number,
