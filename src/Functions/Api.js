@@ -54,6 +54,7 @@ export default class Api {
     GetCardsAndBalance(app_url, provider_id, token, type) {
         let params = new URLSearchParams({ 
             provider_id: provider_id, 
+            user_id: provider_id,
             id: provider_id,
             token: token
         });
@@ -63,6 +64,7 @@ export default class Api {
     AddCreditCardBalance(app_url, provider_id, token, value, card_id, type) {
         let params = new URLSearchParams({ 
             provider_id: provider_id, 
+            user_id: provider_id,
             id: provider_id,
             token: token,
             value: value,
@@ -74,6 +76,7 @@ export default class Api {
     AddBilletBalance(app_url, provider_id, token, value, type) {
         let params = new URLSearchParams({ 
             provider_id: provider_id, 
+            user_id: provider_id,
             id: provider_id,
             token: token,
             value: value
