@@ -14,7 +14,8 @@
     },
     "dependencies": {
       "react-native-elements": "^3.0.0-alpha.1",
-      "react-native-calendar-picker": "^6.0.1"
+      "react-native-calendar-picker": "^6.0.1",
+      "react-native-chart-kit": "^6.7.0"
     },
     
     "peerDependencies": {
