@@ -41,7 +41,7 @@ class AddBalanceScreen extends Component {
         this.arrayIconsType["terracard"] = Images.terra_card;
 
         GLOBAL.lang = GLOBAL.lang ? GLOBAL.lang : this.props.lang;
-        GLOBAL.color = GLOBAL.color ? GLOBAL.color : this.props.color;
+        GLOBAL.color = GLOBAL.color ? GLOBAL.color : this.props.PrimaryButton;
 
         GLOBAL.appUrl = GLOBAL.appUrl ? GLOBAL.appUrl : this.props.appUrl;
         GLOBAL.id = GLOBAL.id ? GLOBAL.id : this.props.id;
