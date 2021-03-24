@@ -93,11 +93,20 @@ class ReportScreen extends Component {
                         <View style={styles.rowGeneralInfo}>
                             <View style={styles.contTravel}>
                                 <Text style={styles.textQuantTravel}>{reportData.rides_count}</Text>
-                                {reportData.rides_count > 1 ? (
-                                <Text style={styles.textTravel}>{this.strings.racings}</Text>
-                                ): (
+
+                                {this.props.requestType ? (
+                                    <Text style={styles.textTravel}>{this.props.requestType}</Text>
+                                ) : null}
+
+                                {reportData.rides_count > 1 && !this.props.requestType ? (
+                                    <Text style={styles.textTravel}>{this.strings.racings}</Text>
+                                ) :
+                                    null}
+
+                                {reportData.rides_count <= 1 && !this.props.requestType ? (
                                     <Text style={styles.textTravel}>{this.strings.racing}</Text>
-                                )}
+                                ) : null}
+                                
                             </View>
                             <View style={styles.divider} />
                             <View style={styles.contOnline}>
