@@ -49,7 +49,7 @@ class ReportScreen extends Component {
 
 
     render() {
-        const { currency, lineGraphic, arrayReport, firstDayWeek, lastDayWeek, reportData } = this.props
+        const { currency, lineGraphic, arrayReport, firstDayWeek, lastDayWeek, reportData, requestType } = this.props
         //console.log('lineGraphic props: ', lineGraphic)
         return (
             <View style={styles.container}>
@@ -93,20 +93,7 @@ class ReportScreen extends Component {
                         <View style={styles.rowGeneralInfo}>
                             <View style={styles.contTravel}>
                                 <Text style={styles.textQuantTravel}>{reportData.rides_count}</Text>
-
-                                {this.props.requestType ? (
-                                    <Text style={styles.textTravel}>{this.props.requestType}</Text>
-                                ) : null}
-
-                                {reportData.rides_count > 1 && !this.props.requestType ? (
-                                    <Text style={styles.textTravel}>{this.strings.racings}</Text>
-                                ) :
-                                    null}
-
-                                {reportData.rides_count <= 1 && !this.props.requestType ? (
-                                    <Text style={styles.textTravel}>{this.strings.racing}</Text>
-                                ) : null}
-                                
+                                <Text style={styles.textTravel}>{requestType + "(s)"}</Text>
                             </View>
                             <View style={styles.divider} />
                             <View style={styles.contOnline}>
@@ -116,7 +103,7 @@ class ReportScreen extends Component {
                             <View style={styles.divider} />
                             <View style={styles.contTravelCash}>
                                 <Text style={styles.textTravelCash}>{currency} {reportData.total_money_week}</Text>
-                                <Text style={styles.textTravelCashDesc}>{this.strings.cashTravels}</Text>
+                                <Text style={styles.textTravelCashDesc}>{requestType + "(s) " + this.strings.cashTravels}</Text>
                             </View>
                         </View>
 

@@ -232,7 +232,7 @@ class Finance extends Component {
                         lastDayWeek={this.state.lastDayWeek}
                         reportData={this.state.reportData}
                         PrimaryButton={this.props.PrimaryButton}
-                        requestType = {this.props.requestType}
+                        requestType={this.props.requestType ? this.props.requestType : this.strings.racing}
                     />
                 ) : null}
 
