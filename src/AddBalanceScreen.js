@@ -232,7 +232,12 @@ class AddBalanceScreen extends Component {
         if(parseFloat(this.state.settings.prepaid_tax_billet) > 0) {
             msg += " Haverá um acréscimo de " + this.state.settings.prepaid_tax_billet;
         }
-        if(valueToAdd >= parseFloat(this.state.settings.prepaid_min_billet_value)) {
+        if(this.state.settings.prepaid_min_billet_value) {
+            var prepaidMinValue = parseFloat(this.state.settings.prepaid_min_billet_value);
+        } else {
+            var prepaidMinValue = 0;
+        }
+        if(this.state.totalToAddBalance && valueToAdd && valueToAdd >= prepaidMinValue) {
             console.log("adicionar saldo com boleto!");
             Alert.alert(
                 "Pagar com boleto",
@@ -244,14 +249,14 @@ class AddBalanceScreen extends Component {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(this.strings.please_digit_value + this.state.settings.prepaid_min_billet_value);
+            Toast.showToast(this.strings.please_digit_value + prepaidMinValue);
         }
     }
     alertAddBalanceCard(card) {
         //Valor a adicionar formatado (convertido em float). Remove as virgulas e substitui por ponto.
         var valueToAdd = parseFloat(this.state.totalToAddBalance.toString().replace(',', '.')).toFixed(2);
 
-        if(valueToAdd >= parseFloat(this.state.settings.prepaid_min_billet_value)) {
+        if(this.state.totalToAddBalance && valueToAdd && valueToAdd > 0) {
             console.log("adicionar saldo com cartao: ", card);
             Alert.alert(
                 "Pagar com cartão",
@@ -263,7 +268,7 @@ class AddBalanceScreen extends Component {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(this.strings.please_digit_value + this.state.settings.prepaid_min_billet_value);
+            Toast.showToast(this.strings.please_digit_value + "0");
         }
        
     }
