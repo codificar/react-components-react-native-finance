@@ -66,7 +66,10 @@ class AddBalanceScreen extends Component {
                 prepaid_card_provider: "0"
                 
             },
-            addBalanceActive: false
+            addBalanceActive: false,
+			referralBalance: 0,
+			cumulated_balance_monthly: 0,
+			isCustomIndicationEnabled: false
         }
         //Get the lang from props. If hasn't lang in props, default is pt-BR
         this.strings = require('./langs/pt-BR.json');
@@ -140,8 +143,9 @@ class AddBalanceScreen extends Component {
                 settings: json.settings,
                 addBalanceActive: isBalanceActive,
 				referralBalance: json.referralBalance,
-				rideGains: json.rideGains.ride,
-				isCustomIndicationEnabled: json.isCustomIndicationEnabled
+				cumulated_balance_monthly: json.cumulated_balance_monthly,
+				isCustomIndicationEnabled: json.settings.indication_settings.isCustomIndicationEnabled,
+				program_name: json.settings.indication_settings.program_name,
             });
         })
         .catch((error) => {
@@ -329,6 +333,7 @@ class AddBalanceScreen extends Component {
 
                 <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
 				
+				{/* Ajustando layout padrão mobilidade */}
 				{GLOBAL.toolbar ? (
 					<View>
 						<GLOBAL.toolbar
@@ -362,27 +367,35 @@ class AddBalanceScreen extends Component {
                 {/* flex 4/10 */}
                 <View style={{flex: 4, marginTop: 5}}>
                     <View style={{flex: 1, paddingHorizontal: 20}}>
-                        <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
+                        <View style={{ justifyContent: 'center', alignItems: 'center'}}>
                             <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
                             <Text style={styles.currentValue}>{this.state.currentBalance}</Text>
                         </View>
-						
+					
 						{this.state.isCustomIndicationEnabled ? (
-							<View style={styles.cardContainer}>
-								<TouchableOpacity style={styles.card} onPress={() => null}>
-									<View style={styles.cardText}>
-										<Text style={styles.indicationValueText}>{this.strings.referralBalance}</Text>
-										<Text style={styles.indicationValue}>{this.state.referralBalance}</Text>								
-									</View>								
-								</TouchableOpacity>
+							<View style={styles.indicationContainer}>
+								<Text style={[styles.currentValueText, {marginBottom: 10, marginTop: 10}]}>{this.state.program_name}</Text>
+								<View style={styles.cardContainer}>	
+									{this.state.referralBalance !== 0 ? (
+										<TouchableOpacity style={styles.card} onPress={() => null}>
+											<View style={styles.cardText}>
+												<Text style={styles.indicationValueText}>{this.strings.total}</Text>
+												<Text style={styles.indicationValue}>{this.state.referralBalance}</Text>								
+											</View>								
+										</TouchableOpacity>
+									) : null }
 
-								<TouchableOpacity style={styles.card} onPress={() => null}>						
-									<View style={styles.cardText}>
-										<Text style={styles.indicationValueText}>{this.strings.rideGains}</Text>
-										<Text style={styles.indicationValue}>{this.state.rideGains}</Text>								
-									</View>								
-								</TouchableOpacity>
+									{this.state.cumulated_balance_monthly !== 0? (
+										<TouchableOpacity style={styles.card} onPress={() => null}>						
+											<View style={styles.cardText}>
+												<Text style={styles.indicationValueText}>{this.strings.cumulated_balance_monthly}</Text>
+												<Text style={styles.indicationValue}>{this.state.cumulated_balance_monthly}</Text>								
+											</View>								
+										</TouchableOpacity>
+									) : null }
+								</View>
 							</View>
+							
 						) : null }
 						
 
@@ -534,7 +547,7 @@ const styles = StyleSheet.create({
         marginLeft: 5
     },
     currentValueText: {
-        fontSize: 17,
+        fontSize: 20,
         color: "#bfbfbf",
         marginLeft: 5,
 		marginBottom: 10
@@ -636,16 +649,15 @@ const styles = StyleSheet.create({
 		width: window.width,
 		height: 1,
 		backgroundColor: "#EAEAEA",
-		marginTop: 10,
 		marginBottom: 5
 	},
 	cardContainer: {
 		width: '100%',
-		height: '60%',
-		padding: 5,
+		height: '70%',
+		padding: 2,
 		flexDirection: 'row',
 		flexWrap: 'wrap',
-		justifyContent: 'space-around'
+		justifyContent: 'space-around',
 	},
 	card: {
 		width: '50%',
@@ -667,11 +679,14 @@ const styles = StyleSheet.create({
 		flex: 0.60
 	},
 	indicationValueText: {
-		fontSize: 17,
+		fontSize: 20,
         color: "#bfbfbf",
-        marginLeft: 5,
-		flex: 0.40,
-		textAlign:'center'
+		flex: 0.5,
+		textAlign:'center',
+	},
+	indicationContainer: {
+		marginTop: 10,
+		alignItems: "flex-start",
 	}
 });
 
