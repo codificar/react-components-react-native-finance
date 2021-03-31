@@ -299,16 +299,23 @@ class AddBalanceScreen extends Component {
             }
         )
     }
+
+	infoTotal() {
+		Toast.showToast(this.strings.infoTotal)
+	}
+
+	infoMonthly() {
+		Toast.showToast(this.strings.infoMonthly)
+	}
     
     render() {  
         return (
             <View style={[styles.container]}>
-
                 <Modal
                     animationType="slide"
                     transparent={true}
-                    visible={this.state.modalVisible}
-                >
+                    visible={this.state.modalVisible}>
+						
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                         <Text style={styles.modalText}>Boleto gerado com sucesso. Ele foi enviado para o seu email.</Text>
@@ -335,190 +342,176 @@ class AddBalanceScreen extends Component {
                     </View>
                 </Modal>
 
+				<ScrollView>
+					<Loader loading={this.state.isLoading} message={this.strings.loading_message} />
+						
+					{/* Ajustando layout padrão mobilidade */}
+					{GLOBAL.toolbar ? (
+						<View>
+							<GLOBAL.toolbar
+								back={true}
+								handlePress={() => this.props.navigation.goBack()}
+							/>
 
-                <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
-				
-				{/* Ajustando layout padrão mobilidade */}
-				{GLOBAL.toolbar ? (
-					<View>
-						<GLOBAL.toolbar
-							back={true}
-							handlePress={() => this.props.navigation.goBack()}
-						/>
-
-						<GLOBAL.titleHeader
-							text={this.strings.add_balance}
-							align="flex-start"
-						/> 
-					</View>					
-				) :	(
-					<View style={{flex: 1, flexDirection: "row"}}>
-						<TouchableOpacity 
-							onPress={() =>  this.props.navigation.goBack()} 
-						>
-							<Text style={{fontSize: 20, paddingLeft: 20, paddingTop: 20, fontWeight: "bold"}}>X</Text>
-						</TouchableOpacity>
-						<View style={{ 
-							position: 'absolute', 
-							width: Dimensions.get('window').width, 
-							justifyContent: 'center', 
-							alignItems: 'center'}}
-						>
-							<Text style={{ top: 20, fontWeight: "bold", fontSize: 20 }}>{this.strings.add_balance}</Text>
+							<GLOBAL.titleHeader
+								text={this.strings.add_balance}
+								align="flex-start"
+							/> 
+						</View>					
+					) :	(
+						<View style={{flex: 1, flexDirection: "row"}}>
+							<TouchableOpacity 
+								onPress={() =>  this.props.navigation.goBack()} 
+							>
+								<Text style={{fontSize: 20, paddingLeft: 20, paddingTop: 20, fontWeight: "bold"}}>X</Text>
+							</TouchableOpacity>
+							<View style={{ 
+								position: 'absolute', 
+								width: Dimensions.get('window').width, 
+								justifyContent: 'center', 
+								alignItems: 'center'}}
+							>
+								<Text style={{ top: 20, fontWeight: "bold", fontSize: 20 }}>{this.strings.add_balance}</Text>
+							</View>
 						</View>
-					</View>
-				)}
+					)}
 
-                {/* flex 4/10 */}
-                <View style={{flex: 4, marginTop: 5}}>
-                    <View style={{flex: 1, paddingHorizontal: 20}}>
-                        <View style={{ justifyContent: 'center', alignItems: 'center'}}>
-                            <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
-                            <Text style={styles.currentValue}>{this.state.currentBalance}</Text>
-                        </View>
-					
-						{this.state.isCustomIndicationEnabled ? (
-							<View style={styles.indicationContainer}>
-								<Text style={[styles.currentValueText, {marginBottom: 10, marginTop: 10}]}>{this.state.program_name}</Text>
-								<View style={styles.cardContainer}>	
-									{this.state.referralBalance !== 0 ? (
-										<TouchableOpacity style={styles.card} onPress={() => null}>
-											<View style={styles.cardText}>
-												<Text style={styles.indicationValueText}>{this.strings.total}</Text>
-												<Text style={styles.indicationValue}>{this.state.referralBalance}</Text>								
-											</View>								
-										</TouchableOpacity>
-									) : null }
+					{/* flex 4/10 */}
+					<View style={{flex: 4, marginTop: 5}}>
+						<View style={{flex: 1, paddingHorizontal: 20, marginBottom: 10}}>
+							<View style={{ justifyContent: 'center', alignItems: 'center'}}>
+								<Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
+								<Text style={styles.currentValue}>{this.state.currentBalance}</Text>
+							</View>
+						
+							{this.state.isCustomIndicationEnabled ? (
+								<View style={styles.indicationContainer}>
+									<Text style={[styles.currentValueText, {marginBottom: 10, marginTop: 10}]}>{this.state.program_name}</Text>
+									<View style={styles.cardContainer}>	
+										{this.state.referralBalance !== 0 ? (
+											<TouchableOpacity style={styles.card} onPress={() => this.infoTotal()}>
+												<View style={styles.cardText}>
+													<Text style={styles.indicationValueText}>{this.strings.total}</Text>
+													<Text style={styles.indicationValue}>{this.state.referralBalance}</Text>								
+												</View>								
+											</TouchableOpacity>
+										) : null }
 
-									{this.state.cumulated_balance_monthly !== 0? (
-										<TouchableOpacity style={styles.card} onPress={() => null}>						
-											<View style={styles.cardText}>
-												<Text style={styles.indicationValueText}>{this.strings.cumulated_balance_monthly}</Text>
-												<Text style={styles.indicationValue}>{this.state.cumulated_balance_monthly}</Text>								
-											</View>								
-										</TouchableOpacity>
-									) : null }
+										{this.state.cumulated_balance_monthly !== 0 ? (
+											<TouchableOpacity style={styles.card} onPress={() => this.infoMonthly()}>						
+												<View style={styles.cardText}>
+													<Text style={styles.indicationValueText}>{this.strings.cumulated_balance_monthly}</Text>
+													<Text style={styles.indicationValue}>{this.state.cumulated_balance_monthly}</Text>								
+												</View>								
+											</TouchableOpacity>
+										) : null }
+									</View>					
+								</View>
+							) : null }
+						</View>
+
+						{this.state.addBalanceActive ? (
+							<View style={{flex: 1, marginTop: 20}}>
+								<View style={{marginTop: 10}}>
+									<Text style={styles.formValueTransfer}>{this.strings.add_balance_msg}</Text>
+									<View style={styles.form}>
+										<TextInput
+											style={{fontSize: 16, paddingLeft: 10}}
+											keyboardType='numeric'
+											placeholder={'0,00'}
+											onChangeText={text => this.setState({ totalToAddBalance: text })}
+											value={this.state.totalToAddBalance ? String(this.state.totalToAddBalance) : null}
+										/>
+									</View>
 								</View>
 							</View>
-							
-						) : null }
+						) : ( null ) }
 						
+						<ScrollView>							
+							{
+								this.state.addBalanceActive && (
+									(GLOBAL.type == "user" && this.state.settings.prepaid_billet_user == "1") ||
+									(GLOBAL.type == "provider" && this.state.settings.prepaid_billet_provider == "1")
+								)
+							? (
+								<TouchableOpacity
+									style={styles.listTypes}
+									onPress={() => {
+										this.alertAddBalanceBillet();
+									}}
+								>
+									<View style={{ flex: 0.2 }}>
+										<Icon name="barcode" size={40} />
+									</View>
 
-						<View style={styles.redDivider} />
+									<View style={{ flex: 0.7 }}>
+										<Text style={{ fontWeight: 'bold' }}>{this.strings.pay_with_billet}</Text>
+									</View>
 
-                        {this.state.addBalanceActive ? (
-                            <View style={{flex: 1}}>
-                                <View style={{marginTop: 20}}>
-                                    <Text style={styles.formText}>{this.strings.add_balance_msg}</Text>                  
-                                </View>
-                                
-                                <View style={{marginTop: 10}}>
-									<Text style={styles.formValueTransfer}>{this.strings.digit_value}</Text>
-                                    <View style={styles.form}>
-                                        <TextInput
-                                            style={{fontSize: 16, paddingLeft: 10}}
-                                            keyboardType='numeric'
-                                            placeholder={'0,00'}
-                                            onChangeText={text => this.setState({ totalToAddBalance: text })}
-                                            value={this.state.totalToAddBalance ? String(this.state.totalToAddBalance) : null}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                        ) : ( null ) }
-
-                    </View>
-                </View>
-
-                {/* Flex vertical of 5/10 */}
-                <View style={{ flex: 5, justifyContent: 'center', alignItems: 'center' }}>
-                    <ScrollView>
-                        
-                        {/* Billet */}
-
-                        {
-                            this.state.addBalanceActive && (
-                                (GLOBAL.type == "user" && this.state.settings.prepaid_billet_user == "1") ||
-                                (GLOBAL.type == "provider" && this.state.settings.prepaid_billet_provider == "1")
-                            )
-                        ? (
-                            <TouchableOpacity
-                                style={styles.listTypes}
-                                onPress={() => {
-                                    this.alertAddBalanceBillet();
-                                }}
-                            >
-                                <View style={{ flex: 0.2 }}>
-                                    <Icon name="barcode" size={40} />
-                                </View>
-
-                                <View style={{ flex: 0.7 }}>
-                                    <Text style={{ fontWeight: 'bold' }}>{this.strings.pay_with_billet}</Text>
-                                </View>
-
-                            </TouchableOpacity>
-                        ) : ( null ) }
+								</TouchableOpacity>
+							) : ( null ) }
 
 
-                        {/* Add card button */}
-                        {
-                            this.state.addBalanceActive && (
-                                (GLOBAL.type == "user" && this.state.settings.prepaid_card_user == "1") ||
-                                (GLOBAL.type == "provider" && this.state.settings.prepaid_card_provider == "1") 
-                            )
-                        ? (
-                             <View style={{ flex: 1 }}>
-                                <TouchableOpacity
-                                    style={styles.listTypes}
-                                    onPress={() => {
-                                        this.goToAddCardScreen();
-                                    }}
-                                >
-                                    <View style={{ flex: 0.2 }}>
-                                        <Icon name="credit-card" size={40} />
-                                    </View>
+							{/* Add card button */}
+							{
+								this.state.addBalanceActive && (
+									(GLOBAL.type == "user" && this.state.settings.prepaid_card_user == "1") ||
+									(GLOBAL.type == "provider" && this.state.settings.prepaid_card_provider == "1") 
+								)
+							? (
+									<View style={{ flex: 1 }}>
+									<TouchableOpacity
+										style={styles.listTypes}
+										onPress={() => {
+											this.goToAddCardScreen();
+										}}
+									>
+										<View style={{ flex: 0.2 }}>
+											<Icon name="credit-card" size={40} />
+										</View>
 
-                                    <View style={{ flex: 0.7 }}>
-                                        <Text style={{ fontWeight: 'bold' }}>{this.strings.manage_cards}</Text>
-                                    </View>
-                                </TouchableOpacity>
+										<View style={{ flex: 0.7 }}>
+											<Text style={{ fontWeight: 'bold' }}>{this.strings.manage_cards}</Text>
+										</View>
+									</TouchableOpacity>
 
-                                <FlatList
-                                    style={{ marginBottom: 30 }}
-                                    data={this.state.cards}
-                                    renderItem={({ item }) => (
-                                        <TouchableOpacity 
-                                            style={styles.listTypes}
-                                            onPress={() => {
-                                                this.alertAddBalanceCard(item);
-                                            }}
-                                        >
-                                            <View style={{ flex: 0.2 }}>
-                                                {!item.card_type || item.card_type == "unknown" ? (
-                                                    <Icon name="credit-card" size={40} />
-                                                ) : (
-                                                    <Image source={this.arrayIconsType[item.card_type]}
-                                                        style={{
-                                                        width: 40,
-                                                        height: 28,
-                                                        resizeMode: "contain"
-                                                    }} />
-                                                )}
-                                            </View>
+									<FlatList
+										style={{ marginBottom: 30 }}
+										data={this.state.cards}
+										renderItem={({ item }) => (
+											<TouchableOpacity 
+												style={styles.listTypes}
+												onPress={() => {
+													this.alertAddBalanceCard(item);
+												}}
+											>
+												<View style={{ flex: 0.2 }}>
+													{!item.card_type || item.card_type == "unknown" ? (
+														<Icon name="credit-card" size={40} />
+													) : (
+														<Image source={this.arrayIconsType[item.card_type]}
+															style={{
+															width: 40,
+															height: 28,
+															resizeMode: "contain"
+														}} />
+													)}
+												</View>
 
-                                            <View style={{ flex: 0.7 }}>
-                                                <Text style={{ fontWeight: 'bold' }}>**** **** **** {item.last_four}</Text>
-                                            </View>
+												<View style={{ flex: 0.7 }}>
+													<Text style={{ fontWeight: 'bold' }}>**** **** **** {item.last_four}</Text>
+												</View>
 
-                                        </TouchableOpacity>
-                                    )}
-                                    keyExtractor={(item, index) => `${index}`}
-                                />
-                            </View>
-                        ) : ( null ) }
-                    </ScrollView>
-                </View>
-            </View>
+											</TouchableOpacity>
+										)}
+										keyExtractor={(item, index) => `${index}`}
+									/>
+								</View>
+							) : ( null ) }
+						</ScrollView>
+					</View>	
+				</ScrollView>	
+			</View>		
         )
     }
 }
@@ -658,7 +651,7 @@ const styles = StyleSheet.create({
 	},
 	cardContainer: {
 		width: '100%',
-		height: '70%',
+		height: '60%',
 		padding: 2,
 		flexDirection: 'row',
 		flexWrap: 'wrap',
