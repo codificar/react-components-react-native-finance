@@ -24,6 +24,7 @@ import Api from "./Functions/Api";
 import Loader from "./Functions/Loader"
 
 import Toast from "./Functions/Toast";
+import Global from './Functions/Global.js';
 
 class AddBalanceScreen extends Component {
 
@@ -65,7 +66,10 @@ class AddBalanceScreen extends Component {
                 prepaid_card_provider: "0"
                 
             },
-            addBalanceActive: false
+            addBalanceActive: false,
+			referralBalance: 0,
+			cumulated_balance_monthly: 0,
+			isCustomIndicationEnabled: false
         }
         //Get the lang from props. If hasn't lang in props, default is pt-BR
         this.strings = require('./langs/pt-BR.json');
@@ -91,6 +95,12 @@ class AddBalanceScreen extends Component {
             this.getCardsAndBalanceInfo();
         })
 
+		if (this.props) {
+			if (this.props.toolbar) {
+				GLOBAL.toolbar = this.props.toolbar;
+				GLOBAL.titleHeader = this.props.titleHeader;
+			}
+		}		
     }
 
     componentDidMount() {
@@ -131,7 +141,11 @@ class AddBalanceScreen extends Component {
                 cards: json.cards,
                 currentBalance: json.current_balance,
                 settings: json.settings,
-                addBalanceActive: isBalanceActive
+                addBalanceActive: isBalanceActive,
+				referralBalance: json.referralBalance,
+				cumulated_balance_monthly: json.cumulated_balance_monthly,
+				isCustomIndicationEnabled: json.settings.indication_settings.isCustomIndicationEnabled,
+				program_name: json.settings.indication_settings.program_name,
             });
         })
         .catch((error) => {
@@ -323,39 +337,83 @@ class AddBalanceScreen extends Component {
 
 
                 <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
-                {/* Flex vertical of 1/10 */}
-                <View style={{flex: 1, flexDirection: "row"}}>
-                    <TouchableOpacity 
-                        onPress={() =>  this.props.navigation.goBack()} 
-                    >
-                        <Text style={{fontSize: 20, paddingLeft: 20, paddingTop: 20, fontWeight: "bold"}}>X</Text>
-                    </TouchableOpacity>
-                    <View style={{ 
-                        position: 'absolute', 
-                        width: Dimensions.get('window').width, 
-                        justifyContent: 'center', 
-                        alignItems: 'center'}}
-                    >
-                        <Text style={{ top: 20, fontWeight: "bold", fontSize: 20 }}>{this.strings.add_balance}</Text>
-                    </View>
-                </View>
+				
+				{/* Ajustando layout padrão mobilidade */}
+				{GLOBAL.toolbar ? (
+					<View>
+						<GLOBAL.toolbar
+							back={true}
+							handlePress={() => this.props.navigation.goBack()}
+						/>
+
+						<GLOBAL.titleHeader
+							text={this.strings.add_balance}
+							align="flex-start"
+						/> 
+					</View>					
+				) :	(
+					<View style={{flex: 1, flexDirection: "row"}}>
+						<TouchableOpacity 
+							onPress={() =>  this.props.navigation.goBack()} 
+						>
+							<Text style={{fontSize: 20, paddingLeft: 20, paddingTop: 20, fontWeight: "bold"}}>X</Text>
+						</TouchableOpacity>
+						<View style={{ 
+							position: 'absolute', 
+							width: Dimensions.get('window').width, 
+							justifyContent: 'center', 
+							alignItems: 'center'}}
+						>
+							<Text style={{ top: 20, fontWeight: "bold", fontSize: 20 }}>{this.strings.add_balance}</Text>
+						</View>
+					</View>
+				)}
 
                 {/* flex 4/10 */}
-                <View style={{flex: 4}}>
+                <View style={{flex: 4, marginTop: 5}}>
                     <View style={{flex: 1, paddingHorizontal: 20}}>
                         <View style={{ justifyContent: 'center', alignItems: 'center'}}>
                             <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
                             <Text style={styles.currentValue}>{this.state.currentBalance}</Text>
                         </View>
+					
+						{this.state.isCustomIndicationEnabled ? (
+							<View style={styles.indicationContainer}>
+								<Text style={[styles.currentValueText, {marginBottom: 10, marginTop: 10}]}>{this.state.program_name}</Text>
+								<View style={styles.cardContainer}>	
+									{this.state.referralBalance !== 0 ? (
+										<TouchableOpacity style={styles.card} onPress={() => null}>
+											<View style={styles.cardText}>
+												<Text style={styles.indicationValueText}>{this.strings.total}</Text>
+												<Text style={styles.indicationValue}>{this.state.referralBalance}</Text>								
+											</View>								
+										</TouchableOpacity>
+									) : null }
+
+									{this.state.cumulated_balance_monthly !== 0? (
+										<TouchableOpacity style={styles.card} onPress={() => null}>						
+											<View style={styles.cardText}>
+												<Text style={styles.indicationValueText}>{this.strings.cumulated_balance_monthly}</Text>
+												<Text style={styles.indicationValue}>{this.state.cumulated_balance_monthly}</Text>								
+											</View>								
+										</TouchableOpacity>
+									) : null }
+								</View>
+							</View>
+							
+						) : null }
+						
+
+						<View style={styles.redDivider} />
+
                         {this.state.addBalanceActive ? (
                             <View style={{flex: 1}}>
                                 <View style={{marginTop: 20}}>
-                                    <Text style={styles.formText}>{this.strings.add_balance_msg}</Text>
-                                    
+                                    <Text style={styles.formText}>{this.strings.add_balance_msg}</Text>                  
                                 </View>
                                 
-                                <View style={{marginTop: 20}}>
-                                    <Text style={styles.formValueTransfer}>{this.strings.digit_value}</Text>
+                                <View style={{marginTop: 10}}>
+									<Text style={styles.formValueTransfer}>{this.strings.digit_value}</Text>
                                     <View style={styles.form}>
                                         <TextInput
                                             style={{fontSize: 16, paddingLeft: 10}}
@@ -474,7 +532,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "white",
+		paddingHorizontal: 25,
     },
     text: {
         marginBottom: 15,
@@ -488,17 +547,18 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     },
     formText: {
-        fontSize: 14,
+        fontSize: 16,
         color: "#bfbfbf",
         marginLeft: 5
     },
     currentValueText: {
-        fontSize: 17,
+        fontSize: 20,
         color: "#bfbfbf",
-        marginLeft: 5
+        marginLeft: 5,
+		marginBottom: 10
     },
     currentValue: {
-        fontSize: 30,
+        fontSize: 35,
         color: "black",
         marginLeft: 5,
         fontWeight: "bold"
@@ -589,8 +649,50 @@ const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center"
-    }
-
+    },
+	redDivider: {
+		width: window.width,
+		height: 1,
+		backgroundColor: "#EAEAEA",
+		marginBottom: 5
+	},
+	cardContainer: {
+		width: '100%',
+		height: '70%',
+		padding: 2,
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		justifyContent: 'space-around',
+	},
+	card: {
+		width: '50%',
+		height: '100%',
+		padding: 5,
+		flex: 1
+	},
+	cardText: {
+		flex: 1,
+		backgroundColor: '#FBFBFB',
+		alignItems: 'center',
+		padding: 5
+	},
+	indicationValue: {
+		fontSize: 30,
+        color: "black",
+        marginLeft: 5,
+        fontWeight: "bold",
+		flex: 0.60
+	},
+	indicationValueText: {
+		fontSize: 20,
+        color: "#bfbfbf",
+		flex: 0.5,
+		textAlign:'center',
+	},
+	indicationContainer: {
+		marginTop: 10,
+		alignItems: "flex-start",
+	}
 });
 
 export default AddBalanceScreen;
