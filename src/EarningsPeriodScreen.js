@@ -30,8 +30,6 @@ class EarningsPeriodScreen extends Component {
     constructor(props) {
         super(props)
 
-        
-
         this.param = this.props.navigation.state.params;
         this.state = {
             iniciate: 0,
@@ -42,13 +40,13 @@ class EarningsPeriodScreen extends Component {
             isLoading: false,
             financialData: [],
             isLoadingSummary: false,
-            valueTotal: 0,
-            totalByPeriod: 0,
-            current_balance: 0,
+            totalByPeriod: "0",
+            current_balance: "0",
             nextPageUrl: null,
             providerId: GLOBAL.id,
             token: GLOBAL.token,
-            provider_prepaid: false
+            provider_prepaid: false,
+            currency: ""
         }
 
         this.api = new Api();
@@ -174,30 +172,26 @@ class EarningsPeriodScreen extends Component {
         )
         .then((json) => {
             this.setState({ isLoading: false })
-            console.log('json check account: ', json)
-            let finances = json.detailed_balance.data
+            console.log('json check accountss: ', json)
+            let finances = json.detailed_balance.data;
+            
             this.setState({ 
                 nextPageUrl: json.detailed_balance.next_page_url, 
                 provider_prepaid: json.provider_prepaid,
-                isLoading: false 
+                isLoading: false
             });
             if (this.state.iniciate == 0) {
-                let currentBalance = json.current_balance
-                if (currentBalance == null) {
-                    currentBalance = 0
-                }
                 this.setState({
                     financialData: finances,
-                    valueTotal: currentBalance,
-                    totalByPeriod: json.period_balance,
-                    current_balance: json.current_balance,
+                    totalByPeriod: json.period_balance_formatted,
+                    current_balance: json.current_balance_formatted,
                     iniciate: 1
                 })
             } else {
                 this.setState({
                     financialData: finances,
-                    totalByPeriod: json.period_balance,
-                    current_balance: json.current_balance
+                    totalByPeriod: json.period_balance_formatted,
+                    current_balance: json.current_balance_formatted
                 })
             }
         })
@@ -226,13 +220,13 @@ class EarningsPeriodScreen extends Component {
         if (typeValue == 'credit') {
             return (
                 <Text style={{color: GLOBAL.color, fontFamily: 'Roboto',fontSize: 16,fontWeight: 'bold', marginRight: 15}}>
-                    {this.strings.coin} {parseFloat(item.value).toFixed(2)}
+                    {item.value_formatted}
                 </Text>
             )
         } else {
             return (
                 <Text style={styles.negativeValue}>
-                    ({this.strings.coin} {parseFloat(item.value).toFixed(2)})
+                    ({item.value_formatted})
                 </Text>
             )
         }
@@ -309,12 +303,12 @@ class EarningsPeriodScreen extends Component {
                                 <View style={{paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
                                     <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
                                     <Text style={styles.currentValueText}>{this.strings.currentBalanceMsg}</Text>
-                                    <Text style={styles.currentValue}>{this.strings.coin} {parseFloat(this.state.current_balance).toFixed(2)}</Text>
+                                    <Text style={styles.currentValue}>{this.state.current_balance}</Text>
                                 </View>
                                 <View style={{ paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
                                     <Text style={styles.currentValueText}>{this.strings.periodValues}</Text>
                                     <Text style={styles.currentValueText}>{this.param.formattedStartDate} - {this.param.formattedEndDate}</Text>
-                                    <Text style={styles.currentValue}>{this.strings.coin} {parseFloat(this.state.totalByPeriod).toFixed(2)}</Text>
+                                    <Text style={styles.currentValue}>{this.state.totalByPeriod}</Text>
                                 </View>
                             </View>
                             {this.state.financialData == '' ?

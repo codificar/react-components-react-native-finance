@@ -92,7 +92,7 @@ class EarningDetailScreen extends Component {
                 </View>
                 {this.state.item ? (
                     <View>
-                        <Text style={styles.totalTitle}>{this.strings.coin} {parseFloat(this.state.item.value).toFixed(2)}</Text>
+                        <Text style={styles.totalTitle}>{this.state.item.value_formatted}</Text>
                         <Text style={styles.dateTitle}>
                             {moment(this.state.item.created_at).format('dddd')}, {moment(this.state.item.created_at).format('DD')} {this.strings.of} {moment(this.state.item.created_at).format('MMMM')}
                         </Text>
@@ -111,7 +111,7 @@ class EarningDetailScreen extends Component {
                             <Divider style={styles.divider} />
                             <View style={styles.rowTotal}>
                                 <Text style={styles.labelTotal}>{this.strings.total}</Text>
-                                <Text style={styles.textTotal}>{this.strings.coin} {parseFloat(this.state.item.value).toFixed(2)}</Text>
+                                <Text style={styles.textTotal}>{this.state.item.value_formatted}</Text>
                             </View>
                         </View>
                     </View>

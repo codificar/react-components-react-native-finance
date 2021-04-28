@@ -11,7 +11,6 @@
 	"date": "Date",
 	"type": "Type",
 	"value": "Value",
-	"coin": "R$",
 	"currentBalance": "View current balance",
 	"currentBalanceMsg": "(current balance)",
 	"totalByPeriod": "Balance by period",

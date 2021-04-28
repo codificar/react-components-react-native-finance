@@ -11,7 +11,6 @@
 	"date": "Data",
 	"type": "Tipo",
 	"value": "Valor",
-	"coin": "R$",
 	"currentBalance": "Saldo atual",
 	"currentBalanceMsg": "(em carteira)",
 	"totalByPeriod": "Saldo do período",

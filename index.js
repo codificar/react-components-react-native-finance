@@ -119,7 +119,6 @@ class Finance extends Component {
             this.setState({ isLoading: false })
             console.log('response report: ', json)
             if (json.success == true) {
-                console.log("1");
                 let arrayResponse = []
                 let lineGraphic = { labels: [], datasets: [] }
                 let arrayValues = []
@@ -133,7 +132,6 @@ class Finance extends Component {
                 } else {
                     momentLocal = "en"
                 }
-
                 for (let i = 0; i < arrayResponse.length; i++) {
                     lineGraphic.labels.push(moment().locale(momentLocal).day(arrayResponse[i].day - 1).format('ddd'))
                     arrayValues.push(parseFloat(arrayResponse[i].value).toFixed(2))
@@ -227,7 +225,6 @@ class Finance extends Component {
                         getReport={this.getReport.bind(this)}
                         arrayReport={this.state.arrayReport}
                         lineGraphic={this.state.arrayLineGraphic}
-                        currency={this.strings.coin}
                         firstDayWeek={this.state.firstDayWeek}
                         lastDayWeek={this.state.lastDayWeek}
                         reportData={this.state.reportData}

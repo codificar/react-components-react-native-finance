@@ -49,13 +49,12 @@ class ReportScreen extends Component {
 
 
     render() {
-        const { currency, lineGraphic, arrayReport, firstDayWeek, lastDayWeek, reportData, requestType } = this.props
-        //console.log('lineGraphic props: ', lineGraphic)
+        const { lineGraphic, arrayReport, firstDayWeek, lastDayWeek, reportData, requestType } = this.props
         return (
             <View style={styles.container}>
                 <View style={styles.contReceived}>
                     <View style={styles.contTotalValue}>
-                        <Text style={styles.txtTotal}>{currency} {reportData.total_week}</Text>
+                        <Text style={styles.txtTotal}>{reportData.total_week_text}</Text>
                     </View>
                 </View>
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -102,7 +101,7 @@ class ReportScreen extends Component {
                             </View>
                             <View style={styles.divider} />
                             <View style={styles.contTravelCash}>
-                                <Text style={styles.textTravelCash}>{currency} {reportData.total_money_week}</Text>
+                                <Text style={styles.textTravelCash}>{reportData.total_money_week_text}</Text>
                                 <Text style={styles.textTravelCashDesc}>{requestType + "(s) " + this.strings.cashTravels}</Text>
                             </View>
                         </View>
@@ -123,7 +122,6 @@ class ReportScreen extends Component {
                                 onPress={() => this.props.openTransactions()}>
                                 <View style={styles.contRowItem}>
                                     <Text style={styles.textRecentTransac}>{this.strings.recentTransaction}</Text>
-                                    {/*<Text style={styles.textTransacSald}>{strings('checkingAccount.balanceOf')} {currency} 250,00</Text>*/}
                                 </View>
                                 <View style={styles.contArrow}>
                                     <Icon type='ionicon' name='ios-arrow-forward' size={20} iconStyle={styles.backIcon} />
