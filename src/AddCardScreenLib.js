@@ -146,15 +146,6 @@ class AddCardScreenLib extends Component {
         var month = parseInt(exp[0]);
         var year = parseInt(exp[1]);            
 
-            GLOBAL.id + '-' + 
-            GLOBAL.token + '-' +
-            GLOBAL.type + '-' +
-            this.state.cardName + '-' +
-            this.state.cardNumber.split(' ').join('') + '-' +
-            this.state.cardCvv + '-' +
-            month + '-' +
-            year);
-
         this.api.AddCard(
             GLOBAL.appUrl,
             GLOBAL.id, 
