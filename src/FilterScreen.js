@@ -71,7 +71,6 @@ class FilterScreen extends Component {
 
 
   onDateChange(date, type) {
-    //console.log('Data inicial: ', date._i)
     if (type === 'END_DATE') {
       this.setState({
         selectedEndDate: date,

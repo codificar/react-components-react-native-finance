@@ -24,7 +24,6 @@ import Api from "./Functions/Api";
 import Loader from "./Functions/Loader"
 
 import Toast from "./Functions/Toast";
-import Global from './Functions/Global.js';
 
 class AddBalanceScreen extends Component {
 
@@ -130,7 +129,6 @@ class AddBalanceScreen extends Component {
             GLOBAL.type
         )
         .then((json) => {
-            console.log("resposta add balance: ", json);
             var isBalanceActive = false;
             if(GLOBAL.type == "user") {
                 isBalanceActive = json.settings.prepaid_billet_user == "1" || json.settings.prepaid_card_user == "1" ? true : false;
@@ -162,7 +160,6 @@ class AddBalanceScreen extends Component {
 
     addBalanceCard(valueToAdd, cardId) {
         this.setState({ isLoading: true })
-        console.log("chamar api de pagar com cartao. Id: "+cardId);
 
         this.api.AddCreditCardBalance(
             GLOBAL.appUrl,
@@ -178,7 +175,7 @@ class AddBalanceScreen extends Component {
                     isLoading: false,
                     currentBalance: json.current_balance
                 });
-                this.alertOk("Cartão", "Pagamento com cartão realizado com sucesso.");
+                this.alertOk(this.strings.card, this.strings.card_success);
             } else {
                 this.setState({
                     isLoading: false
@@ -187,7 +184,7 @@ class AddBalanceScreen extends Component {
                     Toast.showToast(json.error);
                 }
                 else {
-                    Toast.showToast('Erro no cartão');
+                    Toast.showToast(this.strings);
                 }
             }
         })
@@ -203,7 +200,6 @@ class AddBalanceScreen extends Component {
       
     addBalanceBillet(valueToAdd) {
         this.setState({ isLoading: true })
-        console.log("chamar api de pagar com boleto");
 
         this.api.AddBilletBalance(
             GLOBAL.appUrl,
@@ -222,15 +218,13 @@ class AddBalanceScreen extends Component {
                     modalVisible: true
                 });
             } else {
-                console.log("json: ", json);
-                this.setState({
-                    isLoading: false
-                });
+                this.setState({ isLoading: false });
                 if(json.error){
                     Toast.showToast(json.error);
                 }
                 else {
-                    Toast.showToast('Erro ao gerar boleto');
+
+                    Toast.showToast(this.strings.billet_error);
                 }
             }
         })
@@ -242,9 +236,10 @@ class AddBalanceScreen extends Component {
     alertAddBalanceBillet() {
         //Valor a adicionar formatado (convertido em float). Remove as virgulas e substitui por ponto.
         var valueToAdd = parseFloat(this.state.totalToAddBalance.toString().replace(',', '.')).toFixed(2);
-        var msg = "Tem certeza que deseja gerar um boleto no valor de " + valueToAdd + "?";
+
+        var msg = this.strings.confirm_billet_value + " " + valueToAdd + "?";
         if(parseFloat(this.state.settings.prepaid_tax_billet) > 0) {
-            msg += " Haverá um acréscimo de " + this.state.settings.prepaid_tax_billet;
+            msg += " " + this.strings.billet_addition + " " + this.state.settings.prepaid_tax_billet;
         }
         if(this.state.settings.prepaid_min_billet_value) {
             var prepaidMinValue = parseFloat(this.state.settings.prepaid_min_billet_value);
@@ -252,13 +247,13 @@ class AddBalanceScreen extends Component {
             var prepaidMinValue = 0;
         }
         if(this.state.totalToAddBalance && valueToAdd && valueToAdd >= prepaidMinValue) {
-            console.log("adicionar saldo com boleto!");
+
             Alert.alert(
-                "Pagar com boleto",
+                this.strings.pay_with_billet,
                 msg,
                 [
-                    { text: "Cancelar", style: "cancel" },
-                    { text: "Sim", onPress: () => this.addBalanceBillet(valueToAdd) }
+                    { text: this.strings.cancel, style: "cancel" },
+                    { text: this.strings.yes, onPress: () => this.addBalanceBillet(valueToAdd) }
                 ],
                 { cancelable: false }
             );
@@ -271,13 +266,12 @@ class AddBalanceScreen extends Component {
         var valueToAdd = parseFloat(this.state.totalToAddBalance.toString().replace(',', '.')).toFixed(2);
 
         if(this.state.totalToAddBalance && valueToAdd && valueToAdd > 0) {
-            console.log("adicionar saldo com cartao: ", card);
             Alert.alert(
-                "Pagar com cartão",
-                "Tem certeza que deseja pagar o  valor de " + valueToAdd + " no cartão **** **** **** " + card.last_four + "?",
+                this.strings.pay_with_card,
+                this.strings.confirm_card_value + " " + valueToAdd + " " + this.strings.in_card + " **** **** **** " + card.last_four + "?",
                 [
-                    { text: "Cancelar", style: "cancel" },
-                    { text: "Sim", onPress: () => this.addBalanceCard(valueToAdd, card.id) }
+                    { text: this.strings.cancel, style: "cancel" },
+                    { text: this.strings.yes, onPress: () => this.addBalanceCard(valueToAdd, card.id) }
                 ],
                 { cancelable: false }
             );
@@ -288,7 +282,7 @@ class AddBalanceScreen extends Component {
     }
     copyClipBoard() {
         Clipboard.setString(this.state.digitable_line);
-        Toast.showToast('Boleto copiado com sucesso!');
+        Toast.showToast(this.strings.billet_copied);
     }
 
     goToAddCardScreen() {
@@ -318,8 +312,9 @@ class AddBalanceScreen extends Component {
 						
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Boleto gerado com sucesso. Ele foi enviado para o seu email.</Text>
-                        <Text style={{color: 'blue', fontSize: 15}} onPress={() => Linking.openURL(this.state.billet_url)}>Clique aqui para baixar</Text>
+
+                        <Text style={styles.modalText}>{this.strings.new_billet_success}</Text>
+                        <Text style={{color: 'blue', fontSize: 15}} onPress={() => Linking.openURL(this.state.billet_url)}>{this.strings.click_to_download}</Text>
                        
                         <TouchableOpacity
                             onPress={() => this.copyClipBoard()}

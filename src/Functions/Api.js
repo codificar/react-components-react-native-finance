@@ -25,7 +25,6 @@ export default class Api {
             start_date: start_date,
             end_date: end_date
         })
-        console.log(nextPageUrl + "&" + params);
         return fetch(nextPageUrl + "&" + params, this.config).then((response) => response.json());
     }
 

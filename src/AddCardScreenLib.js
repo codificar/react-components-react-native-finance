@@ -146,8 +146,6 @@ class AddCardScreenLib extends Component {
         var month = parseInt(exp[0]);
         var year = parseInt(exp[1]);            
 
-        console.log("aqui!!!");
-        console.log(GLOBAL.appUrl + '-' +
             GLOBAL.id + '-' + 
             GLOBAL.token + '-' +
             GLOBAL.type + '-' +
@@ -171,14 +169,11 @@ class AddCardScreenLib extends Component {
             this.setState({
                 isLoading: false
             });
-            console.log("repso: ");
-            console.log(response);            
             this.props.navigation.goBack();
         }).catch(error => {
             this.setState({
                 isLoading: false
             });
-            console.log('addCard', error);
         });
     }
 

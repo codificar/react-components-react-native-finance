@@ -118,7 +118,6 @@ class EarningsPeriodScreen extends Component {
     }
 
     componentDidMount() {
-        console.log('componentDidMount')
         this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
             this.props.navigation.goBack()
             return true
@@ -143,7 +142,6 @@ class EarningsPeriodScreen extends Component {
                 this.param.endDate
             )
             .then((json) => {
-                console.log("Resposta: ", json);
                 if (json.detailed_balance.data.length > 0) {
                     this.setState({
                         financialData: [...this.state.financialData, ...json.detailed_balance.data],
@@ -172,7 +170,6 @@ class EarningsPeriodScreen extends Component {
         )
         .then((json) => {
             this.setState({ isLoading: false })
-            console.log('json check accountss: ', json)
             let finances = json.detailed_balance.data;
             
             this.setState({ 
@@ -216,7 +213,6 @@ class EarningsPeriodScreen extends Component {
 
     renderValue = (item) => {
         let typeValue = this.nameReason(item.reason)
-        //console.log('typeValue: ', typeValue)
         if (typeValue == 'credit') {
             return (
                 <Text style={{color: GLOBAL.color, fontFamily: 'Roboto',fontSize: 16,fontWeight: 'bold', marginRight: 15}}>
@@ -254,7 +250,6 @@ class EarningsPeriodScreen extends Component {
 
 
     onDateChange(date, type) {
-        console.log('Data inicial: ', date._i)
         if (type === 'END_DATE') {
             this.setState({
                 selectedEndDate: date,

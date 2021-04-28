@@ -58,5 +58,18 @@
 	"save": "Salvar",
 	"cumulated_balance_monthly": "Mensal",
 	"infoTotal": "Saldo total acumulado de indicação",
-	"infoMonthly": "Saldo mensal acumulado de indicação"
+	"infoMonthly": "Saldo mensal acumulado de indicação",
+	"card": "Cartão",
+	"card_success": "Pagamento com cartão realizado com sucesso.",
+	"card_error": "Erro no cartão",
+	"billet_error": "Erro ao gerar boleto",
+	"confirm_billet_value": "Tem certeza que deseja gerar um boleto no valor de",
+	"billet_addition": "Haverá um acréscimo de",
+	"yes": "Sim",
+	"pay_with_card": "Pagar com cartão",
+	"confirm_card_value": "Tem certeza que deseja pagar o valor de",
+	"in_card": "no cartão",
+	"billet_copied": "Boleto copiado com sucesso!",
+	"new_billet_success": "Boleto gerado com sucesso. Ele foi enviado para o seu email.",
+	"click_to_download": "Clique aqui para baixar"
   }

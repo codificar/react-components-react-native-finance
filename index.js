@@ -117,7 +117,6 @@ class Finance extends Component {
         )
         .then((json) => {
             this.setState({ isLoading: false })
-            console.log('response report: ', json)
             if (json.success == true) {
                 let arrayResponse = []
                 let lineGraphic = { labels: [], datasets: [] }
@@ -138,11 +137,8 @@ class Finance extends Component {
                     formattedList.push({ id: i, day: moment().locale(momentLocal).day(arrayResponse[i].day - 1).format('ddd'), value: arrayResponse[i].value, year: year })
                 }
 
-                console.log('formattedList: ', formattedList)
-                console.log('lineGraphic: ', lineGraphic)
 
                 lineGraphic.datasets.push({ data: arrayValues, strokeWidth: 2 })
-                console.log("depois setstate: ", json);
                 this.setState({
                     arrayLineGraphic: lineGraphic,
                     arrayReport: formattedList,
@@ -158,7 +154,6 @@ class Finance extends Component {
             }
         })
         .catch((error) => {
-            console.log("caiu no catch:");
             this.setState({ isLoading: false })
             console.error(error);
         });
