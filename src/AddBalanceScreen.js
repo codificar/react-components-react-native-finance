@@ -345,7 +345,7 @@ class AddBalanceScreen extends Component {
 						<View>
 							<GLOBAL.toolbar
 								back={true}
-								handlePress={() => this.props.navigation.goBack()}
+								handlePress={() => this.props.navigation.navigate('MainScreen')}
 							/>
 
 							<GLOBAL.titleHeader
