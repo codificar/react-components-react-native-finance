@@ -130,21 +130,23 @@ class AddBalanceScreen extends Component {
         )
         .then((json) => {
             var isBalanceActive = false;
-            if(GLOBAL.type == "user") {
-                isBalanceActive = json.settings.prepaid_billet_user == "1" || json.settings.prepaid_card_user == "1" ? true : false;
-            } else if(GLOBAL.type == "provider") {
-                isBalanceActive = json.settings.prepaid_billet_provider == "1" || json.settings.prepaid_card_provider == "1" ? true : false;
+            if(json && json.settings) {
+                if(GLOBAL.type == "user") {
+                    isBalanceActive = json.settings.prepaid_billet_user == "1" || json.settings.prepaid_card_user == "1" ? true : false;
+                } else if(GLOBAL.type == "provider") {
+                    isBalanceActive = json.settings.prepaid_billet_provider == "1" || json.settings.prepaid_card_provider == "1" ? true : false;
+                }
+                this.setState({
+                    cards: json.cards,
+                    currentBalance: json.current_balance,
+                    settings: json.settings,
+                    addBalanceActive: isBalanceActive,
+    				referralBalance: json.referralBalance,
+    				cumulated_balance_monthly: json.cumulated_balance_monthly,
+    				isCustomIndicationEnabled: json.settings.indication_settings.isCustomIndicationEnabled,
+    				program_name: json.settings.indication_settings.program_name,
+                });
             }
-            this.setState({
-                cards: json.cards,
-                currentBalance: json.current_balance,
-                settings: json.settings,
-                addBalanceActive: isBalanceActive,
-				referralBalance: json.referralBalance,
-				cumulated_balance_monthly: json.cumulated_balance_monthly,
-				isCustomIndicationEnabled: json.settings.indication_settings.isCustomIndicationEnabled,
-				program_name: json.settings.indication_settings.program_name,
-            });
         })
         .catch((error) => {
             console.error(error);
