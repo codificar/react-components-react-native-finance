@@ -7,12 +7,20 @@ import FilterScreen from './src/FilterScreen'
 import AddBalanceScreen from './src/AddBalanceScreen'
 import AddCardScreenLib from './src/AddCardScreenLib'
 
-    const screens = {
-        EarningsPeriodScreen: { screen: EarningsPeriodScreen },
-        EarningDetailScreen: { screen: EarningDetailScreen },
-        FilterScreen: { screen: FilterScreen },
-        AddBalanceScreen: { screen: AddBalanceScreen },
-        AddCardScreenLib: { screen: AddCardScreenLib }
-    };
+const screens = {
+    EarningsPeriodScreen: { screen: EarningsPeriodScreen },
+    EarningDetailScreen: { screen: EarningDetailScreen },
+    FilterScreen: { screen: FilterScreen },
+    AddBalanceScreen: { screen: AddBalanceScreen },
+    AddCardScreenLib: { screen: AddCardScreenLib }
+};
+
+export {
+    AddCardScreenLib,
+    EarningDetailScreen,
+    FilterScreen,
+    AddBalanceScreen,
+    EarningsPeriodScreen,
+}
 
 export default screens;
