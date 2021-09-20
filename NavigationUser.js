@@ -3,10 +3,12 @@
 
 import AddBalanceScreen from './src/AddBalanceScreen'
 import AddCardScreenLib from './src/AddCardScreenLib'
+import AddCardWebView from './src/AddCardWebView'
 
     const screens = {
         AddBalanceScreen: { screen: AddBalanceScreen },
-        AddCardScreenLib: { screen: AddCardScreenLib }
+        AddCardScreenLib: { screen: AddCardScreenLib },
+        AddCardWebView: { screen: AddCardWebView }
     };
 
 export default screens;

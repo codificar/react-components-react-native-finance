@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     View, 
     TouchableOpacity, 
@@ -23,96 +23,98 @@ import Images from "./img/Images";
 import Api from "./Functions/Api";
 import Loader from "./Functions/Loader"
 
+import { useIsFocused } from "@react-navigation/native";
+
 import Toast from "./Functions/Toast";
 
-class AddBalanceScreen extends Component {
+const AddBalanceScreen = (props) => {
 
-    constructor(props) {
-        super(props);
+    const arrayIconsType = {};
+    arrayIconsType["visa"] = Images.icon_ub_creditcard_visa;
+    arrayIconsType["mastercard"] = Images.icon_ub_creditcard_mastercard;
+    arrayIconsType["master"] = Images.icon_ub_creditcard_mastercard;
+    arrayIconsType["amex"] = Images.icon_ub_creditcard_amex;
+    arrayIconsType["diners"] = Images.icon_ub_creditcard_diners;
+    arrayIconsType["discover"] = Images.icon_ub_creditcard_discover;
+    arrayIconsType["jcb"] = Images.icon_ub_creditcard_jcb;
+    arrayIconsType["terracard"] = Images.terra_card;
 
-        this.arrayIconsType = {};
-        this.arrayIconsType["visa"] = Images.icon_ub_creditcard_visa;
-        this.arrayIconsType["mastercard"] = Images.icon_ub_creditcard_mastercard;
-        this.arrayIconsType["master"] = Images.icon_ub_creditcard_mastercard;
-        this.arrayIconsType["amex"] = Images.icon_ub_creditcard_amex;
-        this.arrayIconsType["diners"] = Images.icon_ub_creditcard_diners;
-        this.arrayIconsType["discover"] = Images.icon_ub_creditcard_discover;
-        this.arrayIconsType["jcb"] = Images.icon_ub_creditcard_jcb;
-        this.arrayIconsType["terracard"] = Images.terra_card;
+    GLOBAL.lang = GLOBAL.lang ? GLOBAL.lang : props.lang;
+    GLOBAL.color = GLOBAL.color ? GLOBAL.color : props.PrimaryButton;
 
-        GLOBAL.lang = GLOBAL.lang ? GLOBAL.lang : this.props.lang;
-        GLOBAL.color = GLOBAL.color ? GLOBAL.color : this.props.PrimaryButton;
+    GLOBAL.appUrl = GLOBAL.appUrl ? GLOBAL.appUrl : props.appUrl;
+    GLOBAL.id = GLOBAL.id ? GLOBAL.id : props.id;
+    GLOBAL.token = GLOBAL.token ? GLOBAL.token : props.token;
+    GLOBAL.type = GLOBAL.type ? GLOBAL.type : props.type;
 
-        GLOBAL.appUrl = GLOBAL.appUrl ? GLOBAL.appUrl : this.props.appUrl;
-        GLOBAL.id = GLOBAL.id ? GLOBAL.id : this.props.id;
-        GLOBAL.token = GLOBAL.token ? GLOBAL.token : this.props.token;
-        GLOBAL.type = GLOBAL.type ? GLOBAL.type : this.props.type;
+    const isVisible = useIsFocused();
+    const [totalToAddBalance, setTotalToAddBalance] = useState("");
+    const [cards, setCards] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [currentBalance, setCurrentBalance] = useState(0);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [digitable_line, setDigitable_line] = useState("");
+    const [billet_url, setBillet_url] = useState("");
+    const [addBalanceActive, setAddBalanceActive] = useState(false);
+    const [referralBalance, setReferralBalance] = useState(0);
+    const [cumulated_balance_monthly, setCumulated_balance_monthly] = useState(0);
+    const [isCustomIndicationEnabled, setIsCustomIndicationEnabled] = useState(false);
+    const [program_name, setProgram_name] = useState("");
+    const [settings, setSettings] = useState({
+        prepaid_min_billet_value: "0",
+        prepaid_tax_billet: "0",
+        prepaid_billet_user: "0",
+        prepaid_billet_provider: "0",
+        prepaid_card_user: "0",
+        prepaid_card_provider: "0"
+        
+    });
 
-        this.state = {
-            totalToAddBalance: "",
-            cards: [],
-            isLoading: false,
-            currentBalance: 0,
-            modalVisible: false,
-            digitable_line: "",
-            billet_url: "",
-            settings: {
-                prepaid_min_billet_value: "0",
-                prepaid_tax_billet: "0",
-                prepaid_billet_user: "0",
-                prepaid_billet_provider: "0",
-                prepaid_card_user: "0",
-                prepaid_card_provider: "0"
-                
-            },
-            addBalanceActive: false,
-			referralBalance: 0,
-			cumulated_balance_monthly: 0,
-			isCustomIndicationEnabled: false
-        }
-        //Get the lang from props. If hasn't lang in props, default is pt-BR
-        this.strings = require('./langs/pt-BR.json');
+    //Get the lang from props. If hasn't lang in props, default is pt-BR
+    var strings = require('./langs/pt-BR.json');
 
-        //If has lang from props, get form props, if not, get from global.
-        if(this.props && this.props.lang) {
-            if(this.props.lang == "pt-BR")
-                this.strings = require('./langs/pt-BR.json');
-            else if(this.props.lang.indexOf("en") != -1) 
-                this.strings = require('./langs/en.json');
-        }
-        else if(GLOBAL.lang) {
-            if(GLOBAL.lang == "pt-BR")
-                this.strings = require('./langs/pt-BR.json');
-            else if(GLOBAL.lang.indexOf("en") != -1)
-                this.strings = require('./langs/en.json');
-        }
-
-        this.api = new Api();
-
-        this.willFocus = this.props.navigation.addListener("willFocus", () => {
-            //Toda vez que entra na tela, pega os params novamente, para atualizar os dados da tela
-            this.getCardsAndBalanceInfo();
-        })
-
-		if (this.props) {
-			if (this.props.toolbar) {
-				GLOBAL.toolbar = this.props.toolbar;
-				GLOBAL.titleHeader = this.props.titleHeader;
-			}
-		}		
+    //If has lang from props, get form props, if not, get from global.
+    if(props && props.lang) {
+        if(props.lang == "pt-BR")
+            strings = require('./langs/pt-BR.json');
+        else if(props.lang.indexOf("en") != -1) 
+            strings = require('./langs/en.json');
+    }
+    else if(GLOBAL.lang) {
+        if(GLOBAL.lang == "pt-BR")
+            strings = require('./langs/pt-BR.json');
+        else if(GLOBAL.lang.indexOf("en") != -1)
+            strings = require('./langs/en.json');
     }
 
-    componentDidMount() {
-        this.getCardsAndBalanceInfo();
-        this.backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
-            this.props.navigation.goBack()
-            return true
-        });
+    const api = new Api();
+    
+    if (props) {
+        if (props.toolbar) {
+            GLOBAL.toolbar = props.toolbar;
+            GLOBAL.titleHeader = props.titleHeader;
+        }
     }
 
-    componentWillUnmount() {
-        this.backHandler.remove();
-    }
+    useEffect(() => {
+        if(isVisible) {
+            getCardsAndBalanceInfo();
+        }
+    }, [isVisible]);
+
+    useEffect(() => {
+        const backAction = () => {
+            props.navigation.goBack()
+            return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+          backAction
+        );
+    
+        return () => backHandler.remove();
+    }, []);
 
 
     /**
@@ -121,8 +123,9 @@ class AddBalanceScreen extends Component {
 	 * @param {Number} user_id
 	 * @param {String} user_token
 	 */
-    getCardsAndBalanceInfo() {
-        this.api.GetCardsAndBalance(
+    
+    const getCardsAndBalanceInfo = () => {
+        api.GetCardsAndBalance(
             GLOBAL.appUrl,
             GLOBAL.id, 
             GLOBAL.token, 
@@ -136,23 +139,22 @@ class AddBalanceScreen extends Component {
                 } else if(GLOBAL.type == "provider") {
                     isBalanceActive = json.settings.prepaid_billet_provider == "1" || json.settings.prepaid_card_provider == "1" ? true : false;
                 }
-                this.setState({
-                    cards: json.cards,
-                    currentBalance: json.current_balance,
-                    settings: json.settings,
-                    addBalanceActive: isBalanceActive,
-    				referralBalance: json.referralBalance,
-    				cumulated_balance_monthly: json.cumulated_balance_monthly,
-    				isCustomIndicationEnabled: json.settings.indication_settings.isCustomIndicationEnabled,
-    				program_name: json.settings.indication_settings.program_name,
-                });
+
+                setCards(json.cards);
+                setCurrentBalance(json.current_balance);
+                setSettings(json.settings);
+                setAddBalanceActive(isBalanceActive);
+                setReferralBalance(json.referralBalance);
+                setCumulated_balance_monthly(json.cumulated_balance_monthly);
+                setIsCustomIndicationEnabled(json.settings.indication_settings ? json.settings.indication_settings.isCustomIndicationEnabled : false);
+                setProgram_name(json.settings.indication_settings ? json.settings.indication_settings.program_name : false);
             }
         })
         .catch((error) => {
             console.error(error);
         });
     }
-    alertOk(title, msg) {
+    const alertOk = (title, msg) => {
         Alert.alert(
             title, msg,
             [{ text: "Ok"},],
@@ -160,10 +162,10 @@ class AddBalanceScreen extends Component {
         );
     }
 
-    addBalanceCard(valueToAdd, cardId) {
-        this.setState({ isLoading: true })
+    const addBalanceCard = (valueToAdd, cardId) => {
+        setIsLoading(true);
 
-        this.api.AddCreditCardBalance(
+        api.AddCreditCardBalance(
             GLOBAL.appUrl,
             GLOBAL.id, 
             GLOBAL.token,
@@ -173,20 +175,17 @@ class AddBalanceScreen extends Component {
         )
         .then((json) => {
             if(json.success) {
-                this.setState({
-                    isLoading: false,
-                    currentBalance: json.current_balance
-                });
-                this.alertOk(this.strings.card, this.strings.card_success);
+                setIsLoading(false);
+                setCurrentBalance(json.current_balance);
+
+                alertOk(strings.card, strings.card_success);
             } else {
-                this.setState({
-                    isLoading: false
-                });
+                setIsLoading(false);
                 if(json.error){
                     Toast.showToast(json.error);
                 }
                 else {
-                    Toast.showToast(this.strings);
+                    Toast.showToast(strings);
                 }
             }
         })
@@ -195,15 +194,11 @@ class AddBalanceScreen extends Component {
         });
             
     }
-
-    setModalVisible = (visible) => {
-        this.setState({ modalVisible: visible });
-    }
       
-    addBalanceBillet(valueToAdd) {
-        this.setState({ isLoading: true })
+    const addBalanceBillet = (valueToAdd) => {
+        setIsLoading(true);
 
-        this.api.AddBilletBalance(
+        api.AddBilletBalance(
             GLOBAL.appUrl,
             GLOBAL.id, 
             GLOBAL.token,
@@ -213,20 +208,19 @@ class AddBalanceScreen extends Component {
         .then((json) => {
             if(json.success) {
                
-                this.setState({
-                    isLoading: false,
-                    digitable_line: json.digitable_line,
-                    billet_url: json.billet_url,
-                    modalVisible: true
-                });
+                setIsLoading(false);
+                setDigitable_line(json.digitable_line);
+                setBillet_url(json.billet_url);
+                setModalVisible(true);
+
             } else {
-                this.setState({ isLoading: false });
+                setIsLoading(false);
                 if(json.error){
                     Toast.showToast(json.error);
                 }
                 else {
 
-                    Toast.showToast(this.strings.billet_error);
+                    Toast.showToast(strings.billet_error);
                 }
             }
         })
@@ -235,282 +229,280 @@ class AddBalanceScreen extends Component {
         });
     }
 
-    alertAddBalanceBillet() {
+    const alertAddBalanceBillet = () => {
         //Valor a adicionar formatado (convertido em float). Remove as virgulas e substitui por ponto.
-        var valueToAdd = parseFloat(this.state.totalToAddBalance.toString().replace(',', '.')).toFixed(2);
+        var valueToAdd = parseFloat(totalToAddBalance.toString().replace(',', '.')).toFixed(2);
 
-        var msg = this.strings.confirm_billet_value + " " + valueToAdd + "?";
-        if(parseFloat(this.state.settings.prepaid_tax_billet) > 0) {
-            msg += " " + this.strings.billet_addition + " " + this.state.settings.prepaid_tax_billet;
+        var msg = strings.confirm_billet_value + " " + valueToAdd + "?";
+        if(parseFloat(settings.prepaid_tax_billet) > 0) {
+            msg += " " + strings.billet_addition + " " + settings.prepaid_tax_billet;
         }
-        if(this.state.settings.prepaid_min_billet_value) {
-            var prepaidMinValue = parseFloat(this.state.settings.prepaid_min_billet_value);
+        if(settings.prepaid_min_billet_value) {
+            var prepaidMinValue = parseFloat(settings.prepaid_min_billet_value);
         } else {
             var prepaidMinValue = 0;
         }
-        if(this.state.totalToAddBalance && valueToAdd && valueToAdd >= prepaidMinValue) {
+        if(totalToAddBalance && valueToAdd && valueToAdd >= prepaidMinValue) {
 
             Alert.alert(
-                this.strings.pay_with_billet,
+                strings.pay_with_billet,
                 msg,
                 [
-                    { text: this.strings.cancel, style: "cancel" },
-                    { text: this.strings.yes, onPress: () => this.addBalanceBillet(valueToAdd) }
+                    { text: strings.cancel, style: "cancel" },
+                    { text: strings.yes, onPress: () => addBalanceBillet(valueToAdd) }
                 ],
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(this.strings.please_digit_value + prepaidMinValue);
+            Toast.showToast(strings.please_digit_value + prepaidMinValue);
         }
     }
-    alertAddBalanceCard(card) {
+    const alertAddBalanceCard = () => {
         //Valor a adicionar formatado (convertido em float). Remove as virgulas e substitui por ponto.
-        var valueToAdd = parseFloat(this.state.totalToAddBalance.toString().replace(',', '.')).toFixed(2);
+        var valueToAdd = parseFloat(totalToAddBalance.toString().replace(',', '.')).toFixed(2);
 
-        if(this.state.totalToAddBalance && valueToAdd && valueToAdd > 0) {
+        if(totalToAddBalance && valueToAdd && valueToAdd > 0) {
             Alert.alert(
-                this.strings.pay_with_card,
-                this.strings.confirm_card_value + " " + valueToAdd + " " + this.strings.in_card + " **** **** **** " + card.last_four + "?",
+                strings.pay_with_card,
+                strings.confirm_card_value + " " + valueToAdd + " " + strings.in_card + " **** **** **** " + card.last_four + "?",
                 [
-                    { text: this.strings.cancel, style: "cancel" },
-                    { text: this.strings.yes, onPress: () => this.addBalanceCard(valueToAdd, card.id) }
+                    { text: strings.cancel, style: "cancel" },
+                    { text: strings.yes, onPress: () => addBalanceCard(valueToAdd, card.id) }
                 ],
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(this.strings.please_digit_value + "0");
+            Toast.showToast(strings.please_digit_value + "0");
         }
        
     }
-    copyClipBoard() {
-        Clipboard.setString(this.state.digitable_line);
-        Toast.showToast(this.strings.billet_copied);
+    const copyClipBoard = () => {
+        Clipboard.setString(digitable_line);
+        Toast.showToast(strings.billet_copied);
     }
 
-    goToAddCardScreen() {
-        this.props.navigation.navigate('AddCardScreenLib',
+    const goToAddCardScreen = () => {
+        props.navigation.navigate('AddCardWebView',
             {
                 originScreen: 'AddBalanceScreen',
-                cards: this.state.cards
+                cards: cards
             }
         )
     }
 
-	infoTotal() {
-		Toast.showToast(this.strings.infoTotal)
+	const infoTotal = () => {
+		Toast.showToast(strings.infoTotal)
 	}
 
-	infoMonthly() {
-		Toast.showToast(this.strings.infoMonthly)
+	const infoMonthly = () => {
+		Toast.showToast(strings.infoMonthly)
 	}
     
-    render() {  
-        return (
-            <View style={[styles.container]}>
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={this.state.modalVisible}>
-						
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
+    return (
+        <View style={[styles.container]}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}>
+                    
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
 
-                        <Text style={styles.modalText}>{this.strings.new_billet_success}</Text>
-                        <Text style={{color: 'blue', fontSize: 15}} onPress={() => Linking.openURL(this.state.billet_url)}>{this.strings.click_to_download}</Text>
-                       
-                        <TouchableOpacity
-                            onPress={() => this.copyClipBoard()}
-                        >
-                            <View style={{flexDirection: "row", marginVertical: 20}}>
-                                <Text style={{fontSize: 17}}>{this.state.digitable_line}</Text>
-                                <Icon style={{marginLeft: 10}} name="clipboard" size={25} />
-                            </View>
-                        </TouchableOpacity>
+                    <Text style={styles.modalText}>{strings.new_billet_success}</Text>
+                    <Text style={{color: 'blue', fontSize: 15}} onPress={() => Linking.openURL(billet_url)}>{strings.click_to_download}</Text>
+                    
+                    <TouchableOpacity
+                        onPress={() => copyClipBoard()}
+                    >
+                        <View style={{flexDirection: "row", marginVertical: 20}}>
+                            <Text style={{fontSize: 17}}>{digitable_line}</Text>
+                            <Icon style={{marginLeft: 10}} name="clipboard" size={25} />
+                        </View>
+                    </TouchableOpacity>
 
-                        <TouchableOpacity
-                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                            onPress={() => {
-                                this.setModalVisible(false);
-                            }}
+                    <TouchableOpacity
+                        style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                        onPress={() => {
+                            setModalVisible(false);
+                        }}
+                    >
+                        <Text style={styles.textStyle}>Fechar</Text>
+                    </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
+            <ScrollView>
+                <Loader loading={isLoading} message={strings.loading_message} />
+                    
+                {/* Ajustando layout padrão mobilidade */}
+                {GLOBAL.toolbar ? (
+                    <View>
+                        <GLOBAL.toolbar
+                            back={true}
+                            handlePress={() => props.navigation.navigate('MainScreen')}
+                        />
+
+                        <GLOBAL.titleHeader
+                            text={strings.add_balance}
+                            align="flex-start"
+                        /> 
+                    </View>					
+                ) :	(
+                    <View style={{flex: 1, flexDirection: "row"}}>
+                        <TouchableOpacity 
+                            onPress={() =>  props.navigation.goBack()} 
                         >
-                            <Text style={styles.textStyle}>Fechar</Text>
+                            <Text style={{fontSize: 20, paddingLeft: 20, paddingTop: 20, fontWeight: "bold"}}>X</Text>
                         </TouchableOpacity>
+                        <View style={{ 
+                            position: 'absolute', 
+                            width: Dimensions.get('window').width, 
+                            justifyContent: 'center', 
+                            alignItems: 'center'}}
+                        >
+                            <Text style={{ top: 20, fontWeight: "bold", fontSize: 20 }}>{strings.add_balance}</Text>
                         </View>
                     </View>
-                </Modal>
+                )}
 
-				<ScrollView>
-					<Loader loading={this.state.isLoading} message={this.strings.loading_message} />
-						
-					{/* Ajustando layout padrão mobilidade */}
-					{GLOBAL.toolbar ? (
-						<View>
-							<GLOBAL.toolbar
-								back={true}
-								handlePress={() => this.props.navigation.navigate('MainScreen')}
-							/>
+                {/* flex 4/10 */}
+                <View style={{flex: 4, marginTop: 5}}>
+                    <View style={{flex: 1, paddingHorizontal: 20, marginBottom: 10}}>
+                        <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={styles.currentValueText}>{strings.currentBalance}</Text>
+                            <Text style={styles.currentValue}>{currentBalance}</Text>
+                        </View>
+                    
+                        {isCustomIndicationEnabled ? (
+                            <View style={styles.indicationContainer}>
+                                <Text style={[styles.currentValueText, {marginBottom: 10, marginTop: 10}]}>{program_name}</Text>
+                                <View style={styles.cardContainer}>	
+                                    {referralBalance !== 0 ? (
+                                        <TouchableOpacity style={styles.card} onPress={() => infoTotal()}>
+                                            <View style={styles.cardText}>
+                                                <Text style={styles.indicationValueText}>{strings.total}</Text>
+                                                <Text style={styles.indicationValue}>{referralBalance}</Text>								
+                                            </View>								
+                                        </TouchableOpacity>
+                                    ) : null }
 
-							<GLOBAL.titleHeader
-								text={this.strings.add_balance}
-								align="flex-start"
-							/> 
-						</View>					
-					) :	(
-						<View style={{flex: 1, flexDirection: "row"}}>
-							<TouchableOpacity 
-								onPress={() =>  this.props.navigation.goBack()} 
-							>
-								<Text style={{fontSize: 20, paddingLeft: 20, paddingTop: 20, fontWeight: "bold"}}>X</Text>
-							</TouchableOpacity>
-							<View style={{ 
-								position: 'absolute', 
-								width: Dimensions.get('window').width, 
-								justifyContent: 'center', 
-								alignItems: 'center'}}
-							>
-								<Text style={{ top: 20, fontWeight: "bold", fontSize: 20 }}>{this.strings.add_balance}</Text>
-							</View>
-						</View>
-					)}
+                                    {cumulated_balance_monthly !== 0 ? (
+                                        <TouchableOpacity style={styles.card} onPress={() => infoMonthly()}>						
+                                            <View style={styles.cardText}>
+                                                <Text style={styles.indicationValueText}>{strings.cumulated_balance_monthly}</Text>
+                                                <Text style={styles.indicationValue}>{cumulated_balance_monthly}</Text>								
+                                            </View>								
+                                        </TouchableOpacity>
+                                    ) : null }
+                                </View>					
+                            </View>
+                        ) : null }
+                    </View>
 
-					{/* flex 4/10 */}
-					<View style={{flex: 4, marginTop: 5}}>
-						<View style={{flex: 1, paddingHorizontal: 20, marginBottom: 10}}>
-							<View style={{ justifyContent: 'center', alignItems: 'center'}}>
-								<Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
-								<Text style={styles.currentValue}>{this.state.currentBalance}</Text>
-							</View>
-						
-							{this.state.isCustomIndicationEnabled ? (
-								<View style={styles.indicationContainer}>
-									<Text style={[styles.currentValueText, {marginBottom: 10, marginTop: 10}]}>{this.state.program_name}</Text>
-									<View style={styles.cardContainer}>	
-										{this.state.referralBalance !== 0 ? (
-											<TouchableOpacity style={styles.card} onPress={() => this.infoTotal()}>
-												<View style={styles.cardText}>
-													<Text style={styles.indicationValueText}>{this.strings.total}</Text>
-													<Text style={styles.indicationValue}>{this.state.referralBalance}</Text>								
-												</View>								
-											</TouchableOpacity>
-										) : null }
+                    {addBalanceActive ? (
+                        <View style={{flex: 1, marginTop: 20}}>
+                            <View style={{marginTop: 10}}>
+                                <Text style={styles.formValueTransfer}>{strings.add_balance_msg}</Text>
+                                <View style={styles.form}>
+                                    <TextInput
+                                        style={{fontSize: 16, paddingLeft: 10}}
+                                        keyboardType='numeric'
+                                        placeholder={'0,00'}
+                                        onChangeText={ text => setTotalToAddBalance(text) }
+                                        value={totalToAddBalance ? String(totalToAddBalance) : null}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                    ) : ( null ) }
+                    
+                    <ScrollView>							
+                        {
+                            addBalanceActive && (
+                                (GLOBAL.type == "user" && settings.prepaid_billet_user == "1") ||
+                                (GLOBAL.type == "provider" && settings.prepaid_billet_provider == "1")
+                            )
+                        ? (
+                            <TouchableOpacity
+                                style={styles.listTypes}
+                                onPress={() => {
+                                    alertAddBalanceBillet();
+                                }}
+                            >
+                                <View style={{ flex: 0.2 }}>
+                                    <Icon name="barcode" size={40} />
+                                </View>
 
-										{this.state.cumulated_balance_monthly !== 0 ? (
-											<TouchableOpacity style={styles.card} onPress={() => this.infoMonthly()}>						
-												<View style={styles.cardText}>
-													<Text style={styles.indicationValueText}>{this.strings.cumulated_balance_monthly}</Text>
-													<Text style={styles.indicationValue}>{this.state.cumulated_balance_monthly}</Text>								
-												</View>								
-											</TouchableOpacity>
-										) : null }
-									</View>					
-								</View>
-							) : null }
-						</View>
+                                <View style={{ flex: 0.7 }}>
+                                    <Text style={{ fontWeight: 'bold' }}>{strings.pay_with_billet}</Text>
+                                </View>
 
-						{this.state.addBalanceActive ? (
-							<View style={{flex: 1, marginTop: 20}}>
-								<View style={{marginTop: 10}}>
-									<Text style={styles.formValueTransfer}>{this.strings.add_balance_msg}</Text>
-									<View style={styles.form}>
-										<TextInput
-											style={{fontSize: 16, paddingLeft: 10}}
-											keyboardType='numeric'
-											placeholder={'0,00'}
-											onChangeText={text => this.setState({ totalToAddBalance: text })}
-											value={this.state.totalToAddBalance ? String(this.state.totalToAddBalance) : null}
-										/>
-									</View>
-								</View>
-							</View>
-						) : ( null ) }
-						
-						<ScrollView>							
-							{
-								this.state.addBalanceActive && (
-									(GLOBAL.type == "user" && this.state.settings.prepaid_billet_user == "1") ||
-									(GLOBAL.type == "provider" && this.state.settings.prepaid_billet_provider == "1")
-								)
-							? (
-								<TouchableOpacity
-									style={styles.listTypes}
-									onPress={() => {
-										this.alertAddBalanceBillet();
-									}}
-								>
-									<View style={{ flex: 0.2 }}>
-										<Icon name="barcode" size={40} />
-									</View>
-
-									<View style={{ flex: 0.7 }}>
-										<Text style={{ fontWeight: 'bold' }}>{this.strings.pay_with_billet}</Text>
-									</View>
-
-								</TouchableOpacity>
-							) : ( null ) }
+                            </TouchableOpacity>
+                        ) : ( null ) }
 
 
-							{/* Add card button */}
-							{
-								this.state.addBalanceActive && (
-									(GLOBAL.type == "user" && this.state.settings.prepaid_card_user == "1") ||
-									(GLOBAL.type == "provider" && this.state.settings.prepaid_card_provider == "1") 
-								)
-							? (
-									<View style={{ flex: 1 }}>
-									<TouchableOpacity
-										style={styles.listTypes}
-										onPress={() => {
-											this.goToAddCardScreen();
-										}}
-									>
-										<View style={{ flex: 0.2 }}>
-											<Icon name="credit-card" size={40} />
-										</View>
+                        {/* Add card button */}
+                        {
+                            addBalanceActive && (
+                                (GLOBAL.type == "user" && settings.prepaid_card_user == "1") ||
+                                (GLOBAL.type == "provider" && settings.prepaid_card_provider == "1") 
+                            )
+                        ? (
+                                <View style={{ flex: 1 }}>
+                                <TouchableOpacity
+                                    style={styles.listTypes}
+                                    onPress={() => {
+                                        goToAddCardScreen();
+                                    }}
+                                >
+                                    <View style={{ flex: 0.2 }}>
+                                        <Icon name="credit-card" size={40} />
+                                    </View>
 
-										<View style={{ flex: 0.7 }}>
-											<Text style={{ fontWeight: 'bold' }}>{this.strings.manage_cards}</Text>
-										</View>
-									</TouchableOpacity>
+                                    <View style={{ flex: 0.7 }}>
+                                        <Text style={{ fontWeight: 'bold' }}>{strings.manage_cards}</Text>
+                                    </View>
+                                </TouchableOpacity>
 
-									<FlatList
-										style={{ marginBottom: 30 }}
-										data={this.state.cards}
-										renderItem={({ item }) => (
-											<TouchableOpacity 
-												style={styles.listTypes}
-												onPress={() => {
-													this.alertAddBalanceCard(item);
-												}}
-											>
-												<View style={{ flex: 0.2 }}>
-													{!item.card_type || item.card_type == "unknown" ? (
-														<Icon name="credit-card" size={40} />
-													) : (
-														<Image source={this.arrayIconsType[item.card_type]}
-															style={{
-															width: 40,
-															height: 28,
-															resizeMode: "contain"
-														}} />
-													)}
-												</View>
+                                <FlatList
+                                    style={{ marginBottom: 30 }}
+                                    data={cards}
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity 
+                                            style={styles.listTypes}
+                                            onPress={() => {
+                                                alertAddBalanceCard(item);
+                                            }}
+                                        >
+                                            <View style={{ flex: 0.2 }}>
+                                                {!item.card_type || item.card_type == "unknown" ? (
+                                                    <Icon name="credit-card" size={40} />
+                                                ) : (
+                                                    <Image source={arrayIconsType[item.card_type]}
+                                                        style={{
+                                                        width: 40,
+                                                        height: 28,
+                                                        resizeMode: "contain"
+                                                    }} />
+                                                )}
+                                            </View>
 
-												<View style={{ flex: 0.7 }}>
-													<Text style={{ fontWeight: 'bold' }}>**** **** **** {item.last_four}</Text>
-												</View>
+                                            <View style={{ flex: 0.7 }}>
+                                                <Text style={{ fontWeight: 'bold' }}>**** **** **** {item.last_four}</Text>
+                                            </View>
 
-											</TouchableOpacity>
-										)}
-										keyExtractor={(item, index) => `${index}`}
-									/>
-								</View>
-							) : ( null ) }
-						</ScrollView>
-					</View>	
-				</ScrollView>	
-			</View>		
-        )
-    }
+                                        </TouchableOpacity>
+                                    )}
+                                    keyExtractor={(item, index) => `${index}`}
+                                />
+                            </View>
+                        ) : ( null ) }
+                    </ScrollView>
+                </View>	
+            </ScrollView>	
+        </View>		
+    )
 }
 
 const styles = StyleSheet.create({
