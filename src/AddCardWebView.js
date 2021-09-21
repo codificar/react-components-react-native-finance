@@ -4,7 +4,7 @@ import Toolbar from './Functions/Toolbar'
 import TitleHeader from './Functions/TitleHeader'
 
 import { WebView } from 'react-native-webview';
-import { useIsFocused } from "@react-navigation/native";
+import { NavigationEvents } from "react-navigation";
 
 import { 
     View, 
@@ -30,17 +30,10 @@ const AddCardWebView = (props) => {
         }
     }
 
-    const isVisible = useIsFocused();
     const [webviewUrl, setWebviewUrl] = useState('');
     
 
-    api = new Api();
-
-    useEffect(() => {
-        if(isVisible) {
-            getUrl();
-        }
-    }, [isVisible]);
+    const api = new Api();
 
     const getUrl = () => {
         var url = GLOBAL.appUrl + "/libs/gateways/juno/add_card";
@@ -52,6 +45,11 @@ const AddCardWebView = (props) => {
 
     return (
         <View style={styles.container}>
+            <NavigationEvents
+                onWillFocus={() => {
+                    getUrl();
+                }}
+            />
             <Toolbar
                 back={true}
                 handlePress={() => props.navigation.goBack()}
