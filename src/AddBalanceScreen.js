@@ -61,14 +61,15 @@ const AddBalanceScreen = (props) => {
     const [cumulated_balance_monthly, setCumulated_balance_monthly] = useState(0);
     const [isCustomIndicationEnabled, setIsCustomIndicationEnabled] = useState(false);
     const [program_name, setProgram_name] = useState("");
+    const [addCardIsWebview, setAddCardIsWebview] = useState("");
+    
     const [settings, setSettings] = useState({
         prepaid_min_billet_value: "0",
         prepaid_tax_billet: "0",
         prepaid_billet_user: "0",
         prepaid_billet_provider: "0",
         prepaid_card_user: "0",
-        prepaid_card_provider: "0",
-        add_card_is_webview: false
+        prepaid_card_provider: "0"
         
     });
 
@@ -147,7 +148,6 @@ const AddBalanceScreen = (props) => {
                 } else if(GLOBAL.type == "provider") {
                     isBalanceActive = json.settings.prepaid_billet_provider == "1" || json.settings.prepaid_card_provider == "1" ? true : false;
                 }
-
                 setCards(json.cards);
                 setCurrentBalance(json.current_balance);
                 setSettings(json.settings);
@@ -156,6 +156,7 @@ const AddBalanceScreen = (props) => {
                 setCumulated_balance_monthly(json.cumulated_balance_monthly);
                 setIsCustomIndicationEnabled(json.settings.indication_settings ? json.settings.indication_settings.isCustomIndicationEnabled : false);
                 setProgram_name(json.settings.indication_settings ? json.settings.indication_settings.program_name : false);
+                setAddCardIsWebview(json.add_card_is_webview);
             }
         })
         .catch((error) => {
@@ -290,7 +291,7 @@ const AddBalanceScreen = (props) => {
     }
 
     const goToAddCardScreen = () => {
-        const screen = settings.add_card_is_webview ? 'AddCardWebView' : 'AddCardScreenLib';
+        const screen = addCardIsWebview  ? 'AddCardWebView' : 'AddCardScreenLib';
         props.navigation.navigate(screen,
             {
                 originScreen: 'AddBalanceScreen',
