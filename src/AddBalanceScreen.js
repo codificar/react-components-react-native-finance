@@ -310,7 +310,6 @@ const AddBalanceScreen = (props) => {
             {!GLOBAL.navigation_v5 ? (
                 <NavigationEvents
                     onWillFocus={() => {
-                        alert("1111");
                         getCardsAndBalanceInfo();
                     }}
                 />
