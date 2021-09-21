@@ -5,13 +5,17 @@ import TitleHeader from './Functions/TitleHeader'
 
 import { WebView } from 'react-native-webview';
 import { NavigationEvents } from "react-navigation";
+import { useIsFocused } from "@react-navigation/native";
+import Loader from "./Functions/Loader"
 
 import { 
     View, 
     BackHandler,
     TouchableOpacity,
     TextInput,
-    StyleSheet
+    StyleSheet,
+    ActivityIndicator,
+    Text
 } from 'react-native';
 import Api from "./Functions/Api";
 import GLOBAL from './Functions/Global.js';
@@ -31,9 +35,18 @@ const AddCardWebView = (props) => {
     }
 
     const [webviewUrl, setWebviewUrl] = useState('');
-    
+    const [isLoading, setIsLoading] = useState(true);
 
     const api = new Api();
+
+    if(GLOBAL.navigation_v5) {
+        const isVisible = useIsFocused();
+        useEffect(() => {
+            if(isVisible) {
+                getUrl();
+            }
+        }, [isVisible]);
+    }
 
     const getUrl = () => {
         var url = GLOBAL.appUrl + "/libs/gateways/juno/add_card";
@@ -45,11 +58,16 @@ const AddCardWebView = (props) => {
 
     return (
         <View style={styles.container}>
-            <NavigationEvents
-                onWillFocus={() => {
-                    getUrl();
-                }}
-            />
+            {!GLOBAL.navigation_v5 ? (
+                <NavigationEvents
+                    onWillFocus={() => {
+                        getUrl();
+                    }}
+                />
+            ) : null}
+
+            <Loader loading={isLoading} message={strings.loading_message} />
+            
             <Toolbar
                 back={true}
                 handlePress={() => props.navigation.goBack()}
@@ -61,6 +79,7 @@ const AddCardWebView = (props) => {
                     scalesPageToFit={false}
                     javaScriptEnabled
                     source={{ uri: webviewUrl }}
+                    onLoad={() => setIsLoading(false)}
                     onNavigationStateChange={(event) => {
                         //check if url is diff of original url (card is added)
                         //quando troca de url significa que o cartao foi adicionado.

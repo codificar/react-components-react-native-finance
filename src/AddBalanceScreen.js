@@ -24,7 +24,7 @@ import Api from "./Functions/Api";
 import Loader from "./Functions/Loader"
 import { NavigationEvents } from "react-navigation";
 
-//import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 import Toast from "./Functions/Toast";
 
@@ -42,13 +42,13 @@ const AddBalanceScreen = (props) => {
 
     GLOBAL.lang = GLOBAL.lang ? GLOBAL.lang : props.lang;
     GLOBAL.color = GLOBAL.color ? GLOBAL.color : props.PrimaryButton;
+    GLOBAL.navigation_v5 = GLOBAL.navigation_v5 ? GLOBAL.navigation_v5 : props.navigation_v5;
 
     GLOBAL.appUrl = GLOBAL.appUrl ? GLOBAL.appUrl : props.appUrl;
     GLOBAL.id = GLOBAL.id ? GLOBAL.id : props.id;
     GLOBAL.token = GLOBAL.token ? GLOBAL.token : props.token;
     GLOBAL.type = GLOBAL.type ? GLOBAL.type : props.type;
 
-    //const isVisible = useIsFocused();
     const [totalToAddBalance, setTotalToAddBalance] = useState("");
     const [cards, setCards] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -97,11 +97,15 @@ const AddBalanceScreen = (props) => {
         }
     }
 
-    /*useEffect(() => {
-        if(isVisible) {
-            getCardsAndBalanceInfo();
-        }
-    }, [isVisible]);*/
+    if(GLOBAL.navigation_v5) {
+        const isVisible = useIsFocused();
+        useEffect(() => {
+            if(isVisible) {
+                getCardsAndBalanceInfo();
+            }
+        }, [isVisible]);
+    }
+    
 
     useEffect(() => {
         const backAction = () => {
@@ -303,12 +307,14 @@ const AddBalanceScreen = (props) => {
     
     return (
         <View style={[styles.container]}>
-            <NavigationEvents
-                onWillFocus={() => {
-                    alert("1111");
-                    getCardsAndBalanceInfo();
-                }}
-            />
+            {!GLOBAL.navigation_v5 ? (
+                <NavigationEvents
+                    onWillFocus={() => {
+                        alert("1111");
+                        getCardsAndBalanceInfo();
+                    }}
+                />
+            ) : null}
             <Modal
                 animationType="slide"
                 transparent={true}

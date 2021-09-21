@@ -4,5 +4,6 @@ module.exports = {
     appUrl: null,
     id: null,
     token: null,
-    type: null
+    type: null,
+    navigation_v5: null
 }; 
