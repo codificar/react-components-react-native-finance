@@ -22,8 +22,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Images from "./img/Images";
 import Api from "./Functions/Api";
 import Loader from "./Functions/Loader"
+import { NavigationEvents } from "react-navigation";
 
-import { useIsFocused } from "@react-navigation/native";
+//import { useIsFocused } from "@react-navigation/native";
 
 import Toast from "./Functions/Toast";
 
@@ -47,7 +48,7 @@ const AddBalanceScreen = (props) => {
     GLOBAL.token = GLOBAL.token ? GLOBAL.token : props.token;
     GLOBAL.type = GLOBAL.type ? GLOBAL.type : props.type;
 
-    const isVisible = useIsFocused();
+    //const isVisible = useIsFocused();
     const [totalToAddBalance, setTotalToAddBalance] = useState("");
     const [cards, setCards] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -96,11 +97,11 @@ const AddBalanceScreen = (props) => {
         }
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         if(isVisible) {
             getCardsAndBalanceInfo();
         }
-    }, [isVisible]);
+    }, [isVisible]);*/
 
     useEffect(() => {
         const backAction = () => {
@@ -115,6 +116,8 @@ const AddBalanceScreen = (props) => {
     
         return () => backHandler.remove();
     }, []);
+
+  
 
 
     /**
@@ -300,6 +303,12 @@ const AddBalanceScreen = (props) => {
     
     return (
         <View style={[styles.container]}>
+            <NavigationEvents
+                onWillFocus={() => {
+                    alert("1111");
+                    getCardsAndBalanceInfo();
+                }}
+            />
             <Modal
                 animationType="slide"
                 transparent={true}
