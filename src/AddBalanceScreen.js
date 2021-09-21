@@ -67,7 +67,8 @@ const AddBalanceScreen = (props) => {
         prepaid_billet_user: "0",
         prepaid_billet_provider: "0",
         prepaid_card_user: "0",
-        prepaid_card_provider: "0"
+        prepaid_card_provider: "0",
+        add_card_is_webview: false
         
     });
 
@@ -289,7 +290,8 @@ const AddBalanceScreen = (props) => {
     }
 
     const goToAddCardScreen = () => {
-        props.navigation.navigate('AddCardWebView',
+        const screen = settings.add_card_is_webview ? 'AddCardWebView' : 'AddCardScreenLib';
+        props.navigation.navigate(screen,
             {
                 originScreen: 'AddBalanceScreen',
                 cards: cards
