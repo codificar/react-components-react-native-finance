@@ -266,7 +266,7 @@ const AddBalanceScreen = (props) => {
             Toast.showToast(strings.please_digit_value + prepaidMinValue);
         }
     }
-    const alertAddBalanceCard = () => {
+    const alertAddBalanceCard = (card) => {
         //Valor a adicionar formatado (convertido em float). Remove as virgulas e substitui por ponto.
         var valueToAdd = parseFloat(totalToAddBalance.toString().replace(',', '.')).toFixed(2);
 
