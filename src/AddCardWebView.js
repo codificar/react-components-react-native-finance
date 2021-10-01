@@ -50,7 +50,7 @@ const AddCardWebView = (props) => {
 
     const getUrl = () => {
         var url = GLOBAL.appUrl + "/libs/gateways/juno/add_card";
-        url += "?holder_type=user";
+        url += "?holder_type=" + GLOBAL.type;
         url += "&holder_id=" + GLOBAL.id;
         url += "&holder_token=" + GLOBAL.token;
         setWebviewUrl(url);
