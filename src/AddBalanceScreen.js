@@ -194,7 +194,7 @@ const AddBalanceScreen = (props) => {
                     Toast.showToast(json.error);
                 }
                 else {
-                    Toast.showToast(strings);
+                    Toast.showToast(strings.card_refused);
                 }
             }
         })

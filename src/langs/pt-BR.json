@@ -71,5 +71,6 @@
 	"in_card": "no cartão",
 	"billet_copied": "Boleto copiado com sucesso!",
 	"new_billet_success": "Boleto gerado com sucesso. Ele foi enviado para o seu email.",
-	"click_to_download": "Clique aqui para baixar"
+	"click_to_download": "Clique aqui para baixar",
+	"card_refused": "Cartão Recusado"
   }

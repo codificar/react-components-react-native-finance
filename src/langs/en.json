@@ -71,5 +71,6 @@
 	"in_card": "In the card",
 	"billet_copied": "Boleto copied successfully!",
 	"new_billet_success": "Boleto generated successfully. It was sent to your email.",
-	"click_to_download": "Click here to download"
+	"click_to_download": "Click here to download",
+	"card_refused": "Card Refused"
   }
