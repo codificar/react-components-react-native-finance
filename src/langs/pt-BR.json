@@ -72,5 +72,8 @@
 	"billet_copied": "Boleto copiado com sucesso!",
 	"new_billet_success": "Boleto gerado com sucesso. Ele foi enviado para o seu email.",
 	"click_to_download": "Clique aqui para baixar",
-	"card_refused": "Cartão Recusado"
+	"card_refused": "Cartão Recusado",
+	"confirm_pix_value": "Tem certeza que deseja pagar com pix o valor de",
+	"pay_with_pix": "Pagar com Pix",
+	"copied": "Código copiado com sucesso!"
   }

@@ -43,7 +43,7 @@
 	"digit_value": "Digit a value",
 	"add_balance_msg": "Add balance",
 	"pay_with_billet": "Pay with billet",
-	"please_digit_value": "Please, digit a value more than",
+	"please_digit_value": "Please, digit a value more than ",
 	"addCardTitle": "Add Card",
 	"name": "Name",
 	"namePlaceholder": "Digit the card name",
@@ -72,5 +72,8 @@
 	"billet_copied": "Boleto copied successfully!",
 	"new_billet_success": "Boleto generated successfully. It was sent to your email.",
 	"click_to_download": "Click here to download",
-	"card_refused": "Card Refused"
+	"card_refused": "Card Refused",
+	"confirm_pix_value": "Are you sure you want to pay with pix the value of",
+	"pay_with_pix": "Pay With Pix",
+	"copied": "Code copied successfully!"
   }
