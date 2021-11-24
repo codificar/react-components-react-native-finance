@@ -7,6 +7,8 @@ const Images = {
     icon_ub_creditcard_visa: require("./ub__creditcard_visa.png"),
     icon_ub_creditcard_elo: require("./elo.png"),
     terra_card: require('./cartao_terra.png'),
+    icon_pix: require("./pix.png"),
+    icon_pix_bc: require("./pix_bc.png")
   };
   
   export default Images;

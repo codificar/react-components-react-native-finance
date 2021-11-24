@@ -5,5 +5,6 @@ module.exports = {
     id: null,
     token: null,
     type: null,
-    navigation_v5: null
+    navigation_v5: null,
+    pix_transaction_id: null
 }; 
