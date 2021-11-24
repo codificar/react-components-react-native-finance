@@ -203,6 +203,42 @@ const AddBalanceScreen = (props) => {
         });
             
     }
+
+    const addBalancePix = (valueToAdd) => {
+        setIsLoading(true);
+        api.AddBilletBalance(
+            GLOBAL.appUrl,
+            GLOBAL.id, 
+            GLOBAL.token,
+            valueToAdd,
+            GLOBAL.type
+        )
+        .then((json) => {
+            if(json.success) {
+                setIsLoading(false);
+                GLOBAL.pix_transaction_id = json.transaction_id;
+                props.navigation.navigate('PixScreen',
+                    {
+                        originScreen: 'AddBalanceScreen'
+                    }
+                );
+            } else {
+                setIsLoading(false);
+                if(json.error){
+                    Toast.showToast(json.error);
+                }
+                else {
+
+                    Toast.showToast(strings.billet_error);
+                }
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+        
+    }
       
     const addBalanceBillet = (valueToAdd) => {
         setIsLoading(true);
@@ -238,9 +274,35 @@ const AddBalanceScreen = (props) => {
         });
     }
 
+    //Valor a adicionar convertido em float. Remove as virgulas e substitui por ponto.
+    const getFloatValue = () => {
+        return parseFloat(totalToAddBalance.toString().replace(',', '.')).toFixed(2);
+    }
+
+    const alertAddBalancePix = () => {
+        var valueToAdd = getFloatValue();
+
+        var msg = strings.confirm_pix_value + " " + valueToAdd + "?";
+        var pixMinValue = 1.5; // #todo: setting from api
+        
+        if(totalToAddBalance && valueToAdd && valueToAdd >= pixMinValue) {
+
+            Alert.alert(
+                strings.pay_with_pix,
+                msg,
+                [
+                    { text: strings.cancel, style: "cancel" },
+                    { text: strings.yes, onPress: () => addBalancePix(valueToAdd) }
+                ],
+                { cancelable: false }
+            );
+        } else {
+            Toast.showToast(strings.please_digit_value + pixMinValue);
+        }
+    }
+
     const alertAddBalanceBillet = () => {
-        //Valor a adicionar formatado (convertido em float). Remove as virgulas e substitui por ponto.
-        var valueToAdd = parseFloat(totalToAddBalance.toString().replace(',', '.')).toFixed(2);
+        var valueToAdd = getFloatValue();
 
         var msg = strings.confirm_billet_value + " " + valueToAdd + "?";
         if(parseFloat(settings.prepaid_tax_billet) > 0) {
@@ -267,8 +329,7 @@ const AddBalanceScreen = (props) => {
         }
     }
     const alertAddBalanceCard = (card) => {
-        //Valor a adicionar formatado (convertido em float). Remove as virgulas e substitui por ponto.
-        var valueToAdd = parseFloat(totalToAddBalance.toString().replace(',', '.')).toFixed(2);
+        var valueToAdd = getFloatValue();
 
         if(totalToAddBalance && valueToAdd && valueToAdd > 0) {
             Alert.alert(
@@ -434,7 +495,35 @@ const AddBalanceScreen = (props) => {
                         </View>
                     ) : ( null ) }
                     
-                    <ScrollView>							
+                    <ScrollView>
+                        {
+                            addBalanceActive && (
+                                (GLOBAL.type == "user" && settings.prepaid_pix_user == "1") ||
+                                (GLOBAL.type == "provider" && settings.prepaid_pix_provider == "1")
+                            )
+                        ? (
+                            <TouchableOpacity
+                                style={styles.listTypes}
+                                onPress={() => {
+                                    alertAddBalancePix();
+                                }}
+                            >
+                                <View style={{ flex: 0.2 }}>
+                                    <Image source={Images.icon_pix}
+                                        style={{
+                                        width: 45,
+                                        height: 45,
+                                        resizeMode: "contain"
+                                    }} />
+                                </View>
+
+                                <View style={{ flex: 0.7 }}>
+                                    <Text style={{ fontWeight: 'bold' }}>{strings.pay_with_pix}</Text>
+                                </View>
+
+                            </TouchableOpacity>
+                        ) : ( null ) }
+                        							
                         {
                             addBalanceActive && (
                                 (GLOBAL.type == "user" && settings.prepaid_billet_user == "1") ||

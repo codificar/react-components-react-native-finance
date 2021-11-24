@@ -7,6 +7,7 @@ import FilterScreen from './src/FilterScreen'
 import AddBalanceScreen from './src/AddBalanceScreen'
 import AddCardScreenLib from './src/AddCardScreenLib'
 import AddCardWebView from './src/AddCardWebView'
+import PixScreen from './src/PixScreen'
 
 const screens = {
     EarningsPeriodScreen: { screen: EarningsPeriodScreen },
@@ -14,7 +15,8 @@ const screens = {
     FilterScreen: { screen: FilterScreen },
     AddBalanceScreen: { screen: AddBalanceScreen },
     AddCardScreenLib: { screen: AddCardScreenLib },
-    AddCardWebView: { screen: AddCardWebView }
+    AddCardWebView: { screen: AddCardWebView },
+    PixScreen: { screen: PixScreen }
 };
 
 export {
@@ -24,6 +26,7 @@ export {
     FilterScreen,
     AddBalanceScreen,
     EarningsPeriodScreen,
+    PixScreen
 }
 
 export default screens;
