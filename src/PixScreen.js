@@ -52,7 +52,6 @@ const PixScreen = (props) => {
     const [copyAndPaste, setCopyAndPaste] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
     const [isSubscribed, setIsSubscribed] = useState(false);
-    const [callAlertPaid, setCallAlertPaid] = useState(true);
 
     const appState = useRef(AppState.currentState);
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
@@ -71,22 +70,21 @@ const PixScreen = (props) => {
         }, [isVisible]);
     }
 
-    // if is from request, so can't go back
-    if(!props.is_request) {
-        useEffect(() => {
-            const backAction = () => {
-                goBack();
-                return true;
-            };
+   
+    useEffect(() => {
+        const backAction = () => {
+            goBack();
+            return true;
+        };
         
-            const backHandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            backAction
-            );
+        const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+        );
         
-            return () => backHandler.remove();
-        }, []);
-    }
+        return () => backHandler.remove();
+    }, []);
+    
     
     // caso saia do app e volte depois, pode ser q o pagamento foi confirmado mas o usuario nao viu, entao chama api para verificar
     useEffect(() => {
@@ -132,6 +130,9 @@ const PixScreen = (props) => {
                 channel: "pix." + GLOBAL.pix_transaction_id
             });
             socket.disconnect();
+            socket.removeAllListeners("pixUpate");
+            socket.removeAllListeners("pix");
+            socket.removeAllListeners("pix." + GLOBAL.pix_transaction_id); 
         }
     }
 
@@ -141,7 +142,7 @@ const PixScreen = (props) => {
             GLOBAL.id, 
             GLOBAL.token, 
             GLOBAL.pix_transaction_id,
-            props.request_id,
+            null,
             GLOBAL.type
         )
         .then((json) => {
@@ -169,24 +170,21 @@ const PixScreen = (props) => {
     }
 
     const alertPaid = () => {
-        if(callAlertPaid) {
-            setCallAlertPaid(false);
-            Alert.alert(
-                "Pix",
-                "O seu pagamento Pix foi confirmado!",
-                [
-                    { text: "Confirmar", onPress: () => props.is_request ? props.onPaid(true) : goBack() }
-                ],
-                { cancelable: false }
-            );
-        }
+        unsubscribeSocket(); 
+        Alert.alert(
+            "Pix",
+            "O seu pagamento Pix foi confirmado!",
+            [
+                { text: "Confirmar", onPress: () => goBack() }
+            ],
+            { cancelable: false }
+        );
         
     }
 
     // Quando for sair da tela, chama o unsubscribeSocket
     const goBack = () => {
         GLOBAL.pix_transaction_id = null;
-        unsubscribeSocket(); 
         props.navigation.goBack()
     }
 
@@ -201,13 +199,11 @@ const PixScreen = (props) => {
             ) : null}
             <Loader loading={isLoading} message={strings.loading_message} />
             
-            {/* if is from request, so can't go back */}
-            {!props.is_request ?
-                <Toolbar
-                    back={true}
-                    handlePress={() => goBack() }
-                />
-            : null }
+          
+            <Toolbar
+                back={true}
+                handlePress={() => goBack() }
+            />
         
              {/* Flex vertical of 1/10 */}
             <View style={{flex: 1}}>

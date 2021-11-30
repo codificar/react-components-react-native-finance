@@ -7,15 +7,19 @@ import Loader from "./Functions/Loader"
 import { 
     View, 
     Image,
+    TextInput,
     StyleSheet,
     Text,
+    Clipboard,
+    Button,
     AppState,
     Alert
 } from 'react-native';
 import Api from "./Functions/Api";
+import Toast from "./Functions/Toast";
 import WebSocketServer from "./Functions/socket";
 
-const PixQrCode = (props) => {
+const RequestPix = (props) => {
 
     //Get the lang from props. If hasn't lang in props, default is pt-BR
     var strings = require('./langs/pt-BR.json');
@@ -30,20 +34,27 @@ const PixQrCode = (props) => {
     }
 
     const [isLoading, setIsLoading] = useState(false);
+    const [copyAndPaste, setCopyAndPaste] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
-    const [transactionId, setTransactionId] = useState(0);
-    const [qrCodeBase64, setQrCodeBase64] = useState("");
     const [isSubscribed, setIsSubscribed] = useState(false);
+    const [transactionId, setTransactionId] = useState(0);
+
     const appState = useRef(AppState.currentState);
 
     const socket = WebSocketServer.connect(props.socket_url);
 
     const api = new Api();
 
+
+    const copyClipBoard = () => {
+        Clipboard.setString(copyAndPaste);
+        Toast.showToast(strings.copied);
+    }
+
     /**
      * @description  subscribe scoket
      */
-    const subscribeSocket = (id) => {
+     const subscribeSocket = (id) => {
         if (socket !== null && !isSubscribed) {
             setIsSubscribed(true);
             socket
@@ -77,18 +88,19 @@ const PixQrCode = (props) => {
             props.appUrl,
             props.id, 
             props.token, 
-            props.pix_transaction_id,
+            null,
             props.request_id,
-            "provider" // only provider has qr code screen
+            "user" // only user do pix in a request
         )
         .then((json) => {
+            //console.log(json);
             if(json.success) {
+                setCopyAndPaste(json.copy_and_paste);
                 setFormattedValue(json.formatted_value);
                 if(json && json.paid) {
                     alertPaid();
                 } else {
                     setTransactionId(json.transaction_id);
-                    setQrCodeBase64(json.qr_code_base64);
                     //se for a primeira vez que chama essa api (qtd = 0), entao se inscreve no socket
                     if(qtd == 0) {
                         subscribeSocket(json.transaction_id);
@@ -117,12 +129,11 @@ const PixQrCode = (props) => {
         );
     }
 
-
     return (
         <View style={styles.container}>
 
             <Loader loading={isLoading} message={strings.loading_message} />
-            
+        
              {/* Flex vertical of 1/10 */}
             <View style={{flex: 1}}>
                 <Image source={Images.icon_pix_bc}
@@ -130,26 +141,46 @@ const PixQrCode = (props) => {
                         flex: 1,
                         width: null,
                         height: null,
-                        top: 10,
                         resizeMode: 'contain'
                     }} 
                 />
             </View>
             {/* Flex vertical of 2/10 */}
             <View style={{flex: 2, justifyContent: "center" }}>
-                <Text style={{color: 'grey', textAlign: "center", fontSize: 16, marginHorizontal: 20}}>Peça para o cliente abrir o app bancário, copiar o código disponível no app dele OU ler o Código QR abaixo.</Text>
+                <Text style={{color: 'grey', textAlign: "center", fontSize: 16, marginHorizontal: 20}}>Pague com Pix em qualquer dia e a qualquer hora! O pagamento é instantâneo, prático e pode ser feito em poucos segundos. É rápido e seguro.</Text>
             </View>
 
-             {/* Flex vertical of 6/10 */}
-             <View style={{flex: 6, flexDirection: 'row', alignItems: "center", justifyContent: "center"}}>
-                 {qrCodeBase64 ? 
-                    <Image
-                        source={{ uri: `data:image/png;base64,${qrCodeBase64}`}}
-                        style={{ width: "80%", height: "80%", resizeMode: 'contain'}}
-                    />
-                    :
-                    <Text>QR</Text>
-                }
+             {/* Flex vertical of 1/10 */}
+             <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
+                <Text style={styles.circle}>1</Text>
+                <Text style={styles.text}>Copie o código</Text>
+            </View>
+
+            {/* Flex vertical of 2/10 */}
+            <View style={{flex: 2, alignItems: "center", alignItems: "center"}}>
+                <TextInput
+                    style={styles.input}
+                    selectTextOnFocus={true}
+                    showSoftInputOnFocus={false} 
+                    value={copyAndPaste}
+                />
+                <Button
+                    onPress={() => copyClipBoard()}
+                    title="Copiar Pix"
+                    color={props.color ? props.color : "#2ebdaf"}
+                />
+                
+            </View>
+             {/* Flex vertical of 1/10 */}
+             <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
+                <Text style={styles.circle}>2</Text>
+                <Text style={styles.text}>Abra o app do seu banco e escolha Pix Copia e Cola</Text>
+            </View>
+
+             {/* Flex vertical of 1/10 */}
+             <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
+                <Text style={styles.circle}>3</Text>
+                <Text style={styles.text}>Cole o código, confira as informações e finalize a compra</Text>
             </View>
 
             {/* Flex vertical of 1/10 */}
@@ -181,6 +212,18 @@ const styles = StyleSheet.create({
         marginHorizontal: 6, 
         flexShrink: 1
     },
+    circle: {
+        width: 36,
+        height: 36,
+        borderRadius: 36/2,
+        fontSize: 20,
+        marginLeft: 20,
+        backgroundColor: "#2ebdaf", //pix logo color
+        color: "white",
+        textAlign: "center",
+        paddingTop: 3,
+        fontWeight: "bold"
+    },
     input: {
         borderColor: "gray",
         width: "70%",
@@ -199,4 +242,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default PixQrCode;
+export default RequestPix;
