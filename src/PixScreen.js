@@ -114,9 +114,7 @@ const PixScreen = (props) => {
      * @description  subscribe scoket
      */
     const subscribeSocket = () => {
-        console.log("tentado conectar" + isSubscribed + "  - fim");
         if (socket !== null && !isSubscribed) {
-            console.log('conectado');
             setIsSubscribed(true);
             socket
             .emit('subscribe', {
@@ -147,8 +145,7 @@ const PixScreen = (props) => {
             GLOBAL.type
         )
         .then((json) => {
-            console.log("succes");
-            console.log(json);
+            //console.log(json);
             if(json.success) {
                 setCopyAndPaste(json.copy_and_paste);
                 setFormattedValue(json.formatted_value);
