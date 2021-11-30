@@ -28,6 +28,14 @@ import WebSocketServer from "./Functions/socket";
 
 const PixScreen = (props) => {
 
+    GLOBAL.lang = GLOBAL.lang ? GLOBAL.lang : props.lang;
+    GLOBAL.color = GLOBAL.color ? GLOBAL.color : props.PrimaryButton;
+    GLOBAL.navigation_v5 = GLOBAL.navigation_v5 ? GLOBAL.navigation_v5 : props.navigation_v5;
+    GLOBAL.appUrl = GLOBAL.appUrl ? GLOBAL.appUrl : props.appUrl;
+    GLOBAL.id = GLOBAL.id ? GLOBAL.id : props.id;
+    GLOBAL.token = GLOBAL.token ? GLOBAL.token : props.token;
+    GLOBAL.type = GLOBAL.type ? GLOBAL.type : props.type;
+
     //Get the lang from props. If hasn't lang in props, default is pt-BR
     var strings = require('./langs/pt-BR.json');
     if(GLOBAL.lang) {
@@ -43,7 +51,8 @@ const PixScreen = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [copyAndPaste, setCopyAndPaste] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
-
+    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [callAlertPaid, setCallAlertPaid] = useState(true);
 
     const appState = useRef(AppState.currentState);
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
@@ -57,32 +66,33 @@ const PixScreen = (props) => {
         const isVisible = useIsFocused();
         useEffect(() => {
             if(isVisible) {
-                retrievePix();
-                subscribeSocket();
+                retrievePix(true);
             }
         }, [isVisible]);
     }
 
-    // apertou para voltar backhandler
-    useEffect(() => {
-        const backAction = () => {
-            goBack();
-            return true;
-        };
+    // if is from request, so can't go back
+    if(!props.is_request) {
+        useEffect(() => {
+            const backAction = () => {
+                goBack();
+                return true;
+            };
+        
+            const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+            );
+        
+            return () => backHandler.remove();
+        }, []);
+    }
     
-        const backHandler = BackHandler.addEventListener(
-          "hardwareBackPress",
-          backAction
-        );
-    
-        return () => backHandler.remove();
-    }, []);
-
     // caso saia do app e volte depois, pode ser q o pagamento foi confirmado mas o usuario nao viu, entao chama api para verificar
     useEffect(() => {
         const subscription = AppState.addEventListener("change", nextAppState => {
           if (appState.current.match(/inactive|background/) && nextAppState === "active") {
-            retrievePix();
+            retrievePix(false);
           }
           appState.current = nextAppState;
           setAppStateVisible(appState.current);
@@ -104,9 +114,10 @@ const PixScreen = (props) => {
      * @description  subscribe scoket
      */
     const subscribeSocket = () => {
-
-        if (socket !== null) {
-            console.log('Connecting in pix socket',);
+        console.log("tentado conectar" + isSubscribed + "  - fim");
+        if (socket !== null && !isSubscribed) {
+            console.log('conectado');
+            setIsSubscribed(true);
             socket
             .emit('subscribe', {
                 channel: 'pix.' + GLOBAL.pix_transaction_id,
@@ -126,40 +137,58 @@ const PixScreen = (props) => {
         }
     }
 
-    const retrievePix = () => {
+    const retrievePix = (subSocket) => {
         api.RetrievePix(
             GLOBAL.appUrl,
             GLOBAL.id, 
             GLOBAL.token, 
             GLOBAL.pix_transaction_id,
+            props.request_id,
             GLOBAL.type
         )
         .then((json) => {
-            //console.log(json);
-            setCopyAndPaste(json.copy_and_paste);
-            setFormattedValue(json.formatted_value);
-            if(json && json.paid) {
-                alertPaid();
+            console.log("succes");
+            console.log(json);
+            if(json.success) {
+                setCopyAndPaste(json.copy_and_paste);
+                setFormattedValue(json.formatted_value);
+                if(json && json.paid) {
+                    alertPaid();
+                } else {
+                    GLOBAL.pix_transaction_id = json.transaction_id;
+                    if(subSocket) {
+                        subscribeSocket();
+                    }
+                }
+            } else {
+                console.log("error");
             }
         })
         .catch((error) => {
+            console.log("fail");
+
             console.error(error);
         });
     }
 
     const alertPaid = () => {
-        Alert.alert(
-            "Pix",
-            "O seu pagamento Pix foi confirmado!",
-            [
-                { text: "Confirmar", onPress: () => goBack() }
-            ],
-            { cancelable: false }
-        );
+        if(callAlertPaid) {
+            setCallAlertPaid(false);
+            Alert.alert(
+                "Pix",
+                "O seu pagamento Pix foi confirmado!",
+                [
+                    { text: "Confirmar", onPress: () => props.is_request ? props.onPaid(true) : goBack() }
+                ],
+                { cancelable: false }
+            );
+        }
+        
     }
 
     // Quando for sair da tela, chama o unsubscribeSocket
     const goBack = () => {
+        GLOBAL.pix_transaction_id = null;
         unsubscribeSocket(); 
         props.navigation.goBack()
     }
@@ -169,17 +198,19 @@ const PixScreen = (props) => {
             {!GLOBAL.navigation_v5 ? (
                 <NavigationEvents
                     onWillFocus={() => {
-                        retrievePix();
-                        subscribeSocket();
+                        retrievePix(true);
                     }}
                 />
             ) : null}
             <Loader loading={isLoading} message={strings.loading_message} />
             
-            <Toolbar
-                back={true}
-                handlePress={() => goBack() }
-            />
+            {/* if is from request, so can't go back */}
+            {!props.is_request ?
+                <Toolbar
+                    back={true}
+                    handlePress={() => goBack() }
+                />
+            : null }
         
              {/* Flex vertical of 1/10 */}
             <View style={{flex: 1}}>

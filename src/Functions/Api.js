@@ -116,14 +116,16 @@ export default class Api {
         return fetch(app_url + "/libs/finance/" + type + "/add_pix_balance" + "?" + params, this.get).then((response) => response.json());
     }
 
-    RetrievePix(app_url, id, token, transaction_id, type) {
+    RetrievePix(app_url, id, token, transaction_id, request_id, type) {
         let params = new URLSearchParams({ 
             provider_id: id, 
             user_id: id,
             id: id,
-            token: token
+            token: token,
+            transaction_id: transaction_id,
+            request_id: request_id
         });
-        return fetch(app_url + "/libs/finance/" + type + "/retrieve_pix/" + transaction_id + "?" + params, this.get).then((response) => response.json());
+        return fetch(app_url + "/libs/finance/" + type + "/retrieve_pix" + "?" + params, this.get).then((response) => response.json());
     }
 
 }
