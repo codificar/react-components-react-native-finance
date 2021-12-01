@@ -48,7 +48,8 @@ const AddBalanceScreen = (props) => {
     GLOBAL.id = GLOBAL.id ? GLOBAL.id : props.id;
     GLOBAL.token = GLOBAL.token ? GLOBAL.token : props.token;
     GLOBAL.type = GLOBAL.type ? GLOBAL.type : props.type;
-
+    GLOBAL.socket_url = GLOBAL.socket_url ? GLOBAL.socket_url : props.socket_url;
+    
     const [totalToAddBalance, setTotalToAddBalance] = useState("");
     const [cards, setCards] = useState([]);
     const [isLoading, setIsLoading] = useState(false);

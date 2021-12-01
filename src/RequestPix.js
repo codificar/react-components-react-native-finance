@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 
 import Images from "./img/Images";
 
@@ -12,7 +12,6 @@ import {
     Text,
     Clipboard,
     Button,
-    AppState,
     Alert
 } from 'react-native';
 import Api from "./Functions/Api";
@@ -38,8 +37,6 @@ const RequestPix = (props) => {
     const [formattedValue, setFormattedValue] = useState("");
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [transactionId, setTransactionId] = useState(0);
-
-    const appState = useRef(AppState.currentState);
 
     const socket = WebSocketServer.connect(props.socket_url);
 
@@ -120,10 +117,10 @@ const RequestPix = (props) => {
     const alertPaid = () => {
         unsubscribeSocket();
         Alert.alert(
-            "Pix",
-            "O pagamento Pix foi confirmado!",
+            strings.pix,
+            strings.confirmed_pix,
             [
-                { text: "Confirmar", onPress: () => props.onPaid(true) }
+                { text: strings.confirm, onPress: () => props.onPaid(true) }
             ],
             { cancelable: false }
         );
@@ -147,13 +144,13 @@ const RequestPix = (props) => {
             </View>
             {/* Flex vertical of 2/10 */}
             <View style={{flex: 2, justifyContent: "center" }}>
-                <Text style={{color: 'grey', textAlign: "center", fontSize: 16, marginHorizontal: 20}}>Pague com Pix em qualquer dia e a qualquer hora! O pagamento é instantâneo, prático e pode ser feito em poucos segundos. É rápido e seguro.</Text>
+                <Text style={{color: 'grey', textAlign: "center", fontSize: 16, marginHorizontal: 20}}>{ strings.pix_info }</Text>
             </View>
 
              {/* Flex vertical of 1/10 */}
              <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
                 <Text style={styles.circle}>1</Text>
-                <Text style={styles.text}>Copie o código</Text>
+                <Text style={styles.text}>{ strings.req_pix_info_1}</Text>
             </View>
 
             {/* Flex vertical of 2/10 */}
@@ -174,18 +171,18 @@ const RequestPix = (props) => {
              {/* Flex vertical of 1/10 */}
              <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
                 <Text style={styles.circle}>2</Text>
-                <Text style={styles.text}>Abra o app do seu banco e escolha Pix Copia e Cola</Text>
+                <Text style={styles.text}>{ strings.req_pix_info_2}</Text>
             </View>
 
              {/* Flex vertical of 1/10 */}
              <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
                 <Text style={styles.circle}>3</Text>
-                <Text style={styles.text}>Cole o código, confira as informações e finalize a compra</Text>
+                <Text style={styles.text}>{ strings.req_pix_info_3 }</Text>
             </View>
 
             {/* Flex vertical of 1/10 */}
             <View style={{flex: 1, justifyContent: 'flex-end', alignItems: "center"}}>
-                <Text style={{color: "#222B45",fontSize: 23,fontWeight: "bold"}}>Total: {formattedValue}</Text>
+                <Text style={{color: "#222B45",fontSize: 23,fontWeight: "bold"}}>{strings.total}: {formattedValue}</Text>
             </View>
 
         </View>

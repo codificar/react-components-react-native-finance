@@ -35,6 +35,7 @@ const PixScreen = (props) => {
     GLOBAL.id = GLOBAL.id ? GLOBAL.id : props.id;
     GLOBAL.token = GLOBAL.token ? GLOBAL.token : props.token;
     GLOBAL.type = GLOBAL.type ? GLOBAL.type : props.type;
+    GLOBAL.socket_url = GLOBAL.socket_url ? GLOBAL.socket_url : props.socket_url;
 
     //Get the lang from props. If hasn't lang in props, default is pt-BR
     var strings = require('./langs/pt-BR.json');
@@ -56,7 +57,7 @@ const PixScreen = (props) => {
     const appState = useRef(AppState.currentState);
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
-    const socket = WebSocketServer.connect('https://dev3.motoristaprivado.com.br:8003');
+    const socket = WebSocketServer.connect(GLOBAL.socket_url);
 
     const api = new Api();
     
@@ -172,10 +173,10 @@ const PixScreen = (props) => {
     const alertPaid = () => {
         unsubscribeSocket(); 
         Alert.alert(
-            "Pix",
-            "O seu pagamento Pix foi confirmado!",
+            strings.pix,
+            strings.confirmed_pix,
             [
-                { text: "Confirmar", onPress: () => goBack() }
+                { text: strings.confirm, onPress: () => goBack() }
             ],
             { cancelable: false }
         );
@@ -218,13 +219,13 @@ const PixScreen = (props) => {
             </View>
             {/* Flex vertical of 2/10 */}
             <View style={{flex: 2, justifyContent: "center" }}>
-                <Text style={{color: 'grey', textAlign: "center", fontSize: 16, marginHorizontal: 20}}>Pague com Pix em qualquer dia e a qualquer hora! O pagamento é instantâneo, prático e pode ser feito em poucos segundos. É rápido e seguro.</Text>
+                <Text style={{color: 'grey', textAlign: "center", fontSize: 16, marginHorizontal: 20}}>{strings.pix_info}</Text>
             </View>
 
              {/* Flex vertical of 1/10 */}
              <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
                 <Text style={styles.circle}>1</Text>
-                <Text style={styles.text}>Copie o código</Text>
+                <Text style={styles.text}>{strings.pix_info_1}</Text>
             </View>
 
             {/* Flex vertical of 2/10 */}
@@ -245,18 +246,18 @@ const PixScreen = (props) => {
              {/* Flex vertical of 1/10 */}
              <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
                 <Text style={styles.circle}>2</Text>
-                <Text style={styles.text}>Abra o app do seu banco e escolha Pix Copia e Cola</Text>
+                <Text style={styles.text}>{strings.pix_info_2}</Text>
             </View>
 
              {/* Flex vertical of 1/10 */}
              <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
                 <Text style={styles.circle}>3</Text>
-                <Text style={styles.text}>Cole o código, confira as informações e finalize a compra</Text>
+                <Text style={styles.text}>{strings.pix_info_3}</Text>
             </View>
 
             {/* Flex vertical of 1/10 */}
             <View style={{flex: 1, justifyContent: 'flex-end', alignItems: "center"}}>
-                <Text style={{color: "#222B45",fontSize: 23,fontWeight: "bold"}}>Total: {formattedValue}</Text>
+                <Text style={{color: "#222B45",fontSize: 23,fontWeight: "bold"}}>{strings.total}: {formattedValue}</Text>
             </View>
 
         </View>

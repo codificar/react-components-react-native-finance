@@ -75,5 +75,15 @@
 	"card_refused": "Card Refused",
 	"confirm_pix_value": "Are you sure you want to pay with pix the value of",
 	"pay_with_pix": "Pay With Pix",
-	"copied": "Code copied successfully!"
+	"copied": "Code copied successfully!",
+	"pix": "Pix",
+	"confirmed_pix": "Pix payment has been confirmed!",
+	"pix_info": "Pay with Pix any day, anytime! Payment is instant, convenient and can be done in just a few seconds. It's fast and secure.",
+	"req_pix_info_1": "Copy the code below OR scan the QR code on the provider's APP",
+	"req_pix_info_2": "Open your bank's app and choose Pix Copy and Paste OR QR code",
+	"req_pix_info_3": "Paste the code or read the QR code on the provider's app, check the information and complete the payment",
+	"pix_info_1": "Copy the code below",
+	"pix_info_2": "Open your bank's app and choose Pix Copia e Cola",
+	"pix_info_3": "Paste the code, check the information and complete the payment",
+	"pix_qr_info": "Ask the customer to open the banking app, copy the code available in their app OR read the QR Code below."
   }

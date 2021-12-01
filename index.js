@@ -39,6 +39,8 @@ class Finance extends Component {
         GLOBAL.id = this.props.id;
         GLOBAL.token = this.props.token;
         GLOBAL.type = this.props.type;
+        GLOBAL.socket_url = GLOBAL.socket_url ? GLOBAL.socket_url : props.socket_url;
+
 
         this.api = new Api();
 

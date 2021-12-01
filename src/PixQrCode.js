@@ -108,10 +108,10 @@ const PixQrCode = (props) => {
     const alertPaid = () => {
         unsubscribeSocket();
         Alert.alert(
-            "Pix",
-            "O pagamento Pix foi confirmado!",
+            strings.pix,
+            strings.confirmed_pix,
             [
-                { text: "Confirmar", onPress: () => props.onPaid(true) }
+                { text: strings.confirm, onPress: () => props.onPaid(true) }
             ],
             { cancelable: false }
         );
@@ -137,7 +137,7 @@ const PixQrCode = (props) => {
             </View>
             {/* Flex vertical of 2/10 */}
             <View style={{flex: 2, justifyContent: "center" }}>
-                <Text style={{color: 'grey', textAlign: "center", fontSize: 16, marginHorizontal: 20}}>Peça para o cliente abrir o app bancário, copiar o código disponível no app dele OU ler o Código QR abaixo.</Text>
+                <Text style={{color: 'grey', textAlign: "center", fontSize: 16, marginHorizontal: 20}}>{strings.pix_qr_info}</Text>
             </View>
 
              {/* Flex vertical of 6/10 */}
@@ -148,13 +148,13 @@ const PixQrCode = (props) => {
                         style={{ width: "80%", height: "80%", resizeMode: 'contain'}}
                     />
                     :
-                    <Text>QR</Text>
+                    <Text>QR CODE</Text>
                 }
             </View>
 
             {/* Flex vertical of 1/10 */}
             <View style={{flex: 1, justifyContent: 'flex-end', alignItems: "center"}}>
-                <Text style={{color: "#222B45",fontSize: 23,fontWeight: "bold"}}>Total: {formattedValue}</Text>
+                <Text style={{color: "#222B45",fontSize: 23,fontWeight: "bold"}}>{strings.total}: {formattedValue}</Text>
             </View>
 
         </View>
