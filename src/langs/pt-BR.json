@@ -90,5 +90,6 @@
 	"check_payment": "Verificar pagamento",
 	"copy_pix": "Copiar Pix",
 	"attention": "Atenção",
-	"pix_payment": "Pagamento Pix"
+	"pix_payment": "Pagamento Pix",
+	"payment_not_confirmed": "Não identificamos o pagamento ainda."
 }

@@ -90,5 +90,6 @@
 	"check_payment": "Check Payment",
 	"copy_pix": "Copy Pix",
 	"attention": "Attention",
-	"pix_payment": "Pix Payment"
+	"pix_payment": "Pix Payment",
+	"payment_not_confirmed": "Payment not confirmed yet."
   }

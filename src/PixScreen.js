@@ -15,7 +15,8 @@ import {
     Text,
     Clipboard,
     AppState,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 import Api from "./Functions/Api";
 import GLOBAL from './Functions/Global.js';
@@ -62,7 +63,7 @@ const PixScreen = (props) => {
         const isVisible = useIsFocused();
         useEffect(() => {
             if(isVisible) {
-                retrievePix(true);
+                retrievePix(true, false);
             }
         }, [isVisible]);
     }
@@ -87,7 +88,7 @@ const PixScreen = (props) => {
     useEffect(() => {
         const subscription = AppState.addEventListener("change", nextAppState => {
           if (appState.current.match(/inactive|background/) && nextAppState === "active") {
-            retrievePix(false);
+            retrievePix(false, false);
           }
           appState.current = nextAppState;
           setAppStateVisible(appState.current);
@@ -133,7 +134,7 @@ const PixScreen = (props) => {
         }
     }
 
-    const retrievePix = (subSocket) => {
+    const retrievePix = (subSocket, showFailMsg) => {
         api.RetrievePix(
             GLOBAL.appUrl,
             GLOBAL.id, 
@@ -150,6 +151,9 @@ const PixScreen = (props) => {
                 if(json && json.paid) {
                     alertPaid();
                 } else {
+                    if(showFailMsg) {
+                        Toast.showToast(strings.payment_not_confirmed);
+                    }
                     GLOBAL.pix_transaction_id = json.transaction_id;
                     if(subSocket) {
                         subscribeSocket();
@@ -179,7 +183,6 @@ const PixScreen = (props) => {
         
     }
 
-    // Quando for sair da tela, chama o unsubscribeSocket
     const goBack = () => {
         GLOBAL.pix_transaction_id = null;
         props.navigation.goBack()
@@ -190,7 +193,7 @@ const PixScreen = (props) => {
             {!GLOBAL.navigation_v5 ? (
                 <NavigationEvents
                     onWillFocus={() => {
-                        retrievePix(true);
+                        retrievePix(true, false);
                     }}
                 />
             ) : null}
@@ -244,7 +247,7 @@ const PixScreen = (props) => {
             <View style={{flex: 1, alignItems: "center"}}>
                 <Text style={[styles.text, styles.textBlack]}>{strings.payment_made}</Text>
                 <TouchableOpacity
-                    onPress={() =>  retrievePix(false)} 
+                    onPress={() =>  retrievePix(false, true)} 
                 >
                     <Text style={[styles.text, styles.greenText]}>{strings.check_payment}</Text>
                 </TouchableOpacity>
