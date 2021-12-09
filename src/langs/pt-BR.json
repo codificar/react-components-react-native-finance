@@ -82,8 +82,13 @@
 	"req_pix_info_1": "Copie o código abaixo OU escaneie o código QR no APP do prestador",
 	"req_pix_info_2": "Abra o app do seu banco e escolha Pix Copia e Cola OU QR code",
 	"req_pix_info_3": "Cole o código ou leia o código QR no app do prestador, confira as informações e finalize o pagamento",
-	"pix_info_1": "Copie o código abaixo",
+	"pix_info_1": "Código",
 	"pix_info_2": "Abra o app do seu banco e escolha Pix Copia e Cola",
 	"pix_info_3": "Cole o código, confira as informações e finalize o pagamento",
-	"pix_qr_info": "Peça para o cliente abrir o app bancário, copiar o código disponível no app dele OU ler o Código QR abaixo."
+	"pix_qr_info": "Peça para o cliente abrir o app bancário, copiar o código disponível no app dele OU ler o Código QR abaixo.",
+	"payment_made": "Já efetuou o pagamento?",
+	"check_payment": "Verificar pagamento",
+	"copy_pix": "Copiar Pix",
+	"attention": "Atenção",
+	"pix_payment": "Pagamento Pix"
 }
