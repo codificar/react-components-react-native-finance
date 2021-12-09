@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react"
 
-import Images from "./img/Images";
+import Toolbar from './Functions/Toolbar'
+
 
 import Loader from "./Functions/Loader"
 
 import { 
     View, 
-    Image,
+    BackHandler,
     TextInput,
     StyleSheet,
     Text,
     Clipboard,
-    Button,
+    AppState,
+    TouchableOpacity,
     Alert
 } from 'react-native';
 import Api from "./Functions/Api";
@@ -41,7 +43,7 @@ const RequestPix = (props) => {
     const socket = WebSocketServer.connect(props.socket_url);
 
     const api = new Api();
-
+    
 
     const copyClipBoard = () => {
         Clipboard.setString(copyAndPaste);
@@ -51,7 +53,7 @@ const RequestPix = (props) => {
     /**
      * @description  subscribe scoket
      */
-     const subscribeSocket = (id) => {
+    const subscribeSocket = (id) => {
         if (socket !== null && !isSubscribed) {
             setIsSubscribed(true);
             socket
@@ -77,10 +79,10 @@ const RequestPix = (props) => {
     }
 
     useEffect(() => {
-        retrievePix(props.callRetrieve);
+        retrievePix(props.callRetrieve, false);
     }, [props.callRetrieve]);
 
-    const retrievePix = (qtd) => {
+    const retrievePix = (qtd, showFailMsg) => {
         api.RetrievePix(
             props.appUrl,
             props.id, 
@@ -98,6 +100,9 @@ const RequestPix = (props) => {
                     alertPaid();
                 } else {
                     setTransactionId(json.transaction_id);
+                    if(showFailMsg) {
+                        Toast.showToast(strings.payment_not_confirmed);
+                    }
                     //se for a primeira vez que chama essa api (qtd = 0), entao se inscreve no socket
                     if(qtd == 0) {
                         subscribeSocket(json.transaction_id);
@@ -115,7 +120,7 @@ const RequestPix = (props) => {
     }
 
     const alertPaid = () => {
-        unsubscribeSocket();
+        unsubscribeSocket(); 
         Alert.alert(
             strings.pix,
             strings.confirmed_pix,
@@ -124,65 +129,82 @@ const RequestPix = (props) => {
             ],
             { cancelable: false }
         );
+        
+    }
+
+    const goBack = () => {
+        props.navigation.goBack()
     }
 
     return (
         <View style={styles.container}>
-
+            
             <Loader loading={isLoading} message={strings.loading_message} />
-        
-             {/* Flex vertical of 1/10 */}
-            <View style={{flex: 1}}>
-                <Image source={Images.icon_pix_bc}
-                    style={{
-                        flex: 1,
-                        width: null,
-                        height: null,
-                        resizeMode: 'contain'
-                    }} 
-                />
-            </View>
-            {/* Flex vertical of 2/10 */}
-            <View style={{flex: 2, justifyContent: "center" }}>
-                <Text style={{color: 'grey', textAlign: "center", fontSize: 16, marginHorizontal: 20}}>{ strings.pix_info }</Text>
+            
+          
+            <Toolbar
+                back={true}
+                handlePress={() => goBack() }
+            />
+            <View style={{ marginTop: -15, alignItems: 'center' }}>
+                <Text style={{color: "#222B45", fontSize: 20, fontWeight: "bold"}}>{strings.pix_payment}</Text>
             </View>
 
-             {/* Flex vertical of 1/10 */}
-             <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
-                <Text style={styles.circle}>1</Text>
-                <Text style={styles.text}>{ strings.req_pix_info_1}</Text>
+            {/* Flex vertical of 2/13 */}
+            <View style={{flex: 2, marginTop: 10 }}>
+                <Text style={styles.text}>{strings.pix_info}</Text>
             </View>
 
-            {/* Flex vertical of 2/10 */}
-            <View style={{flex: 2, alignItems: "center", alignItems: "center"}}>
-                <TextInput
-                    style={styles.input}
-                    selectTextOnFocus={true}
-                    showSoftInputOnFocus={false} 
-                    value={copyAndPaste}
-                />
-                <Button
-                    onPress={() => copyClipBoard()}
-                    title="Copiar Pix"
-                    color={props.color ? props.color : "#2ebdaf"}
-                />
+             {/* Flex vertical of 4/13 */}
+            <View style={{flex: 4}}>
+                <Text style={[styles.textBold, styles.text, styles.textBlack]}>{strings.pix_info_1}</Text>
+                <View style={{ marginTop: 10, alignItems: "center"}}>
+                    <TextInput
+                        style={styles.input}
+                        selectTextOnFocus={true}
+                        showSoftInputOnFocus={false} 
+                        value={copyAndPaste}
+                    />
+
+                    <TouchableOpacity
+                        style={styles.buttonStyle}
+                        onPress={() =>  copyClipBoard()} 
+                    >
+                        <Text style={[styles.greenText, {fontSize: 16, fontWeight: "bold", textAlign: "center" }]}>{strings.copy_pix}</Text>
+                    </TouchableOpacity>
+                                     
+                </View>
+            </View>
+
+            {/* Flex vertical of 4/13 */}
+            <View style={{ flex: 4, alignItems: 'center' }}>
+                <View style={styles.yellowCard}>
+                    <Text style={[styles.textBold, styles.yellowText]}>{strings.attention}</Text>
+                    <Text style={styles.yellowText}>{strings.req_pix_info_2}</Text>
+                    <Text style={[{marginBottom: 20}, styles.yellowText]}>{strings.req_pix_info_3}</Text>
+                </View>
+            </View>
+
+            {/* Flex vertical of 1/13 */}
+            <View style={{flex: 1, alignItems: "center"}}>
+                <Text style={[styles.text, styles.textBlack]}>{strings.payment_made}</Text>
+                <TouchableOpacity
+                    onPress={() =>  retrievePix(false, true)} 
+                >
+                    <Text style={[styles.text, styles.greenText]}>{strings.check_payment}</Text>
+                </TouchableOpacity>
+            </View>
+
+            {/* Flex vertical of 2/13 */}
+            <View style={{flex: 2, alignItems: "center"}}>
+                <View style={styles.hr}/>
+
+                <View style={{flexDirection: 'row', width: '90%', justifyContent: 'space-between'}}>
+                    <Text style={styles.valueText}>{strings.total}</Text>
+                    <Text style={[styles.valueText, styles.textBold]}>{formattedValue}</Text>
+                </View>
                 
-            </View>
-             {/* Flex vertical of 1/10 */}
-             <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
-                <Text style={styles.circle}>2</Text>
-                <Text style={styles.text}>{ strings.req_pix_info_2}</Text>
-            </View>
-
-             {/* Flex vertical of 1/10 */}
-             <View style={{flex: 1, flexDirection: 'row', alignItems: "center"}}>
-                <Text style={styles.circle}>3</Text>
-                <Text style={styles.text}>{ strings.req_pix_info_3 }</Text>
-            </View>
-
-            {/* Flex vertical of 1/10 */}
-            <View style={{flex: 1, justifyContent: 'flex-end', alignItems: "center"}}>
-                <Text style={{color: "#222B45",fontSize: 23,fontWeight: "bold"}}>{strings.total}: {formattedValue}</Text>
+                <View style={styles.hr}/>
             </View>
 
         </View>
@@ -194,36 +216,20 @@ const styles = StyleSheet.create({
         padding: 0,
         backgroundColor: "white"
     },
-    main: {
-        marginBottom: 20,
-        marginLeft: 30
-    },
-    title: {
-        color: "#222B45",
-        fontSize: 30,
-        fontWeight: "bold"
-    },
     text: {
         color: 'grey', 
-        fontSize: 17,
-        marginHorizontal: 6, 
-        flexShrink: 1
+        fontSize: 16, 
+        marginHorizontal: 20
     },
-    circle: {
-        width: 36,
-        height: 36,
-        borderRadius: 36/2,
-        fontSize: 20,
-        marginLeft: 20,
-        backgroundColor: "#2ebdaf", //pix logo color
-        color: "white",
-        textAlign: "center",
-        paddingTop: 3,
+    textBold: {
         fontWeight: "bold"
     },
+    textBlack: {
+        color: 'black'
+    },
     input: {
-        borderColor: "gray",
-        width: "70%",
+        borderColor: "#adadad",
+        width: "90%",
         height: 50,
         borderWidth: 1,
         borderRadius: 10,
@@ -231,12 +237,39 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     buttonStyle: {
-        flex: 1,
-        backgroundColor: 'black',
-        marginLeft: 5,
-        marginRight: 5,
-        borderRadius: 50
+        borderColor: "white",
+        backgroundColor: '#f0f8f3',
+        width: "90%",
+        height: 50,
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        marginBottom: 10,
+        marginTop: 10,
     },
+    yellowCard: {
+        width: "90%",
+        backgroundColor: "#fefaed"
+    },
+    valueText: {
+        color: '#808080', 
+        fontSize: 20,
+    },
+    yellowText: {
+        color: '#F2994A', 
+        fontSize: 16, 
+        marginHorizontal: 20,
+        marginTop: 8
+    },
+    greenText: {
+        color: '#6EB986'
+    },
+    hr: {
+        backgroundColor: '#e3e3e3', 
+        height: 1, 
+        width: "90%",
+        marginVertical: 10
+    }
 });
 
 export default RequestPix;
