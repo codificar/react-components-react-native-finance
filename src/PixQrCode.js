@@ -3,6 +3,9 @@ import React, { useRef, useState, useEffect } from "react"
 import Images from "./img/Images";
 
 import Loader from "./Functions/Loader"
+import Toolbar from './Functions/Toolbar'
+import Toast from "./Functions/Toast";
+import {Picker} from '@react-native-picker/picker';
 
 import { 
     View, 
@@ -10,7 +13,11 @@ import {
     StyleSheet,
     Text,
     AppState,
-    Alert
+    Alert,
+    TouchableOpacity,
+    Modal,
+    Dimensions,
+    BackHandler
 } from 'react-native';
 import Api from "./Functions/Api";
 import WebSocketServer from "./Functions/socket";
@@ -35,6 +42,9 @@ const PixQrCode = (props) => {
     const [qrCodeBase64, setQrCodeBase64] = useState("");
     const [isSubscribed, setIsSubscribed] = useState(false);
     const appState = useRef(AppState.currentState);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [newPaymentMode, setNewPaymentMode] = useState();
+    const [paymentsTypes, setPaymentsTypes] = useState({});
 
     const socket = WebSocketServer.connect(props.socket_url);
 
@@ -69,10 +79,10 @@ const PixQrCode = (props) => {
     }
 
     useEffect(() => {
-        retrievePix(props.callRetrieve);
+        retrievePix(props.callRetrieve, false);
     }, [props.callRetrieve]);
 
-    const retrievePix = (qtd) => {
+    const retrievePix = (qtd, showFailMsg) => {
         api.RetrievePix(
             props.appUrl,
             props.id, 
@@ -89,9 +99,13 @@ const PixQrCode = (props) => {
                 } else {
                     setTransactionId(json.transaction_id);
                     setQrCodeBase64(json.qr_code_base64);
+                    if(showFailMsg) {
+                        Toast.showToast(strings.payment_not_confirmed);
+                    }
                     //se for a primeira vez que chama essa api (qtd = 0), entao se inscreve no socket
                     if(qtd == 0) {
                         subscribeSocket(json.transaction_id);
+                        getPaymentTypes();
                     }
                 }
             } else {
@@ -103,6 +117,73 @@ const PixQrCode = (props) => {
 
             console.error(error);
         });
+    }
+
+    const getPaymentTypes = () => {
+        api.getPaymentTypes(
+            props.appUrl,
+            props.id, 
+            props.token
+        )
+        .then((json) => {
+            if(json) {
+                //set money as default change payment type
+                setPaymentsTypes(json);
+                setNewPaymentMode(json.money_code);
+            } else {
+                console.log("error");
+            }
+        })
+        .catch((error) => {
+            console.log("fail");
+
+            console.error(error);
+        });
+    }
+
+    const changePayment = () => {
+        setModalVisible(false);
+        setIsLoading(true);
+        api.changePaymentType(
+            props.appUrl,
+            props.id, 
+            props.token,
+            props.request_id,
+            newPaymentMode
+        )
+        .then((json) => {
+            setIsLoading(false);
+
+            if(json.success) {
+                props.onPaymentChange(json.bill)
+            } else {
+                console.log("error aq");
+            }
+        })
+        .catch((error) => {
+            setIsLoading(false);
+            console.log("deu erro");
+            console.error(error);
+        });
+    }
+
+    const goBack = () => {
+        Alert.alert(
+            strings.exit_app,
+            strings.exit_app_msg,
+            [
+                {
+                    text: strings.no,
+                    onPress: () => function () { },
+                    style: "cancel",
+                },
+                {
+                    text: strings.yes,
+                    onPress: () => BackHandler.exitApp(),
+                },
+            ],
+            { cancelable: true }
+        );
     }
 
     const alertPaid = () => {
@@ -121,40 +202,116 @@ const PixQrCode = (props) => {
     return (
         <View style={styles.container}>
 
-            <Loader loading={isLoading} message={strings.loading_message} />
-            
-             {/* Flex vertical of 1/10 */}
-            <View style={{flex: 1}}>
-                <Image source={Images.icon_pix_bc}
-                    style={{
-                        flex: 1,
-                        width: null,
-                        height: null,
-                        top: 10,
-                        resizeMode: 'contain'
-                    }} 
-                />
-            </View>
-            {/* Flex vertical of 2/10 */}
-            <View style={{flex: 2, justifyContent: "center" }}>
-                <Text style={{color: 'grey', textAlign: "center", fontSize: 16, marginHorizontal: 20}}>{strings.pix_qr_info}</Text>
+            {/* Modal to change payment mode */}
+            <View>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    style={{ backgroundColor: '#FBFBFB' }}
+                    onRequestClose={() => {
+                        Alert.alert("Modal has been closed.");
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                        <View style={styles.modalView}>
+
+                            <View style={{flex: 5, alignItems: "center"}}>
+                                <Text style={[styles.text, {textAlign: "center"}]}>Alterar forma de pagamento</Text>
+
+                                <View style={{alignItems: "center", flex: 1, justifyContent: "center", width: "100%"}}>
+                                    <Picker
+                                        selectedValue={newPaymentMode}
+                                        style={{ width: Dimensions.get('window').width/2, height: 40 }}
+                                        onValueChange={(itemValue, itemIndex) => setNewPaymentMode(itemValue)}
+                                    >
+                                        <Picker.Item label="Dinheiro" value={paymentsTypes.money_code} />
+                                        <Picker.Item label="Pix Direto em minha conta" value={paymentsTypes.direct_pix_code} />
+                                        <Picker.Item label="Maquineta de cartão" value={paymentsTypes.machine_code} />
+                                    </Picker>
+                                </View>
+                                
+                            </View>
+
+                            <View style={{flex: 1, flexDirection:"row", justifyContent: 'flex-end'}}>
+                                <TouchableOpacity
+                                    onPress={() =>  setModalVisible(!modalVisible)}
+                                    style={{justifyContent: 'flex-end'}}
+                                >
+                                    <Text style={[styles.text, styles.greenText]}>Fechar</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => changePayment()}
+                                    style={{justifyContent: 'flex-end'}}
+                                >
+                                    <Text style={[styles.text, styles.greenText]}>Confirmar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </View>
 
-             {/* Flex vertical of 6/10 */}
-             <View style={{flex: 6, flexDirection: 'row', alignItems: "center", justifyContent: "center"}}>
+            <Toolbar
+                back={true}
+                handlePress={() => goBack() }
+            />
+            <View style={{ marginTop: -15, alignItems: 'center' }}>
+                <Text style={{color: "#363636", fontSize: 20, fontWeight: "bold"}}>{strings.pix_payment}</Text>
+            </View>
+
+            <Loader loading={isLoading} message={strings.loading_message} />
+
+
+            {/* Flex vertical of 2/15 */}
+            <View style={{flex: 2, marginTop: 15 }}>
+                <Text style={{color: 'grey', fontSize: 16, marginHorizontal: 20}}>{strings.pix_qr_info}</Text>
+            </View>
+
+             {/* Flex vertical of 7/15 */}
+             <View style={{flex: 7, flexDirection: 'row', alignItems: "center", justifyContent: "center"}}>
                  {qrCodeBase64 ? 
                     <Image
                         source={{ uri: `data:image/png;base64,${qrCodeBase64}`}}
-                        style={{ width: "80%", height: "80%", resizeMode: 'contain'}}
+                        style={{ width: "100%", height: "100%", resizeMode: 'contain'}}
                     />
                     :
                     <Text>QR CODE</Text>
                 }
             </View>
 
-            {/* Flex vertical of 1/10 */}
-            <View style={{flex: 1, justifyContent: 'flex-end', alignItems: "center"}}>
-                <Text style={{color: "#222B45",fontSize: 23,fontWeight: "bold"}}>{strings.total}: {formattedValue}</Text>
+            {/* Flex vertical of 2/15 */}
+            <View style={{flex: 2, alignItems: "center"}}>
+                <Text style={[styles.text, styles.textBlack, {paddingTop: 10}]}>{strings.payment_made}</Text>
+                <TouchableOpacity
+                    onPress={() =>  retrievePix(false, true)} 
+                >
+                    <Text style={[styles.text, styles.greenText]}>{strings.check_payment}</Text>
+                </TouchableOpacity>
+            </View>
+
+             {/* Flex vertical of 2/15 */}
+             <View style={{flex: 2, alignItems: "center"}}>
+                <Text style={[styles.text, styles.textBlack]}>{strings.pix_problems}</Text>
+                <TouchableOpacity
+                    onPress={() =>  setModalVisible(true)} 
+                >
+                    <Text style={[styles.text, styles.greenText]}>{strings.change_payment_mode}</Text>
+                </TouchableOpacity>
+            </View>
+
+            {/* Flex vertical of 2/15 */}
+            <View style={{flex: 2, alignItems: "center"}}>
+                <View style={styles.hr}/>
+
+                <View style={{flexDirection: 'row', width: '90%', justifyContent: 'space-between'}}>
+                    <Text style={styles.valueText}>{strings.total}</Text>
+                    <Text style={[styles.valueText, styles.textBold]}>{formattedValue}</Text>
+                </View>
+                
+                <View style={styles.hr}/>
             </View>
 
         </View>
@@ -166,37 +323,60 @@ const styles = StyleSheet.create({
         padding: 0,
         backgroundColor: "white"
     },
-    main: {
-        marginBottom: 20,
-        marginLeft: 30
-    },
-    title: {
-        color: "#222B45",
-        fontSize: 30,
-        fontWeight: "bold"
-    },
     text: {
         color: 'grey', 
-        fontSize: 17,
-        marginHorizontal: 6, 
-        flexShrink: 1
+        fontSize: 16, 
+        marginHorizontal: 20
     },
-    input: {
-        borderColor: "gray",
-        width: "70%",
-        height: 50,
-        borderWidth: 1,
-        borderRadius: 10,
+    textBold: {
+        fontWeight: "bold"
+    },
+    textBlack: {
+        color: 'black'
+    },
+    valueText: {
+        color: '#808080', 
+        fontSize: 20,
+    },
+    greenText: {
+        color: '#6EB986'
+    },
+    hr: {
+        backgroundColor: '#e3e3e3', 
+        height: 1, 
+        width: "90%",
+        marginVertical: 10
+    },
+
+
+    modalView: {
+        margin: 5,
+        width: "60%",
+        height: "40%",
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: "5%",
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    button: {
+        borderRadius: 20,
         padding: 10,
-        marginBottom: 10
+        elevation: 2
     },
-    buttonStyle: {
-        flex: 1,
-        backgroundColor: 'black',
-        marginLeft: 5,
-        marginRight: 5,
-        borderRadius: 50
+    buttonOpen: {
+        backgroundColor: "#F194FF",
     },
+    buttonClose: {
+        backgroundColor: "#2196F3",
+    }
 });
 
 export default PixQrCode;

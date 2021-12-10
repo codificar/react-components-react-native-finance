@@ -128,4 +128,29 @@ export default class Api {
         return fetch(app_url + "/libs/finance/" + type + "/retrieve_pix" + "?" + params, this.get).then((response) => response.json());
     }
 
+    getPaymentTypes(app_url, id, token) {
+        let params = new URLSearchParams({ 
+            provider_id: id, 
+            id: id,
+            token: token
+        });
+        return fetch(app_url + "/libs/finance/provider/change_pix_payment_types" + "?" + params, this.get).then((response) => response.json());
+    }
+    changePaymentType(app_url, id, token, request_id, new_payment_mode) {
+        let params = {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                provider_id: id, 
+                id: id,
+                token: token,
+                request_id: request_id,
+                new_payment_mode: new_payment_mode
+            })
+        }
+        return fetch(app_url + "/libs/finance/provider/change_pix_payment", params).then((response) => response.json());
+    }
 }

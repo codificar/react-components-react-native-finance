@@ -205,7 +205,7 @@ const PixScreen = (props) => {
                 handlePress={() => goBack() }
             />
             <View style={{ marginTop: -15, alignItems: 'center' }}>
-                <Text style={{color: "#222B45", fontSize: 20, fontWeight: "bold"}}>{strings.pix_payment}</Text>
+                <Text style={{color: "#363636", fontSize: 20, fontWeight: "bold"}}>{strings.pix_payment}</Text>
             </View>
 
             {/* Flex vertical of 2/13 */}
