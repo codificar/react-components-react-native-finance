@@ -96,5 +96,6 @@
 	"pix_problems": "Problemas com pagamento pix?",
 	"change_payment_mode": "Alterar forma de pagamento",
 	"exit_app": "Sair do aplicativo",
-	"exit_app_msg": "Você tem certeza que deseja sair do aplicativo?"
+	"exit_app_msg": "Você tem certeza que deseja sair do aplicativo?",
+	"payment_changed": "A forma de pagamento foi alterada"
 }

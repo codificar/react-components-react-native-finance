@@ -62,9 +62,9 @@ const RequestPix = (props) => {
             })
             .on('pixUpate', (channel, data) => {
                 if(data.payment_change) {
-                    
+                    alertChange(false);
                 } else {
-                    alertPaid();
+                    alertChange(true);
                 }
             })
         }
@@ -101,7 +101,10 @@ const RequestPix = (props) => {
                 setCopyAndPaste(json.copy_and_paste);
                 setFormattedValue(json.formatted_value);
                 if(json && json.paid) {
-                    alertPaid();
+                    alertChange(true);
+                }
+                else if(json && json.payment_changed) {
+                    alertChange(false);
                 } else {
                     setTransactionId(json.transaction_id);
                     if(showFailMsg) {
@@ -123,11 +126,11 @@ const RequestPix = (props) => {
         });
     }
 
-    const alertPaid = () => {
+    const alertChange = (isPaid) => {
         unsubscribeSocket(); 
         Alert.alert(
             strings.pix,
-            strings.confirmed_pix,
+            isPaid ? strings.confirmed_pix : strings.payment_changed,
             [
                 { text: strings.confirm, onPress: () => props.onPaid(true) }
             ],
@@ -137,7 +140,22 @@ const RequestPix = (props) => {
     }
 
     const goBack = () => {
-        props.navigation.goBack()
+        Alert.alert(
+            strings.exit_app,
+            strings.exit_app_msg,
+            [
+                {
+                    text: strings.no,
+                    onPress: () => function () { },
+                    style: "cancel",
+                },
+                {
+                    text: strings.yes,
+                    onPress: () => BackHandler.exitApp(),
+                },
+            ],
+            { cancelable: true }
+        );
     }
 
     return (

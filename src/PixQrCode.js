@@ -61,7 +61,9 @@ const PixQrCode = (props) => {
                 channel: 'pix.' + id,
             })
             .on('pixUpate', (channel, data) => {
-                alertPaid();
+                if(data.is_paid) {
+                    alertPaid();
+                }
             })
         }
     }
