@@ -220,7 +220,7 @@ const PixQrCode = (props) => {
                         <View style={styles.modalView}>
 
                             <View style={{flex: 5, alignItems: "center"}}>
-                                <Text style={[styles.text, {textAlign: "center"}]}>Alterar forma de pagamento</Text>
+                                <Text style={[styles.text, {textAlign: "center"}]}>{strings.change_payment_mode}</Text>
 
                                 <View style={{alignItems: "center", flex: 1, justifyContent: "center", width: "100%"}}>
                                     <Picker
@@ -228,9 +228,9 @@ const PixQrCode = (props) => {
                                         style={{ width: Dimensions.get('window').width/2, height: 40 }}
                                         onValueChange={(itemValue, itemIndex) => setNewPaymentMode(itemValue)}
                                     >
-                                        <Picker.Item label="Dinheiro" value={paymentsTypes.money_code} />
-                                        <Picker.Item label="Pix Direto em minha conta" value={paymentsTypes.direct_pix_code} />
-                                        <Picker.Item label="Maquineta de cartão" value={paymentsTypes.machine_code} />
+                                        {paymentsTypes.money ? <Picker.Item label="Dinheiro" value={paymentsTypes.money_code} /> : null}
+                                        {paymentsTypes.direct_pix ? <Picker.Item label="Pix Direto em minha conta" value={paymentsTypes.direct_pix_code} /> : null}
+                                        {paymentsTypes.machine ? <Picker.Item label="Maquineta de cartão" value={paymentsTypes.machine_code} /> : null}
                                     </Picker>
                                 </View>
                                 
@@ -241,14 +241,14 @@ const PixQrCode = (props) => {
                                     onPress={() =>  setModalVisible(!modalVisible)}
                                     style={{justifyContent: 'flex-end'}}
                                 >
-                                    <Text style={[styles.text, styles.greenText]}>Fechar</Text>
+                                    <Text style={[styles.text, styles.greenText]}>{strings.cancel}</Text>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
                                     onPress={() => changePayment()}
                                     style={{justifyContent: 'flex-end'}}
                                 >
-                                    <Text style={[styles.text, styles.greenText]}>Confirmar</Text>
+                                    <Text style={[styles.text, styles.greenText]}>{strings.confirm}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
