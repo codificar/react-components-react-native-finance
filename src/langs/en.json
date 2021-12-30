@@ -97,5 +97,7 @@
 	"change_payment_mode": "Change payment mode",
 	"exit_app": "Exit App",
 	"exit_app_msg": "Are you sure?",
-	"payment_changed": "The payment mode has changed"
+	"payment_changed": "The payment mode has changed",
+	"add_cards": "Add card",
+	"payment_methods": "Payment Methods"
 }

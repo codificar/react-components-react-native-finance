@@ -8,7 +8,13 @@ const Images = {
     icon_ub_creditcard_elo: require("./elo.png"),
     terra_card: require('./cartao_terra.png'),
     icon_pix: require("./pix.png"),
-    icon_pix_bc: require("./pix_bc.png")
+    icon_pix_bc: require("./pix_bc.png"),
+    icon_remove: require("./trash-simple.png"),
+    icon_money: require("./money.png"),
+    machine: require("./machine.png"),
+    bitcoin: require("./machine.png"),
+    balance: require("./balance.png"),
+    icon_pix: require("./pix.png"),
   };
   
   export default Images;
