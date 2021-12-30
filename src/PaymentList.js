@@ -75,7 +75,7 @@ const PaymentList = (props) => {
                 : null }
                 <View>
                     <ScrollView>
-
+                        {props.enableAddCard ?
                         <FlatList
                             data={props.cards}
                             renderItem={({ item, index }) => (
@@ -112,7 +112,7 @@ const PaymentList = (props) => {
                             )}
                             keyExtractor={(item, index) => `${index}`}
                         />
-
+                        : null}
                         <FlatList
                             style={{marginBottom: 100}}
                             data={props.paymentsType}
