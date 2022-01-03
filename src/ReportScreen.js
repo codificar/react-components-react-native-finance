@@ -117,7 +117,7 @@ class ReportScreen extends Component {
                             </View>
                         </TouchableOpacity>
 
-                        {reportData && reportData.is_withdraw_enabled && parseInt(reportData.is_withdraw_enabled) ? (
+                        {reportData && reportData.is_withdraw_enabled && parseInt(reportData.is_withdraw_enabled) && GLOBAL.type != "user" ? (
                             <TouchableOpacity style={styles.btnTransactions}
                                 onPress={() => this.props.openTransactions()}>
                                 <View style={styles.contRowItem}>
