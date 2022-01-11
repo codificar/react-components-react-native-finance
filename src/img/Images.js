@@ -13,8 +13,7 @@ const Images = {
     icon_money: require("./money.png"),
     machine: require("./machine.png"),
     bitcoin: require("./machine.png"),
-    balance: require("./balance.png"),
-    icon_pix: require("./pix.png"),
+    balance: require("./balance.png")
   };
   
   export default Images;
