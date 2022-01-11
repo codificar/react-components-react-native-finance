@@ -230,7 +230,7 @@ const AddBalanceScreen = (props) => {
                 }
                 else {
 
-                    Toast.showToast(strings.billet_error);
+                    Toast.showToast('erro pix');
                 }
             }
         })
