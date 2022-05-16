@@ -13,7 +13,14 @@ const Images = {
     icon_money: require("./money.png"),
     machine: require("./machine.png"),
     bitcoin: require("./machine.png"),
-    balance: require("./balance.png")
+    balance: require("./balance.png"),
+    iconCard: require('./paymentIcons/card.png'),
+    iconcryptoCurrency: require('./paymentIcons/cryptocurrency.png'),
+    iconMachine: require('./paymentIcons/machine.png'),
+    iconMoney: require('./paymentIcons/money.png'),
+    iconCarto: require('./paymentIcons/carto.png'),
+    payment_balance: require("./paymentIcons/baseline-account-balance.png"),
+    payment_billing: require("./paymentIcons/voucher.png"),
   };
   
   export default Images;

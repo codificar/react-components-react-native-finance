@@ -99,5 +99,16 @@
 	"exit_app_msg": "Are you sure?",
 	"payment_changed": "The payment mode has changed",
 	"add_cards": "Add card",
-	"payment_methods": "Payment Methods"
+	"payment_methods": "Payment Methods",
+	"payment_card": "Credit Card",
+	"payment_money": "Money",
+	"payment_carto": "Carto",
+	"payment_machine": "Machine",
+	"payment_cryptocurrency": "Cryptocoin",
+	"payment_debitCard": "Debit Card",
+	"payment_balance": "Balance",
+	"payment_billing": "Billing",
+	"payment_pix": "Pix Online",
+	"payment_direct_pix": "Direct Pix",
+	"manage_payment_title": "Manage payment"
 }
