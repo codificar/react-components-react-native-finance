@@ -133,30 +133,30 @@ export default class Api {
       }
   
     getPaymentInfo(app_url) {
-    return fetch(`${app_url}/libs/gateways/payment_methods`, this.get).then((response) => response.json());
+        return fetch(`${app_url}/libs/gateways/payment_methods`, this.get).then((response) => response.json());
     }
 
     setProviderPayment(app_url, id, token, payments) {
-    let params = {
-        method: 'POST',
-        headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-        id: id,
-        token: token,
-        provider_payment: payments
-        })
-    }
-    return fetch(`${app_url}/libs/gateways/provider/set_payments`, params).then((response) => response.json());
+        let params = {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              id: id,
+              token: token,
+              provider_payment: payments
+            })
+        }
+        return fetch(`${app_url}/libs/gateways/provider/set_payments`, params).then((response) => response.json());
     }
 
     getPaymentTypes(app_url, id, token) {
         let params = new URLSearchParams({ 
-            provider_id: id, 
-            id: id,
-            token: token
+          provider_id: id, 
+          id: id,
+          token: token
         });
         return fetch(app_url + "/libs/finance/provider/change_pix_payment_types" + "?" + params, this.get).then((response) => response.json());
     }

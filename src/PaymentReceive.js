@@ -56,7 +56,6 @@ const PaymentReceive = (props) => {
       props.token,
       provider_payments_selected
     ).then(result => {
-      console.log('set_provider_payments', result)
       setIsLoading(false);
     })
   }
@@ -81,7 +80,6 @@ const PaymentReceive = (props) => {
       props.id,
       props.token
     ).then(result => {
-      console.log('provider_payments', result.provider_payments)
       var payments_selected = result.provider_payments.map(item => { return item.payment_id })
       setprovider_payments_selected(payments_selected);
       setIsLoading(false);
