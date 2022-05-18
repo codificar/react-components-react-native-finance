@@ -120,16 +120,18 @@ const PaymentReceive = (props) => {
 
   return (
     <>
-      <View style={{ marginTop: Platform.OS === 'android' ? 0 : 25 }}>
-        <Toolbar
-            back={true}
-            handlePress={() => props.navigation.goBack()}
-        />
-        <TitleHeader
-            text={strings.manage_payment_title}
-            align="flex-start"
-        />
-      </View>
+      {!props.disableHeader && 
+        <View style={{ marginTop: Platform.OS === 'android' ? 0 : 25 }}>
+          <Toolbar
+              back={true}
+              handlePress={() => props.navigation.goBack()}
+          />
+          <TitleHeader
+              text={strings.manage_payment_title}
+              align="flex-start"
+          />
+        </View>
+      }
       <Loader loading={isLoading} message={strings.loading_message} />
 
       <View style={styles.parentContainer}>
