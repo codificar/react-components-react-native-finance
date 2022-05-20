@@ -108,7 +108,7 @@
 	"payment_debitCard": "Cartão de débito",
 	"payment_balance": "Saldo",
 	"payment_billing": "Boleto",
-	"payment_pix": "Pix Online",
+	"payment_gateway_pix": "Pix Online",
 	"payment_direct_pix": "Pix direto",
 	"manage_payment_title": "Gerenciar pagamento"
 }
