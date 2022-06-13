@@ -82,7 +82,6 @@ const PixQrCode = (props) => {
 
     useEffect(() => {
         retrievePix(props.callRetrieve, false);
-        getPaymentTypes();
     }, [props.callRetrieve]);
 
     const retrievePix = (qtd, showFailMsg) => {
@@ -108,6 +107,7 @@ const PixQrCode = (props) => {
                     //se for a primeira vez que chama essa api (qtd = 0), entao se inscreve no socket
                     if(qtd == 0) {
                         subscribeSocket(json.transaction_id);
+                        getPaymentTypes();
                     }
                 }
             } else {

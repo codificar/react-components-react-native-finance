@@ -99,5 +99,6 @@
 	"exit_app_msg": "Você tem certeza que deseja sair do aplicativo?",
 	"payment_changed": "A forma de pagamento foi alterada",
 	"add_cards": "Adicionar cartões",
-	"payment_methods": "Formas de Pagamento"
+	"payment_methods": "Formas de Pagamento",
+  	"make_widthdrawal": "Solicitar Saque"
 }

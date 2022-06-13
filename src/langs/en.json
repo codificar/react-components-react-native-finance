@@ -99,5 +99,6 @@
 	"exit_app_msg": "Are you sure?",
 	"payment_changed": "The payment mode has changed",
 	"add_cards": "Add card",
-	"payment_methods": "Payment Methods"
+	"payment_methods": "Payment Methods",
+  	"make_widthdrawal": "Make Withdrawal"
 }

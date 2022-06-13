@@ -161,12 +161,16 @@ class EarningsPeriodScreen extends Component {
 
     getCheckingAccount() {
         this.setState({ isLoading: true })
+
+        const type = GLOBAL.type == 'user' ? GLOBAL.type : 'provider';
+
         this.api.GetCheckingAccount(
             this.param.appUrl,
             this.state.providerId,
             this.state.token,
             this.props.navigation.state.params.startDate,
-            this.props.navigation.state.params.endDate
+            this.props.navigation.state.params.endDate,
+            type
         )
         .then((json) => {
             this.setState({ isLoading: false })

@@ -17,7 +17,7 @@ export default class Api {
         };
     }
     GetAccountSummary(nextPageUrl, provider_id, token, start_date, end_date) {
-        let params = new URLSearchParams({ 
+        let params = new URLSearchParams({
             provider_id: provider_id,
             id: provider_id,
             token: token,
@@ -28,31 +28,46 @@ export default class Api {
         return fetch(nextPageUrl + "&" + params, this.config).then((response) => response.json());
     }
 
-    GetCheckingAccount(app_url, provider_id, token, start_date, end_date) {
-        let params = new URLSearchParams({ 
+    GetCheckingAccount(app_url, provider_id, token, start_date, end_date, type = 'provider') {
+        let params = new URLSearchParams({
             provider_id: provider_id,
             id: provider_id,
             token: token,
-            holder_type: 'provider',
+            holder_type: type,
             start_date: start_date,
             end_date: end_date
         });
+
+        if (type == 'user')
+            return fetch(app_url + "/libs/finance/user/financial/user_summary?" + params, this.get).then((response) => response.json());
+
         return fetch(app_url + "/libs/finance/provider/financial/provider_summary?" + params, this.get).then((response) => response.json());
     }
 
-    GetReport(app_url, provider_id, token, year) {
-        let params = new URLSearchParams({ 
-            provider_id: provider_id, 
+    GetReport(app_url, provider_id, token, year, type) {
+        if (type == 'user') {
+            let params = new URLSearchParams({
+                user_id: provider_id,
+                id: provider_id,
+                token: token,
+                year: year
+            });
+
+            return fetch(app_url + "/libs/finance/user/profits" + "?" + params, this.get).then((response) => response.json());
+        }
+
+        let params = new URLSearchParams({
+            provider_id: provider_id,
             id: provider_id,
-            token: token, 
+            token: token,
             year: year
         });
         return fetch(app_url + "/libs/finance/provider/profits" + "?" + params, this.get).then((response) => response.json());
     }
 
     GetCardsAndBalance(app_url, provider_id, token, type) {
-        let params = new URLSearchParams({ 
-            provider_id: provider_id, 
+        let params = new URLSearchParams({
+            provider_id: provider_id,
             user_id: provider_id,
             id: provider_id,
             token: token
@@ -61,8 +76,8 @@ export default class Api {
     }
 
     AddCreditCardBalance(app_url, provider_id, token, value, card_id, type) {
-        let params = new URLSearchParams({ 
-            provider_id: provider_id, 
+        let params = new URLSearchParams({
+            provider_id: provider_id,
             user_id: provider_id,
             id: provider_id,
             token: token,
@@ -73,8 +88,8 @@ export default class Api {
     }
 
     AddBilletBalance(app_url, provider_id, token, value, type) {
-        let params = new URLSearchParams({ 
-            provider_id: provider_id, 
+        let params = new URLSearchParams({
+            provider_id: provider_id,
             user_id: provider_id,
             id: provider_id,
             token: token,
@@ -91,7 +106,7 @@ export default class Api {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: id, 
+                id: id,
                 provider_id: id,
                 user_id: id,
                 token: token,
@@ -106,8 +121,8 @@ export default class Api {
     }
 
     AddBilletBalance(app_url, id, token, value, type) {
-        let params = new URLSearchParams({ 
-            provider_id: id, 
+        let params = new URLSearchParams({
+            provider_id: id,
             user_id: id,
             id: id,
             token: token,
@@ -117,8 +132,8 @@ export default class Api {
     }
 
     RetrievePix(app_url, id, token, transaction_id, request_id, type) {
-        let params = new URLSearchParams({ 
-            provider_id: id, 
+        let params = new URLSearchParams({
+            provider_id: id,
             user_id: id,
             id: id,
             token: token,
@@ -129,8 +144,8 @@ export default class Api {
     }
 
     getPaymentTypes(app_url, id, token) {
-        let params = new URLSearchParams({ 
-            provider_id: id, 
+        let params = new URLSearchParams({
+            provider_id: id,
             id: id,
             token: token
         });
@@ -144,7 +159,7 @@ export default class Api {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                provider_id: id, 
+                provider_id: id,
                 id: id,
                 token: token,
                 request_id: request_id,
