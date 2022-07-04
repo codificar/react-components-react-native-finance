@@ -274,16 +274,17 @@ const PixQrCode = (props) => {
             </View>
 
              {/* Flex vertical of 7/15 */}
-             <View style={{flex: 7, flexDirection: 'row', alignItems: "center", justifyContent: "center"}}>
-                { qrCodeBase64 ? <QRCode logo={`data:image/png;base64,${qrCodeBase64}`} size={200} /> : null }
-                 {qrCodeBase64 ? 
-                    <Image
-                        source={{ uri: `data:image/png;base64,${qrCodeBase64}`}}
-                        style={{ width: "100%", height: "100%", resizeMode: 'contain'}}
-                    />
-                    :
-                    <Text>QR CODE</Text>
-                }
+             <View 
+                style={{
+                    flex: 7, 
+                    marginTop: 20,
+                    marginBottom: 20,
+                    padding: 10,  
+                    flexDirection: 'row', 
+                    alignItems: "center", 
+                    justifyContent: "center"
+                }}>
+                { qrCodeBase64 ? <QRCode logo={`data:image/png;base64,${qrCodeBase64}`} size={250} /> : null }
             </View>
 
             {/* Flex vertical of 2/15 */}
