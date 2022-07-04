@@ -21,6 +21,7 @@ import {
 } from 'react-native';
 import Api from "./Functions/Api";
 import WebSocketServer from "./Functions/socket";
+import QRCode from "react-native-qrcode-svg";
 
 const PixQrCode = (props) => {
 
@@ -274,6 +275,7 @@ const PixQrCode = (props) => {
 
              {/* Flex vertical of 7/15 */}
              <View style={{flex: 7, flexDirection: 'row', alignItems: "center", justifyContent: "center"}}>
+                { qrCodeBase64 ? <QRCode logo={`data:image/png;base64,${qrCodeBase64}`} size={200} /> : null }
                  {qrCodeBase64 ? 
                     <Image
                         source={{ uri: `data:image/png;base64,${qrCodeBase64}`}}
