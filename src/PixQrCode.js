@@ -284,7 +284,7 @@ const PixQrCode = (props) => {
                     alignItems: "center", 
                     justifyContent: "center"
                 }}>
-                { qrCodeBase64 ? <QRCode logo={`data:image/png;base64,${qrCodeBase64}`} size={250} /> : null }
+                { qrCodeBase64 ? <QRCode value={qrCodeBase64} size={250} /> : null }
             </View>
 
             {/* Flex vertical of 2/15 */}
