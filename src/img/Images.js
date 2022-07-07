@@ -16,6 +16,7 @@ const Images = {
     balance: require("./balance.png"),
     icon_pix: require("./pix.png"),
     icon_bank_profile: require('./bank-profile.png'),
+    warning: require('./warning.png'),
   };
   
   export default Images;

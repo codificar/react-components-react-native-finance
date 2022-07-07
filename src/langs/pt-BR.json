@@ -100,5 +100,8 @@
 	"payment_changed": "A forma de pagamento foi alterada",
 	"add_cards": "Adicionar cartões",
 	"payment_methods": "Formas de Pagamento",
-  	"make_widthdrawal": "Solicitar Saque"
+  	"make_widthdrawal": "Solicitar Saque",
+	"debit_active_balance": "Débito ativo",
+	"current_debit_active": "Débito ativo atual",
+	"message_current_debit_active": "Você possui um debito ativo atual. Para continuar online e recebendo solicitações você deve adicionar um saldo."
 }
