@@ -28,18 +28,33 @@ import { useIsFocused } from "@react-navigation/native";
 
 const DebitActiveScreen = (props) => {
 
-    GLOBAL.lang = GLOBAL.lang ? GLOBAL.lang : props.lang;
-    GLOBAL.color = GLOBAL.color ? GLOBAL.color : props.PrimaryButton;
-    GLOBAL.navigation_v5 = GLOBAL.navigation_v5 ? GLOBAL.navigation_v5 : props.navigation_v5;
-
-    GLOBAL.appUrl = GLOBAL.appUrl ? GLOBAL.appUrl : props.appUrl;
-    GLOBAL.id = GLOBAL.id ? GLOBAL.id : props.id;
-    GLOBAL.token = GLOBAL.token ? GLOBAL.token : props.token;
-    GLOBAL.type = GLOBAL.type ? GLOBAL.type : props.type;
-    GLOBAL.socket_url = GLOBAL.socket_url ? GLOBAL.socket_url : props.socket_url;
     
     const [currentBalance, setCurrentBalance] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+    const [primaryColor, setPrimaryColor] = useState('#00A8FF');
+
+    const verifyProps = () => {
+        if(props.navigation.state.params) {
+            const {params} = props.navigation.state;
+            if(!GLOBAL.id && params.id)
+                GLOBAL.id = params.id;
+            if(!GLOBAL.token && params.token)
+                GLOBAL.token = params.token;
+            if(!GLOBAL.type && params.type)
+                GLOBAL.type = params.type;
+            if(!GLOBAL.appUrl && params.appUrl)
+                GLOBAL.appUrl = params.appUrl;
+            if(!GLOBAL.socket_url && params.socket_url)
+                GLOBAL.socket_url = params.socket_url;
+            if(!GLOBAL.lang && params.lang)
+                GLOBAL.lang = params.lang;
+            if(!GLOBAL.color && params.color) {
+                GLOBAL.color = params.color; 
+                setPrimaryColor(params.color);
+            }
+        }
+    };
+    verifyProps();
 
     //Get the lang from props. If hasn't lang in props, default is pt-BR
     var strings = require('./langs/pt-BR.json');
@@ -67,44 +82,22 @@ const DebitActiveScreen = (props) => {
         }
     }
 
-    if(GLOBAL.navigation_v5) {
-        const isVisible = useIsFocused();
-        useEffect(() => {
-            if(isVisible) {
-                getCardsAndBalanceInfo();
-            }
-        }, [isVisible]);
-    }
-
-
     useEffect(() => {
-
         const backAction = () => {
             props.navigation.goBack()
             return true;
         };
-
         const backHandler = BackHandler.addEventListener(
-          "hardwareBackPress",
-          backAction
+            "hardwareBackPress",
+            backAction
         );
-
+            
+        getCardsAndBalanceInfo();
+        
         return () => backHandler.remove();
     }, []);
 
-    const verifyProps = () => {
-        if(props.navigation.state.params) {
-            const {params} = props.navigation.state;
-            if(params.id)
-                GLOBAL.id = params.id;
-            if(params.token)
-                GLOBAL.token = params.token;
-            if(params.type)
-                GLOBAL.type = params.type;
-            if(params.appUrl)
-                GLOBAL.appUrl = params.appUrl; 
-        }
-    }
+    
 
 
     /**
@@ -115,7 +108,6 @@ const DebitActiveScreen = (props) => {
 	 */
 
     const getCardsAndBalanceInfo = () => {
-      verifyProps();
       setIsLoading(true);
         api.GetCardsAndBalance(
             GLOBAL.appUrl,
@@ -199,7 +191,7 @@ const DebitActiveScreen = (props) => {
                         <Text style={styles.currentValueText}>{strings.current_debit_active}</Text>
                         <Text style={styles.currentValue}>{currentBalance}</Text>
                         <TouchableOpacity
-                            style={styles.buttonToAddBallance}
+                            style={[styles.buttonToAddBallance, {backgroundColor: primaryColor}]}
                             onPress={openAddBalanceScreen} 
                         >
                             <Text style={{color: 'white', fontSize: 16, fontWeight: "bold", textAlign: "center" }}>{strings.add_balance}</Text>
@@ -257,8 +249,7 @@ const styles = StyleSheet.create({
         borderRadius: 3, 
         padding: 10, 
         elevation: 2, 
-        width: Dimensions.get('window').width - 40, 
-        backgroundColor: '#00A8FF'
+        width: Dimensions.get('window').width - 40,
     }
 
 });
