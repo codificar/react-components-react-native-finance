@@ -17,6 +17,13 @@ const Images = {
     icon_pix: require("./pix.png"),
     icon_bank_profile: require('./bank-profile.png'),
     warning: require('./warning.png'),
+    iconCard: require('./paymentIcons/card.png'),
+    iconcryptoCurrency: require('./paymentIcons/cryptocurrency.png'),
+    iconMachine: require('./paymentIcons/machine.png'),
+    iconMoney: require('./paymentIcons/money.png'),
+    iconCarto: require('./paymentIcons/carto.png'),
+    payment_balance: require("./paymentIcons/baseline-account-balance.png"),
+    payment_billing: require("./paymentIcons/voucher.png"),
   };
   
   export default Images;
