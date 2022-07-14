@@ -6,6 +6,7 @@ import EarningDetailScreen from './src/EarningDetailScreen'
 import FilterScreen from './src/FilterScreen'
 import AddBalanceScreen from './src/AddBalanceScreen'
 import AddCardScreenLib from './src/AddCardScreenLib'
+import DebitActiveScreen from './src/DebitActiveScreen'
 import AddCardWebView from './src/AddCardWebView'
 import PixScreen from './src/PixScreen'
 import PixQrCode from './src/PixQrCode'
@@ -15,6 +16,7 @@ const screens = {
     EarningDetailScreen: { screen: EarningDetailScreen },
     FilterScreen: { screen: FilterScreen },
     AddBalanceScreen: { screen: AddBalanceScreen },
+    DebitActiveScreen: { screen: DebitActiveScreen },
     AddCardScreenLib: { screen: AddCardScreenLib },
     AddCardWebView: { screen: AddCardWebView },
     PixScreen: { screen: PixScreen },

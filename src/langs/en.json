@@ -99,5 +99,9 @@
 	"exit_app_msg": "Are you sure?",
 	"payment_changed": "The payment mode has changed",
 	"add_cards": "Add card",
-	"payment_methods": "Payment Methods"
+	"payment_methods": "Payment Methods",
+  	"make_widthdrawal": "Make Withdrawal",
+	"debit_active_balance": "Debit active",
+	"current_debit_active": "Current debit active",
+	"message_current_debit_active": "You have current active debt. To continue online and receive requests you must add a balance."
 }
