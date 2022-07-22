@@ -111,11 +111,14 @@ class Finance extends Component {
     getReport(year) {
         this.setState({ isLoading: true })
 
+        const type = GLOBAL.type == 'user' ? GLOBAL.type : 'provider';
+
         this.api.GetReport(
             GLOBAL.appUrl,
             GLOBAL.id, 
             GLOBAL.token, 
-            year
+            year,
+            type
         )
         .then((json) => {
             this.setState({ isLoading: false })

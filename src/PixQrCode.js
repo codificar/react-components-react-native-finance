@@ -21,6 +21,7 @@ import {
 } from 'react-native';
 import Api from "./Functions/Api";
 import WebSocketServer from "./Functions/socket";
+import QRCode from "react-native-qrcode-svg";
 
 const PixQrCode = (props) => {
 
@@ -82,7 +83,6 @@ const PixQrCode = (props) => {
 
     useEffect(() => {
         retrievePix(props.callRetrieve, false);
-        getPaymentTypes();
     }, [props.callRetrieve]);
 
     const retrievePix = (qtd, showFailMsg) => {
@@ -108,6 +108,7 @@ const PixQrCode = (props) => {
                     //se for a primeira vez que chama essa api (qtd = 0), entao se inscreve no socket
                     if(qtd == 0) {
                         subscribeSocket(json.transaction_id);
+                        getPaymentTypes();
                     }
                 }
             } else {
@@ -273,15 +274,17 @@ const PixQrCode = (props) => {
             </View>
 
              {/* Flex vertical of 7/15 */}
-             <View style={{flex: 7, flexDirection: 'row', alignItems: "center", justifyContent: "center"}}>
-                 {qrCodeBase64 ? 
-                    <Image
-                        source={{ uri: `data:image/png;base64,${qrCodeBase64}`}}
-                        style={{ width: "100%", height: "100%", resizeMode: 'contain'}}
-                    />
-                    :
-                    <Text>QR CODE</Text>
-                }
+             <View 
+                style={{
+                    flex: 7, 
+                    marginTop: 20,
+                    marginBottom: 20,
+                    padding: 10,  
+                    flexDirection: 'row', 
+                    alignItems: "center", 
+                    justifyContent: "center"
+                }}>
+                { qrCodeBase64 ? <QRCode value={qrCodeBase64} size={250} /> : null }
             </View>
 
             {/* Flex vertical of 2/15 */}
