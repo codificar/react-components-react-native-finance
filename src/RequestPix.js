@@ -4,6 +4,7 @@ import Toolbar from './Functions/Toolbar'
 
 
 import Loader from "./Functions/Loader"
+import Images from "./img/Images";
 
 import { 
     View, 
@@ -14,7 +15,8 @@ import {
     Clipboard,
     AppState,
     TouchableOpacity,
-    Alert
+    Alert,
+    Image
 } from 'react-native';
 import Api from "./Functions/Api";
 import Toast from "./Functions/Toast";
@@ -116,12 +118,14 @@ const RequestPix = (props) => {
                     }
                 }
             } else {
-                console.log("error");
+                setFormattedValue(json.formatted_value);
+                Toast.showToast(strings.payment_error);
+                console.log("error: ", json);
             }
         })
         .catch((error) => {
             console.log("fail");
-
+            Toast.showToast(strings.payment_error);
             console.error(error);
         });
     }
@@ -173,39 +177,55 @@ const RequestPix = (props) => {
             </View>
 
             {/* Flex vertical of 2/13 */}
-            <View style={{flex: 2, marginTop: 10 }}>
-                <Text style={styles.text}>{strings.pix_info}</Text>
+            <View style={{flex: 2, marginTop: 10}}>
+                <Text style={[styles.text, {textAlign: 'center'}]}>
+                    {copyAndPaste ? 
+                            strings.pix_info :
+                            strings.payment_error 
+                    }
+                </Text>
             </View>
 
              {/* Flex vertical of 4/13 */}
             <View style={{flex: 4}}>
-                <Text style={[styles.textBold, styles.text, styles.textBlack]}>{strings.pix_info_1}</Text>
+                    {copyAndPaste ? 
+                        <Text style={[styles.textBold, styles.text, styles.textBlack]}>
+                            strings.pix_info_1 
+                        </Text>
+                        : null
+                    }
                 <View style={{ marginTop: 10, alignItems: "center"}}>
-                    <TextInput
-                        style={styles.input}
-                        selectTextOnFocus={true}
-                        showSoftInputOnFocus={false} 
-                        value={copyAndPaste}
-                    />
+                    {copyAndPaste ? (
+                        <>
+                            <TextInput
+                                style={styles.input}
+                                selectTextOnFocus={true}
+                                showSoftInputOnFocus={false} 
+                                value={copyAndPaste}
+                            />
 
-                    <TouchableOpacity
-                        style={styles.buttonStyle}
-                        onPress={() =>  copyClipBoard()} 
-                    >
-                        <Text style={[styles.greenText, {fontSize: 16, fontWeight: "bold", textAlign: "center" }]}>{strings.copy_pix}</Text>
-                    </TouchableOpacity>
-                                     
+                            <TouchableOpacity
+                                style={styles.buttonStyle}
+                                onPress={() =>  copyClipBoard()} 
+                            >
+                                <Text style={[styles.greenText, {fontSize: 16, fontWeight: "bold", textAlign: "center" }]}>{strings.copy_pix}</Text>
+                            </TouchableOpacity>
+                        </>
+                    ) : 
+                        <Image source={Images.warning} style={styles.imgWarning} />
+                    }             
                 </View>
             </View>
-
             {/* Flex vertical of 4/13 */}
-            <View style={{ flex: 4, alignItems: 'center' }}>
-                <View style={styles.yellowCard}>
-                    <Text style={[styles.textBold, styles.yellowText]}>{strings.attention}</Text>
-                    <Text style={styles.yellowText}>{strings.req_pix_info_2}</Text>
-                    <Text style={[{marginBottom: 20}, styles.yellowText]}>{strings.req_pix_info_3}</Text>
+            {copyAndPaste ?
+                <View style={{ flex: 4, alignItems: 'center' }}>
+                    <View style={styles.yellowCard}>
+                        <Text style={[styles.textBold, styles.yellowText]}>{strings.attention}</Text>
+                        <Text style={styles.yellowText}>{strings.req_pix_info_2}</Text>
+                        <Text style={[{marginBottom: 20}, styles.yellowText]}>{strings.req_pix_info_3}</Text>
+                    </View>
                 </View>
-            </View>
+            : null}
 
             {/* Flex vertical of 1/13 */}
             <View style={{flex: 1, alignItems: "center"}}>
@@ -291,7 +311,12 @@ const styles = StyleSheet.create({
         height: 1, 
         width: "90%",
         marginVertical: 10
-    }
+    },
+    imgWarning: {
+        width: 130, 
+        height: 130, 
+        resizeMode: 'contain'
+    },
 });
 
 export default RequestPix;

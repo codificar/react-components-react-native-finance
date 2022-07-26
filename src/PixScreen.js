@@ -6,6 +6,7 @@ import { NavigationEvents } from "react-navigation";
 import { useIsFocused } from "@react-navigation/native";
 
 import Loader from "./Functions/Loader"
+import Images from "./img/Images";
 
 import { 
     View, 
@@ -144,7 +145,7 @@ const PixScreen = (props) => {
             GLOBAL.type
         )
         .then((json) => {
-            //console.log(json);
+            console.log(json);
             if(json.success) {
                 setCopyAndPaste(json.copy_and_paste);
                 setFormattedValue(json.formatted_value);
@@ -160,7 +161,7 @@ const PixScreen = (props) => {
                     }
                 }
             } else {
-                console.log("error");
+                console.log("error > ");
                 GLOBAL.pix_transaction_id = json.transaction_id;
                 setFormattedValue(json.formatted_value);
                 Toast.showToast(strings.payment_not_confirmed);
@@ -218,7 +219,12 @@ const PixScreen = (props) => {
 
              {/* Flex vertical of 4/13 */}
             <View style={{flex: 4}}>
-                <Text style={[styles.textBold, styles.text, styles.textBlack]}>{strings.pix_info_1}</Text>
+                <Text style={[styles.textBold, styles.text, styles.textBlack, {textAlign: 'center'}]}>
+                    {copyAndPaste ? 
+                        strings.pix_info_1 :
+                        strings.payment_error 
+                    }
+                </Text>
                 <View style={{ marginTop: 10, alignItems: "center"}}>
                     {copyAndPaste ? (
                         <>
@@ -236,7 +242,9 @@ const PixScreen = (props) => {
                         <Text style={[styles.greenText, {fontSize: 16, fontWeight: "bold", textAlign: "center" }]}>{strings.copy_pix}</Text>
                     </TouchableOpacity>
                     </>
-                    ) : null }             
+                    ) : 
+                    <Image source={Images.warning} style={styles.imgWarning} />
+                    }             
                 </View>
             </View>
 
@@ -333,7 +341,12 @@ const styles = StyleSheet.create({
         height: 1, 
         width: "90%",
         marginVertical: 10
-    }
+    },
+    imgWarning: {
+        width: 130, 
+        height: 130, 
+        resizeMode: 'contain'
+    },
 });
 
 export default PixScreen;
