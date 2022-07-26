@@ -161,11 +161,14 @@ const PixScreen = (props) => {
                 }
             } else {
                 console.log("error");
+                GLOBAL.pix_transaction_id = json.transaction_id;
+                setFormattedValue(json.formatted_value);
+                Toast.showToast(strings.payment_not_confirmed);
             }
         })
         .catch((error) => {
+            Toast.showToast(strings.payment_not_confirmed);
             console.log("fail");
-
             console.error(error);
         });
     }
@@ -217,6 +220,8 @@ const PixScreen = (props) => {
             <View style={{flex: 4}}>
                 <Text style={[styles.textBold, styles.text, styles.textBlack]}>{strings.pix_info_1}</Text>
                 <View style={{ marginTop: 10, alignItems: "center"}}>
+                    {copyAndPaste ? (
+                        <>
                     <TextInput
                         style={styles.input}
                         selectTextOnFocus={true}
@@ -230,7 +235,8 @@ const PixScreen = (props) => {
                     >
                         <Text style={[styles.greenText, {fontSize: 16, fontWeight: "bold", textAlign: "center" }]}>{strings.copy_pix}</Text>
                     </TouchableOpacity>
-                                     
+                    </>
+                    ) : null }             
                 </View>
             </View>
 

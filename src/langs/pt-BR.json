@@ -93,6 +93,7 @@
 	"attention": "Atenção",
 	"pix_payment": "Pagamento Pix",
 	"payment_not_confirmed": "Não identificamos o pagamento ainda.",
+	"payment_error": "Houve um problema com o pagamento pix, por favor tente com outro metodo de pagamento.",
 	"pix_problems": "Problemas com pagamento pix?",
 	"change_payment_mode": "Alterar forma de pagamento",
 	"exit_app": "Sair do aplicativo",
