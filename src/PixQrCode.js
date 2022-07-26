@@ -112,8 +112,13 @@ const PixQrCode = (props) => {
                     }
                 }
             } else {
-                if(json.formatted_value) {
-                    setFormattedValue(json.formatted_value);
+                if(json.paid) {
+                    alertPaid();
+                } else {
+                    if(json.formatted_value) {
+                        setFormattedValue(json.formatted_value);
+                    }
+                    Toast.showToast(strings.payment_error);
                 }
                 getPaymentTypes();
                 console.log("error: ", json);

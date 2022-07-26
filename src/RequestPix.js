@@ -118,8 +118,14 @@ const RequestPix = (props) => {
                     }
                 }
             } else {
-                setFormattedValue(json.formatted_value);
-                Toast.showToast(strings.payment_error);
+                if(json.paid) {
+                    alertChange(true);
+                } else {
+                    if(json.formatted_value) {
+                        setFormattedValue(json.formatted_value);
+                    }
+                    Toast.showToast(strings.payment_error);
+                }
                 console.log("error: ", json);
             }
         })
