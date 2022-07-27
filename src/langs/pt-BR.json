@@ -104,5 +104,16 @@
   	"make_widthdrawal": "Solicitar Saque",
 	"debit_active_balance": "Débito ativo",
 	"current_debit_active": "Débito ativo atual",
-	"message_current_debit_active": "Você possui um debito ativo atual. Para continuar online e recebendo solicitações você deve adicionar um saldo."
+	"message_current_debit_active": "Você possui um debito ativo atual. Para continuar online e recebendo solicitações você deve adicionar um saldo.",
+	"payment_card": "Cartão de crédito",
+	"payment_money": "Dinheiro",
+	"payment_carto": "Carto",
+	"payment_machine": "Maquininha",
+	"payment_cryptocurrency": "Criptomoeda",
+	"payment_debitCard": "Cartão de débito",
+	"payment_balance": "Saldo",
+	"payment_billing": "Boleto",
+	"payment_gateway_pix": "Pix Online",
+	"payment_direct_pix": "Pix direto",
+	"manage_payment_title": "Gerenciar pagamento"
 }

@@ -102,8 +102,8 @@ export default class Api {
         let params = {
             method: 'POST',
             headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json'
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 id: id,
@@ -114,7 +114,7 @@ export default class Api {
                 card_number: card_number,
                 card_cvv: card_cvv,
                 card_expiration_year: card_expiration_year,
-                card_expiration_month:card_expiration_month
+                card_expiration_month: card_expiration_month
             })
         }
         return fetch(app_url + "/libs/finance/" + type + "/add_credit_card", params).then((response) => response.json());
@@ -145,6 +145,30 @@ export default class Api {
             .catch((error) => error);
     }
 
+    getProviderPayment(app_url, id, token) {
+        return fetch(`${app_url}/libs/gateways/provider/get_payments?id=${id}&token=${token}`, this.get).then((response) => response.json());
+    }
+
+    getPaymentInfo(app_url) {
+        return fetch(`${app_url}/libs/gateways/payment_methods`, this.get).then((response) => response.json());
+    }
+
+    setProviderPayment(app_url, id, token, payments) {
+        let params = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                token: token,
+                provider_payment: payments
+            })
+        }
+        return fetch(`${app_url}/libs/gateways/provider/set_payments`, params).then((response) => response.json());
+    }
+
     getPaymentTypes(app_url, id, token) {
         let params = new URLSearchParams({
             provider_id: id,
@@ -157,8 +181,8 @@ export default class Api {
         let params = {
             method: 'POST',
             headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json'
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 provider_id: id,

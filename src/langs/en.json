@@ -104,5 +104,16 @@
   	"make_widthdrawal": "Make Withdrawal",
 	"debit_active_balance": "Debit active",
 	"current_debit_active": "Current debit active",
-	"message_current_debit_active": "You have current active debt. To continue online and receive requests you must add a balance."
+	"message_current_debit_active": "You have current active debt. To continue online and receive requests you must add a balance.",
+	"payment_card": "Credit Card",
+	"payment_money": "Money",
+	"payment_carto": "Carto",
+	"payment_machine": "Machine",
+	"payment_cryptocurrency": "Cryptocoin",
+	"payment_debitCard": "Debit Card",
+	"payment_balance": "Balance",
+	"payment_billing": "Billing",
+	"payment_gateway_pix": "Pix Online",
+	"payment_direct_pix": "Direct Pix",
+	"manage_payment_title": "Manage payment"
 }
