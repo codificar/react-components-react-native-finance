@@ -17,7 +17,8 @@ import {
     Clipboard,
     AppState,
     TouchableOpacity,
-    Alert
+    Alert,
+    Image
 } from 'react-native';
 import Api from "./Functions/Api";
 import GLOBAL from './Functions/Global.js';
