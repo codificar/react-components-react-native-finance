@@ -165,11 +165,11 @@ const PixScreen = (props) => {
                 console.log("error > ");
                 GLOBAL.pix_transaction_id = json.transaction_id;
                 setFormattedValue(json.formatted_value);
-                Toast.showToast(strings.payment_not_confirmed);
+                Toast.showToast(strings.payment_error);
             }
         })
         .catch((error) => {
-            Toast.showToast(strings.payment_not_confirmed);
+            Toast.showToast(strings.payment_error);
             console.log("fail");
             console.error(error);
         });
