@@ -249,13 +249,15 @@ const PixScreen = (props) => {
             </View>
 
             {/* Flex vertical of 4/13 */}
-            <View style={{ flex: 4, alignItems: 'center' }}>
-                <View style={styles.yellowCard}>
-                    <Text style={[styles.textBold, styles.yellowText]}>{strings.attention}</Text>
-                    <Text style={styles.yellowText}>{strings.pix_info_2}</Text>
-                    <Text style={[{marginBottom: 20}, styles.yellowText]}>{strings.pix_info_3}</Text>
+            {copyAndPaste ?
+                <View style={{ flex: 4, alignItems: 'center' }}>
+                    <View style={styles.yellowCard}>
+                        <Text style={[styles.textBold, styles.yellowText]}>{strings.attention}</Text>
+                        <Text style={styles.yellowText}>{strings.pix_info_2}</Text>
+                        <Text style={[{marginBottom: 20}, styles.yellowText]}>{strings.pix_info_3}</Text>
+                    </View>
                 </View>
-            </View>
+            : null}
 
             {/* Flex vertical of 1/13 */}
             <View style={{flex: 1, alignItems: "center"}}>
