@@ -36,6 +36,7 @@ class Finance extends Component {
         GLOBAL.color = this.props.PrimaryButton;
 
         GLOBAL.appUrl = this.props.appUrl;
+        GLOBAL.removeCardUrl = this.props.removeCardUrl;
         GLOBAL.id = this.props.id;
         GLOBAL.token = this.props.token;
         GLOBAL.type = this.props.type;
@@ -181,6 +182,7 @@ class Finance extends Component {
                     formattedEndDate: this.state.lastDayWeek,
                     isHelp: this.props.isHelp,
                     appUrl: GLOBAL.appUrl,
+                    removeCardUrl: GLOBAL.removeCardUrl,
                     PrimaryButton: this.props.PrimaryButton
                 }
             )

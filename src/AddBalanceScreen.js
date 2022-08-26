@@ -45,6 +45,7 @@ const AddBalanceScreen = (props) => {
     GLOBAL.navigation_v5 = GLOBAL.navigation_v5 ? GLOBAL.navigation_v5 : props.navigation_v5;
 
     GLOBAL.appUrl = GLOBAL.appUrl ? GLOBAL.appUrl : props.appUrl;
+    GLOBAL.removeCardUrl = GLOBAL.removeCardUrl ? GLOBAL.removeCardUrl : props.removeCardUrl;
     GLOBAL.id = GLOBAL.id ? GLOBAL.id : props.id;
     GLOBAL.token = GLOBAL.token ? GLOBAL.token : props.token;
     GLOBAL.type = GLOBAL.type ? GLOBAL.type : props.type;
@@ -374,6 +375,52 @@ const AddBalanceScreen = (props) => {
         }
 
     }
+
+    const removeCardAlert = (card) => {
+        if(card) {
+            Alert.alert(
+                strings.remove_card,
+                strings.confirm_remove_card,
+                [
+                    { text: strings.cancel, style: "cancel" },
+                    { text: strings.yes, onPress: () => removeCard(card) }
+                ],
+                { cancelable: true }
+            );
+        }
+    }
+
+    const removeCard = (card) => {
+        setIsLoading(true);
+        if(card) {
+            api.RemoveCard(
+                GLOBAL.removeCardUrl,
+                GLOBAL.id,
+                GLOBAL.token,
+                card.id,
+            )
+            .then((json) => {
+                if(json.success) {
+                    setIsLoading(false);
+                    setCards(json.cards);
+                    alertOk(strings.card, strings.remove_card_success);
+                } else {
+                    setIsLoading(false);
+                    if(json.error){
+                        Toast.showToast(json.error);
+                    }
+                    else {
+                        Toast.showToast(strings.card_refused);
+                    }
+                }
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                console.error(error);
+            });
+        }
+    }
+
     const copyClipBoard = () => {
         Clipboard.setString(digitable_line);
         Toast.showToast(strings.billet_copied);
@@ -660,6 +707,13 @@ const AddBalanceScreen = (props) => {
                                                 <Text style={{ fontWeight: 'bold' }}>**** **** **** {item.last_four}</Text>
                                             </View>
 
+                                            <View style={{ flex: 0.1, justifyContent: 'center', alignItems: 'center' }}>
+                                                <TouchableOpacity
+                                                    onPress={() => removeCardAlert(item)}
+                                                >
+                                                    <Image resizeMode="contain" source={Images.icon_remove} style={styles.removeCard} />
+                                                </TouchableOpacity>
+                                            </View>
                                         </TouchableOpacity>
                                     )}
                                     keyExtractor={(item, index) => `${index}`}
@@ -842,7 +896,13 @@ const styles = StyleSheet.create({
 	indicationContainer: {
 		marginTop: 10,
 		alignItems: "flex-start",
-	}
+	},
+    removeCard: {
+        height: 15,
+        width: 15,
+        marginTop: 5,
+        marginLeft: 10
+    },
 });
 
 export default AddBalanceScreen;
