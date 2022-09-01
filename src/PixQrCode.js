@@ -38,6 +38,7 @@ const PixQrCode = (props) => {
     }
 
     const [isLoading, setIsLoading] = useState(false);
+    const [errorPix, setErrorPix] = useState(false);
     const [formattedValue, setFormattedValue] = useState("");
     const [transactionId, setTransactionId] = useState(0);
     const [qrCodeBase64, setQrCodeBase64] = useState("");
@@ -96,6 +97,7 @@ const PixQrCode = (props) => {
         )
         .then((json) => {
             if(json.success) {
+                setErrorPix(false);
                 setFormattedValue(json.formatted_value);
                 if(json && json.paid) {
                     alertPaid();
@@ -121,12 +123,14 @@ const PixQrCode = (props) => {
                     Toast.showToast(strings.payment_error);
                 }
                 getPaymentTypes();
+                setErrorPix(true);
                 console.log("error: ", json);
                 Toast.showToast(strings.payment_error);
             }
         })
         .catch((error) => {
             getPaymentTypes();
+            setErrorPix(true);
             console.log('retrievePix error',error);
             Toast.showToast(strings.payment_error);
         });
@@ -281,9 +285,9 @@ const PixQrCode = (props) => {
             {/* Flex vertical of 2/15 */}
             <View style={{flex: 2, marginTop: 15 }}>
                 <Text style={{color: 'grey', textAlign: 'center', fontSize: 16, marginHorizontal: 20}}>
-                    {qrCodeBase64 ? 
-                        strings.pix_qr_info : 
-                        strings.payment_error
+                    {qrCodeBase64 && !errorPix 
+                        ? strings.pix_qr_info 
+                        : strings.payment_error
                     }
                 </Text>
             </View>
@@ -299,9 +303,13 @@ const PixQrCode = (props) => {
                     alignItems: "center", 
                     justifyContent: "center"
                 }}>
-                { qrCodeBase64 ? 
-                    <QRCode value={qrCodeBase64} size={250} /> : 
-                    <Image source={Images.warning} style={styles.imgWarning} />  
+                {errorPix 
+                    ? <Image source={Images.warning} style={styles.imgWarning} />
+                    : null 
+                }
+                { qrCodeBase64 && !errorPix
+                    ? <QRCode value={qrCodeBase64} size={250} /> 
+                    : null  
                 }
             </View>
 

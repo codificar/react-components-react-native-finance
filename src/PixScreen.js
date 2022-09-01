@@ -49,6 +49,7 @@ const PixScreen = (props) => {
     }
 
     const [isLoading, setIsLoading] = useState(false);
+    const [errorPix, setErrorPix] = useState(false);
     const [copyAndPaste, setCopyAndPaste] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
     const [isSubscribed, setIsSubscribed] = useState(false);
@@ -148,6 +149,7 @@ const PixScreen = (props) => {
         .then((json) => {
             console.log(json);
             if(json.success) {
+                setErrorPix(false);
                 setCopyAndPaste(json.copy_and_paste);
                 setFormattedValue(json.formatted_value);
                 if(json && json.paid) {
@@ -162,7 +164,7 @@ const PixScreen = (props) => {
                     }
                 }
             } else {
-                console.log("error > ");
+                setErrorPix(true);
                 GLOBAL.pix_transaction_id = json.transaction_id;
                 setFormattedValue(json.formatted_value);
                 Toast.showToast(strings.payment_error);
@@ -170,6 +172,7 @@ const PixScreen = (props) => {
         })
         .catch((error) => {
             Toast.showToast(strings.payment_error);
+            setErrorPix(true);
             console.log("fail");
             console.error(error);
         });
@@ -221,13 +224,18 @@ const PixScreen = (props) => {
              {/* Flex vertical of 4/13 */}
             <View style={{flex: 4}}>
                 <Text style={[styles.textBold, styles.text, styles.textBlack, {textAlign: 'center'}]}>
-                    {copyAndPaste ? 
+                    {copyAndPaste && !errorPix ? 
                         strings.pix_info_1 :
                         strings.payment_error 
                     }
                 </Text>
                 <View style={{ marginTop: 10, alignItems: "center"}}>
-                    {copyAndPaste ? (
+
+                    {errorPix
+                        ? <Image source={Images.warning} style={styles.imgWarning} /> 
+                        : null
+                    }
+                    {copyAndPaste && !errorPix ? (
                         <>
                     <TextInput
                         style={styles.input}
@@ -244,13 +252,13 @@ const PixScreen = (props) => {
                     </TouchableOpacity>
                     </>
                     ) : 
-                    <Image source={Images.warning} style={styles.imgWarning} />
+                    null
                     }             
                 </View>
             </View>
 
             {/* Flex vertical of 4/13 */}
-            {copyAndPaste ?
+            {copyAndPaste && !errorPix ?
                 <View style={{ flex: 4, alignItems: 'center' }}>
                     <View style={styles.yellowCard}>
                         <Text style={[styles.textBold, styles.yellowText]}>{strings.attention}</Text>
