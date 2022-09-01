@@ -51,6 +51,9 @@ const AddBalanceScreen = (props) => {
     GLOBAL.type = GLOBAL.type ? GLOBAL.type : props.type;
     GLOBAL.socket_url = GLOBAL.socket_url ? GLOBAL.socket_url : props.socket_url;
     
+    GLOBAL.toolbar = GLOBAL.toolbar ? GLOBAL.toolbar : props.toolbar;
+    GLOBAL.titleHeader = GLOBAL.titleHeader ? GLOBAL.titleHeader : props.titleHeader;
+    
     const [totalToAddBalance, setTotalToAddBalance] = useState("");
     const [cards, setCards] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -99,12 +102,6 @@ const AddBalanceScreen = (props) => {
 
     const api = new Api();
 
-    if (props) {
-        if (props.toolbar) {
-            GLOBAL.toolbar = props.toolbar;
-            GLOBAL.titleHeader = props.titleHeader;
-        }
-    }
 
     if(GLOBAL.navigation_v5) {
         const isVisible = useIsFocused();
@@ -158,7 +155,7 @@ const AddBalanceScreen = (props) => {
 	 */
 
     const getCardsAndBalanceInfo = () => {
-      setIsLoading(true);
+        setIsLoading(true);
         api.GetCardsAndBalance(
             GLOBAL.appUrl,
             GLOBAL.id,
@@ -453,7 +450,7 @@ const AddBalanceScreen = (props) => {
 	}
 
     return (
-        <View style={[styles.container]}>
+        <View style={styles.container}>
             {!GLOBAL.navigation_v5 ? (
                 <NavigationEvents
                     onWillFocus={() => {

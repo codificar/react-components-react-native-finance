@@ -9,5 +9,7 @@ module.exports = {
     navigation_v5: null,
     pix_transaction_id: null,
     request_id: null,
-    socket_url: null
+    socket_url: null,
+    toolbar: null,
+    titleHeader: null,
 }; 
