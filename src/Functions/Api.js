@@ -120,7 +120,7 @@ export default class Api {
         return fetch(app_url + "/libs/finance/" + type + "/add_credit_card", params).then((response) => response.json());
     }
 
-    AddBilletBalance(app_url, id, token, value, type) {
+    AddPixBalance(app_url, id, token, value, type) {
         let params = new URLSearchParams({
             provider_id: id,
             user_id: id,

@@ -234,7 +234,7 @@ const AddBalanceScreen = (props) => {
 
     const addBalancePix = (valueToAdd) => {
         setIsLoading(true);
-        api.AddBilletBalance(
+        api.AddPixBalance(
             GLOBAL.appUrl,
             GLOBAL.id,
             GLOBAL.token,
@@ -254,6 +254,8 @@ const AddBalanceScreen = (props) => {
                 setIsLoading(false);
                 if(json.error){
                     Toast.showToast(json.error);
+                } else if(json.message){
+                    Toast.showToast(json.message);
                 }
                 else {
 
@@ -290,6 +292,8 @@ const AddBalanceScreen = (props) => {
                 setIsLoading(false);
                 if(json.error){
                     Toast.showToast(json.error);
+                } else if (json.message){
+                    Toast.showToast(json.message);
                 }
                 else {
 
