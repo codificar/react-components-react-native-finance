@@ -399,7 +399,7 @@ const AddBalanceScreen = (props) => {
             .then((json) => {
                 if(json.success) {
                     setIsLoading(false);
-                    setCards(json.cards);
+                    getCardsAndBalanceInfo();
                     alertOk(strings.card, strings.remove_card_success);
                 } else {
                     setIsLoading(false);
