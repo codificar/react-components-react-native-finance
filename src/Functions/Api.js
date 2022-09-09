@@ -120,6 +120,22 @@ export default class Api {
         return fetch(app_url + "/libs/finance/" + type + "/add_credit_card", params).then((response) => response.json());
     }
 
+    RemoveCard(removeCardUrl, id, token, card_id) {
+        let params = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                token: token,
+                card_id: card_id
+            })
+        }
+        return fetch(removeCardUrl, params).then((response) => response.json());
+    }
+
     AddBilletBalance(app_url, id, token, value, type) {
         let params = new URLSearchParams({
             provider_id: id,
@@ -140,7 +156,9 @@ export default class Api {
             transaction_id: transaction_id,
             request_id: request_id
         });
-        return fetch(app_url + "/libs/finance/" + type + "/retrieve_pix" + "?" + params, this.get).then((response) => response.json());
+        return fetch(app_url + "/libs/finance/" + type + "/retrieve_pix" + "?" + params, this.get)
+            .then((response) => response.json())
+            .catch((error) => error);
     }
 
     getProviderPayment(app_url, id, token) {
