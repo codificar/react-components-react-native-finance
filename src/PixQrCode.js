@@ -38,6 +38,7 @@ const PixQrCode = (props) => {
     }
 
     const [isLoading, setIsLoading] = useState(false);
+    const [errorPix, setErrorPix] = useState(false);
     const [formattedValue, setFormattedValue] = useState("");
     const [transactionId, setTransactionId] = useState(0);
     const [qrCodeBase64, setQrCodeBase64] = useState("");
@@ -96,6 +97,7 @@ const PixQrCode = (props) => {
         )
         .then((json) => {
             if(json.success) {
+                setErrorPix(false);
                 setFormattedValue(json.formatted_value);
                 if(json && json.paid) {
                     alertPaid();
@@ -112,13 +114,25 @@ const PixQrCode = (props) => {
                     }
                 }
             } else {
-                console.log("error");
+                if(json.paid) {
+                    alertPaid();
+                } else {
+                    if(json.formatted_value) {
+                        setFormattedValue(json.formatted_value);
+                    }
+                    Toast.showToast(strings.payment_error);
+                }
+                getPaymentTypes();
+                setErrorPix(true);
+                console.log("error: ", json);
+                Toast.showToast(strings.payment_error);
             }
         })
         .catch((error) => {
-            console.log("fail");
-
-            console.error(error);
+            getPaymentTypes();
+            setErrorPix(true);
+            console.log('retrievePix error',error);
+            Toast.showToast(strings.payment_error);
         });
     }
 
@@ -270,7 +284,12 @@ const PixQrCode = (props) => {
 
             {/* Flex vertical of 2/15 */}
             <View style={{flex: 2, marginTop: 15 }}>
-                <Text style={{color: 'grey', fontSize: 16, marginHorizontal: 20}}>{strings.pix_qr_info}</Text>
+                <Text style={{color: 'grey', textAlign: 'center', fontSize: 16, marginHorizontal: 20}}>
+                    {qrCodeBase64 && !errorPix 
+                        ? strings.pix_qr_info 
+                        : strings.payment_error
+                    }
+                </Text>
             </View>
 
              {/* Flex vertical of 7/15 */}
@@ -284,7 +303,14 @@ const PixQrCode = (props) => {
                     alignItems: "center", 
                     justifyContent: "center"
                 }}>
-                { qrCodeBase64 ? <QRCode value={qrCodeBase64} size={250} /> : null }
+                {errorPix 
+                    ? <Image source={Images.warning} style={styles.imgWarning} />
+                    : null 
+                }
+                { qrCodeBase64 && !errorPix
+                    ? <QRCode value={qrCodeBase64} size={250} /> 
+                    : null  
+                }
             </View>
 
             {/* Flex vertical of 2/15 */}
@@ -352,8 +378,11 @@ const styles = StyleSheet.create({
         width: "90%",
         marginVertical: 10
     },
-
-
+    imgWarning: {
+        width: 130, 
+        height: 130, 
+        resizeMode: 'contain'
+    },
     modalView: {
         margin: 5,
         width: "60%",

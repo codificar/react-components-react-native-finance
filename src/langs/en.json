@@ -93,6 +93,7 @@
 	"attention": "Attention",
 	"pix_payment": "Pix Payment",
 	"payment_not_confirmed": "Payment not confirmed yet.",
+	"payment_error": "There was a problem with the payment, please try with another payment method.",
 	"pix_problems": "Problems with pix?",
 	"change_payment_mode": "Change payment mode",
 	"exit_app": "Exit App",
