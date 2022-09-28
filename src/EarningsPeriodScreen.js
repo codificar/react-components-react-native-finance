@@ -50,7 +50,7 @@ class EarningsPeriodScreen extends Component {
         }
 
         this.api = new Api();
-        
+
         this.willFocus = this.props.navigation.addListener("willFocus", () => {
             //Toda vez que entra na tela, pega os params novamente, para atualizar os dados da tela
             this.param = this.props.navigation.state.params;
@@ -62,7 +62,7 @@ class EarningsPeriodScreen extends Component {
         if(GLOBAL.lang) {
             if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./langs/pt-BR.json');
-            } 
+            }
             // if is english
             else if(GLOBAL.lang.indexOf("en") != -1) {
                 this.strings = require('./langs/en.json');
@@ -132,8 +132,8 @@ class EarningsPeriodScreen extends Component {
 
 
     getAccountSummary() {
-        this.setState({ isLoadingSummary: true })
         if (this.state.nextPageUrl != null) {
+            this.setState({ isLoading: true })
             this.api.GetAccountSummary(
                 this.state.nextPageUrl,
                 this.state.providerId,
@@ -151,10 +151,9 @@ class EarningsPeriodScreen extends Component {
             })
             .catch((error) => {
                 console.error(error);
+            }).finally(() => {
+              this.setState({ isLoading: false })
             });
-
-        } else {
-            this.setState({ isLoadingSummary: false })
         }
     }
 
@@ -175,9 +174,9 @@ class EarningsPeriodScreen extends Component {
         .then((json) => {
             this.setState({ isLoading: false })
             let finances = json.detailed_balance.data;
-            
-            this.setState({ 
-                nextPageUrl: json.detailed_balance.next_page_url, 
+
+            this.setState({
+                nextPageUrl: json.detailed_balance.next_page_url,
                 provider_prepaid: json.provider_prepaid,
                 isLoading: false
             });
@@ -234,9 +233,9 @@ class EarningsPeriodScreen extends Component {
 
 
     openFilter() {
-        this.props.navigation.navigate('FilterScreen', { 
-            originScreen: 'EarningsPeriodScreen', 
-            PrimaryButton: this.param.PrimaryButton 
+        this.props.navigation.navigate('FilterScreen', {
+            originScreen: 'EarningsPeriodScreen',
+            PrimaryButton: this.param.PrimaryButton
         })
     }
 
@@ -294,73 +293,71 @@ class EarningsPeriodScreen extends Component {
                             align="flex-start"
                         />
                     </View>
-
-                    <ScrollView style={styles.summaryContainer}>
-                        <View style={styles.flatListViewContainer}>
-
-                            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                                <View style={{paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
-                                    <Text style={styles.currentValueText}>{this.strings.currentBalanceMsg}</Text>
-                                    <Text style={styles.currentValue}>{this.state.current_balance}</Text>
-                                </View>
-                                <View style={{ paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Text style={styles.currentValueText}>{this.strings.periodValues}</Text>
-                                    <Text style={styles.currentValueText}>{this.param.formattedStartDate} - {this.param.formattedEndDate}</Text>
-                                    <Text style={styles.currentValue}>{this.state.totalByPeriod}</Text>
-                                </View>
-                            </View>
-                            {this.state.financialData == '' ?
-                                <View style={styles.areaBlankState}>
-                                    <Image
-                                        source={require('./img/icon_balnk_state.png')} 
-                                        style={styles.imgBlankState}
-                                    />
-                                    <Text style={styles.txtBlankState}>
-                                        {this.strings.blank_state_message_filter}
-                                    </Text>
-                                </View>
-                            :
-                                <FlatList
-                                    style={styles.flat}
-                                    data={this.state.financialData}
-                                    onEndReached={() => this.getAccountSummary()}
-                                    onEndReachedThreshold={0.1}
-                                    ref={(ref) => { this.flatListRef = ref }}
-                                    keyExtractor={(x, i) => i.toString()}
-                                    ListFooterComponent={() => this.renderFooter()}
-                                    renderItem={({ item, index }) => (
-                                        <TouchableOpacity onPress={() => this.openEarningDetail(item)}>
-                                            <View style={styles.itemList}>
-                                                <View>
-                                                    <Text style={styles.textDate}>{moment(item.compensation_date).format('DD MMM')}</Text>
-                                                    <Text style={styles.textHour}>{moment(item.compensation_date).format('HH:mm')}</Text>
-                                                </View>
-                                                <View style={styles.contLastColumn}>
-                                                    {this.renderValue(item)}
-                                                    <Icon type='ionicon' name='ios-arrow-forward' size={20} />
-                                                </View>
-                                            </View>
-                                            <Divider style={styles.divider} />
-                                        </TouchableOpacity>
-                                    )}
-                                />
-                            }
+                    <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                        <View style={{paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
+                            <Text style={styles.currentValueText}>{this.strings.currentBalanceMsg}</Text>
+                            <Text style={styles.currentValue}>{this.state.current_balance}</Text>
                         </View>
-                    </ScrollView>
+                        <View style={{ paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={styles.currentValueText}>{this.strings.periodValues}</Text>
+                            <Text style={styles.currentValueText}>{this.param.formattedStartDate} - {this.param.formattedEndDate}</Text>
+                            <Text style={styles.currentValue}>{this.state.totalByPeriod}</Text>
+                        </View>
+                    </View>
+
+                    <View style={{flex: 1}}>
+                      {this.state.financialData == '' ?
+                          <View style={styles.areaBlankState}>
+                              <Image
+                                  source={require('./img/icon_balnk_state.png')}
+                                  style={styles.imgBlankState}
+                              />
+                              <Text style={styles.txtBlankState}>
+                                  {this.strings.blank_state_message_filter}
+                              </Text>
+                          </View>
+                      :
+                          <View style={{marginTop: 10, flex: 1}}>
+                          <FlatList
+                              data={this.state.financialData}
+                              onEndReached={() => this.getAccountSummary()}
+                              onEndReachedThreshold={0.1}
+                              ref={(ref) => { this.flatListRef = ref }}
+                              keyExtractor={(x, i) => i.toString()}
+                              ListFooterComponent={() => this.renderFooter()}
+                              renderItem={({ item, index }) => (
+                                  <TouchableOpacity onPress={() => this.openEarningDetail(item)}>
+                                      <View style={styles.itemList}>
+                                          <View>
+                                              <Text style={styles.textDate}>{moment(item.compensation_date).format('DD MMM')}</Text>
+                                              <Text style={styles.textHour}>{moment(item.compensation_date).format('HH:mm')}</Text>
+                                          </View>
+                                          <View style={styles.contLastColumn}>
+                                              {this.renderValue(item)}
+                                              <Icon type='ionicon' name='ios-arrow-forward' size={20} />
+                                          </View>
+                                      </View>
+                                      <Divider style={styles.divider} />
+                                  </TouchableOpacity>
+                              )}
+                          />
+                          </View>
+                      }
+                    </View>
                 </View>
                 {/* Flex 1/10 */}
                 {this.state.provider_prepaid ?
                     <View style={{ flex: 1, justifyContent: 'center' }}>{/* Flex vertical of 1/10 */}
                         <TouchableOpacity
                             style={{ borderRadius: 3, padding: 10, elevation: 2,marginHorizontal: 30, backgroundColor: GLOBAL.color }}
-                            onPress={() =>  this.openAddBalanceScreen()} 
+                            onPress={() =>  this.openAddBalanceScreen()}
                         >
                             <Text style={{color: 'white', fontSize: 16, fontWeight: "bold", textAlign: "center" }}>{this.strings.add_balance}</Text>
                         </TouchableOpacity>
                     </View>
                 : null}
-            </View>
+              </View>
         )
     }
 }
