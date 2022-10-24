@@ -332,11 +332,13 @@ const AddBalanceScreen = (props) => {
     }
 
     const alertAddBalanceBillet = () => {
-        var valueToAdd = getFloatValue();
 
-        var msg = strings.confirm_billet_value + " " + valueToAdd + "?";
+        var valueToAdd = getFloatValue();
+        var msgMinimum=string.minimumValueToCharge + prepaidMinValue;
+
+        var msg = strings.confirm_billet_value + " " + strings.currency + valueToAdd  +",00"+ "?";
         if(parseFloat(settings.prepaid_tax_billet) > 0) {
-            msg += " " + strings.billet_addition + " " + settings.prepaid_tax_billet;
+            msg += " " + strings.billet_addition + " " + strings.currency + settings.prepaid_tax_billet +",00";
         }
         if(settings.prepaid_min_billet_value) {
             var prepaidMinValue = parseFloat(settings.prepaid_min_billet_value);
@@ -355,7 +357,16 @@ const AddBalanceScreen = (props) => {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(strings.please_digit_value + prepaidMinValue);
+            Alert.alert(
+                strings.pay_with_billet,
+                msgMinimum,
+                [
+                    { text: strings.ok, style: "cancel" },
+                    
+                ],
+                { cancelable: false }
+            );
+            // Toast.showToast(strings.please_digit_value + prepaidMinValue);
         }
     }
     const alertAddBalanceCard = (card) => {
@@ -638,7 +649,7 @@ const AddBalanceScreen = (props) => {
                             addBalanceActive && (
                                 (GLOBAL.type == "user" && settings.prepaid_billet_user == "1") ||
                                 (GLOBAL.type == "provider" && settings.prepaid_billet_provider == "1")
-                            )
+                            ) && (totalToAddBalance)
                         ? (
                             <TouchableOpacity
                                 style={styles.listTypes}
