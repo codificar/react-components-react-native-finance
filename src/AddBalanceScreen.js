@@ -334,11 +334,12 @@ const AddBalanceScreen = (props) => {
     const alertAddBalanceBillet = () => {
 
         var valueToAdd = getFloatValue();
-        var msgMinimum=string.minimumValueToCharge + prepaidMinValue;
+        var prepaid_tax_billet = parseFloat(settings.prepaid_tax_billet);
+        var msgMinimum=strings.minimumValueToCharge +  " " + strings.currency + parseFloat(settings.prepaid_min_billet_value);
 
-        var msg = strings.confirm_billet_value + " " + strings.currency + valueToAdd  +",00"+ "?";
+        var msg = strings.confirm_billet_value + " " + strings.currency + valueToAdd  +"?";
         if(parseFloat(settings.prepaid_tax_billet) > 0) {
-            msg += " " + strings.billet_addition + " " + strings.currency + settings.prepaid_tax_billet +",00";
+            msg += " " + strings.billet_addition + " " + strings.currency + prepaid_tax_billet;
         }
         if(settings.prepaid_min_billet_value) {
             var prepaidMinValue = parseFloat(settings.prepaid_min_billet_value);
