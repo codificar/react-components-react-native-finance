@@ -304,7 +304,6 @@ const AddBalanceScreen = (props) => {
                     Toast.showToast(json.message);
                 }
                 else {
-
                     Toast.showToast(strings.billet_error);
                 }
             }
@@ -492,26 +491,26 @@ const AddBalanceScreen = (props) => {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
 
-                    <Text style={styles.modalText}>{strings.new_billet_success}</Text>
-                    <Text style={{color: 'blue', fontSize: 15}} onPress={() => Linking.openURL(billet_url)}>{strings.click_to_download}</Text>
+                        <Text style={styles.modalText}>{strings.new_billet_success}</Text>
+                        <Text style={{ color: 'blue', fontSize: 15 }} onPress={() => Linking.openURL(billet_url)}>{strings.click_to_download}</Text>
 
-                    <TouchableOpacity
-                        onPress={() => copyClipBoard()}
-                    >
-                        <View style={{flexDirection: "row", marginVertical: 20}}>
-                            <Text style={{fontSize: 17}}>{digitable_line}</Text>
-                            <Icon style={{marginLeft: 10}} name="clipboard" size={25} />
+                        <View style={{ flexDirection: "row", marginVertical: 20 }}>
+                            <Text style={{ fontSize: 17 }}>{digitable_line}</Text>
+                            <TouchableOpacity
+                                onPress={() => copyClipBoard()}
+                            >
+                                <Icon style={{ marginLeft: 6, marginTop: 8 }} name="clipboard" size={25} />
+                            </TouchableOpacity>
                         </View>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                        onPress={() => {
-                            setModalVisible(false);
-                        }}
-                    >
-                        <Text style={styles.textStyle}>Fechar</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                            onPress={() => {
+                                setModalVisible(false);
+                            }}
+                        >
+                            <Text style={styles.textStyle}>Fechar</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
