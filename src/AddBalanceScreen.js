@@ -287,6 +287,16 @@ const AddBalanceScreen = (props) => {
                 setModalVisible(true);
 
             } else {
+                msgError = strings.try_again
+                Alert.alert(
+                    strings.billet_error,
+                    msgError,
+                    [
+                        { text: strings.ok, style: "cancel" },
+                        
+                    ],
+                    { cancelable: false }
+                );
                 setIsLoading(false);
                 if(json.error){
                     Toast.showToast(json.error);
