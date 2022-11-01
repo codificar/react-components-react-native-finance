@@ -30,13 +30,13 @@ class EarningsPeriodScreen extends Component {
     constructor(props) {
         super(props)
 
-        this.param = this.props.navigation.state.params;
+      this.param = this.props.navigation.state != undefined ? this.param : this.props.route.params;
         this.state = {
             iniciate: 0,
-            dateInitial: this.props.navigation.state.params.startDate,
-            dateFinal: this.props.navigation.state.params.endDate,
-            formattedStartDate: this.props.navigation.state.params.formattedStartDate,
-            formattedEndDate: this.props.navigation.state.params.formattedEndDate,
+            dateInitial: this.param.startDate,
+            dateFinal: this.param.endDate,
+            formattedStartDate: this.param.formattedStartDate,
+            formattedEndDate: this.param.formattedEndDate,
             isLoading: false,
             financialData: [],
             isLoadingSummary: false,
@@ -53,7 +53,7 @@ class EarningsPeriodScreen extends Component {
 
         this.willFocus = this.props.navigation.addListener("willFocus", () => {
             //Toda vez que entra na tela, pega os params novamente, para atualizar os dados da tela
-            this.param = this.props.navigation.state.params;
+            this.param = this.props.navigation.state != undefined ? this.param : this.props.route.params;
             this.getCheckingAccount()
         })
 
@@ -167,8 +167,8 @@ class EarningsPeriodScreen extends Component {
             this.param.appUrl,
             this.state.providerId,
             this.state.token,
-            this.props.navigation.state.params.startDate,
-            this.props.navigation.state.params.endDate,
+            this.param.startDate,
+            this.param.endDate,
             type
         )
         .then((json) => {
