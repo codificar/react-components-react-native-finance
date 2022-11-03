@@ -127,7 +127,6 @@ class EarningsPeriodScreen extends Component {
 
     componentWillUnmount() {
         this.backHandler.remove()
-        this.willFocus.remove()
     }
 
 
