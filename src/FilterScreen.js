@@ -28,10 +28,12 @@ let months = []
 class FilterScreen extends Component {
   constructor(props) {
     super(props)
+        const origin = this.props.navigation.state != undefined ? this.param.originScreen : this.props.route.params.originScreen;
+
     this.state = {
       selectedStartDate: null,
       selectedEndDate: null,
-      originScreen: this.props.navigation.state.params.originScreen
+      originScreen: origin
     }
 
     //Get the lang from props. If hasn't lang in props, default is pt-BR
