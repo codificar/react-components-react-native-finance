@@ -83,6 +83,8 @@
 	"confirm_pix_value": "Tem certeza que deseja pagar com pix o valor de",
 	"pay_with_pix": "Pagar com Pix",
 	"copied": "Código copiado com sucesso!",
+	"payment":"Pagamento",
+	"confirmed_payment": "O pagamento foi confirmado!",
 	"pix": "Pix",
 	"confirmed_pix": "O pagamento Pix foi confirmado!",
 	"pix_info": "Pague com Pix em qualquer dia e a qualquer hora! O pagamento é instantâneo, prático e pode ser feito em poucos segundos. É rápido e seguro.",
