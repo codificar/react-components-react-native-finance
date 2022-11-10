@@ -20,18 +20,24 @@ import TitleHeader from './Functions/TitleHeader'
 import CalendarPicker from 'react-native-calendar-picker'
 
 import GLOBAL from './Functions/Global.js'
+import {useRoute} from "@react-navigation/native";
 
 let week = []
 let months = []
+let params = {}
 
 
 class FilterScreen extends Component {
   constructor(props) {
     super(props)
+        params = this.props.route.params
+          ? this.props.route.params
+          : this.props.navigation.state.params;
+
     this.state = {
       selectedStartDate: null,
       selectedEndDate: null,
-      originScreen: this.props.navigation.state.params.originScreen
+      originScreen: params.originScreen
     }
 
     //Get the lang from props. If hasn't lang in props, default is pt-BR
@@ -39,7 +45,7 @@ class FilterScreen extends Component {
     if(GLOBAL.lang) {
       if(GLOBAL.lang == "pt-BR") {
           this.strings = require('./langs/pt-BR.json');
-      } 
+      }
       // if is english
       else if(GLOBAL.lang.indexOf("en") != -1) {
           this.strings = require('./langs/en.json');
@@ -135,12 +141,12 @@ class FilterScreen extends Component {
             previousTitle={this.strings.previous}
             maxDate={today}
             allowRangeSelection={true}
-            selectedDayColor={this.props.navigation.state.params.PrimaryButton}
+            selectedDayColor={params.PrimaryButton}
             selectedDayTextColor={"#fff"}
             onDateChange={(date, type) => this.onDateChange(date, type)}
             selectedRangeStartStyle={{ borderBottomRightRadius: borderSelectedDay, borderTopRightRadius: borderSelectedDay }}
           />
-          <TouchableOpacity style={[styles.btnOverlay, {backgroundColor: this.props.navigation.state.params.PrimaryButton}]} onPress={() => this.sendIntervalDates()}>
+          <TouchableOpacity style={[styles.btnOverlay, {backgroundColor: params.PrimaryButton}]} onPress={() => this.sendIntervalDates()}>
             <Text style={styles.txtSend}>{this.strings.send}</Text>
           </TouchableOpacity>
         </View>
