@@ -249,6 +249,16 @@ const AddBalanceScreen = (props) => {
                     }
                 );
             } else {
+                msgError = strings.try_again
+                Alert.alert(
+                    strings.billet_error,
+                    msgError,
+                    [
+                        { text: strings.ok, style: "cancel" },
+                        
+                    ],
+                    { cancelable: false }
+                );
                 setIsLoading(false);
                 if(json.error){
                     Toast.showToast(json.error);
@@ -320,9 +330,10 @@ const AddBalanceScreen = (props) => {
 
     const alertAddBalancePix = () => {
         var valueToAdd = getFloatValue();
-
         var msg = strings.confirm_pix_value + " " + valueToAdd + "?";
         var pixMinValue = 1.5; // #todo: setting from api
+        var msgMinimum=strings.minimumValueToCharge + strings.currency + parseFloat(pixMinValue);
+
 
         if(totalToAddBalance && valueToAdd && valueToAdd >= pixMinValue) {
 
@@ -336,7 +347,16 @@ const AddBalanceScreen = (props) => {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(strings.please_digit_value + pixMinValue);
+            Alert.alert(
+                strings.pay_with_pix,
+                msgMinimum,
+                [
+                    { text: strings.ok, style: "cancel" },
+                    
+                ],
+                { cancelable: false }
+            );
+            ;
         }
     }
 
@@ -376,7 +396,6 @@ const AddBalanceScreen = (props) => {
                 ],
                 { cancelable: false }
             );
-            // Toast.showToast(strings.please_digit_value + prepaidMinValue);
         }
     }
     const alertAddBalanceCard = (card) => {
@@ -631,7 +650,7 @@ const AddBalanceScreen = (props) => {
                             addBalanceActive && (
                                 (GLOBAL.type == "user" && settings.prepaid_pix_user == "1") ||
                                 (GLOBAL.type == "provider" && settings.prepaid_pix_provider == "1")
-                            )
+                            )&& (totalToAddBalance)
                         ? (
                             <TouchableOpacity
                                 style={styles.listTypes}
