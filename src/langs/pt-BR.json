@@ -69,6 +69,7 @@
 	"confirm_billet_value": "Tem certeza que deseja gerar um boleto no valor de",
 	"billet_addition": "Haverá um acréscimo de",
 	"yes": "Sim",
+	"selectvalue": "Por favor insira um valor e tente novamente",
 	"no": "Não",
 	"pay_with_card": "Pagar com cartão",
 	"confirm_card_value": "Tem certeza que deseja pagar o valor de",

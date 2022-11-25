@@ -400,7 +400,7 @@ const AddBalanceScreen = (props) => {
     }
     const alertAddBalanceCard = (card) => {
         var valueToAdd = getFloatValue();
-        var msgMinimum=strings.minimumValueToCharge + strings.currency + parseFloat(settings.prepaid_min_billet_value) + ".";
+        var msgMinimum=selectvalue
 
         if(totalToAddBalance && valueToAdd && valueToAdd > 0) {
             Alert.alert(
