@@ -400,6 +400,7 @@ const AddBalanceScreen = (props) => {
     }
     const alertAddBalanceCard = (card) => {
         var valueToAdd = getFloatValue();
+        var msgMinimum=strings.minimumValueToCharge + strings.currency + parseFloat(settings.prepaid_min_billet_value) + ".";
 
         if(totalToAddBalance && valueToAdd && valueToAdd > 0) {
             Alert.alert(
@@ -412,7 +413,15 @@ const AddBalanceScreen = (props) => {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(strings.please_digit_value + "0");
+            Alert.alert(
+                strings.pay_with_card,
+                msgMinimum,
+                [
+                    { text: strings.ok, style: "cancel" },
+                    
+                ],
+                { cancelable: false }
+            );
         }
 
     }
