@@ -400,7 +400,7 @@ const AddBalanceScreen = (props) => {
     }
     const alertAddBalanceCard = (card) => {
         var valueToAdd = getFloatValue();
-        var msgMinimum=selectvalue
+        var msgMinimum=strings.selectvalue
 
         if(totalToAddBalance && valueToAdd && valueToAdd > 0) {
             Alert.alert(
