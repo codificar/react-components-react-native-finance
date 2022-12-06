@@ -216,11 +216,21 @@ const AddBalanceScreen = (props) => {
             } else {
                 setIsLoading(false);
                 if(json.error){
-                    Toast.showToast(json.error);
+                    msgError = json.error;
                 }
                 else {
-                    Toast.showToast(strings.card_refused);
+                    msgError = strings.card_refused;
                 }
+                
+                Alert.alert(
+                    strings.card_error,
+                    msgError,
+                    [
+                        { text: strings.ok, style: "cancel" },
+                        
+                    ],
+                    { cancelable: false }
+                );
             }
         })
         .catch((error) => {
