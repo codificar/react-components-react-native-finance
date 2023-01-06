@@ -216,11 +216,21 @@ const AddBalanceScreen = (props) => {
             } else {
                 setIsLoading(false);
                 if(json.error){
-                    Toast.showToast(json.error);
+                    msgError = json.error;
                 }
                 else {
-                    Toast.showToast(strings.card_refused);
+                    msgError = strings.card_refused;
                 }
+                
+                Alert.alert(
+                    strings.card_error,
+                    msgError,
+                    [
+                        { text: strings.ok, style: "cancel" },
+                        
+                    ],
+                    { cancelable: false }
+                );
             }
         })
         .catch((error) => {
@@ -249,6 +259,16 @@ const AddBalanceScreen = (props) => {
                     }
                 );
             } else {
+                msgError = strings.try_again
+                Alert.alert(
+                    strings.billet_error,
+                    msgError,
+                    [
+                        { text: strings.ok, style: "cancel" },
+                        
+                    ],
+                    { cancelable: false }
+                );
                 setIsLoading(false);
                 if(json.error){
                     Toast.showToast(json.error);
@@ -287,6 +307,16 @@ const AddBalanceScreen = (props) => {
                 setModalVisible(true);
 
             } else {
+                msgError = strings.try_again
+                Alert.alert(
+                    strings.billet_error,
+                    msgError,
+                    [
+                        { text: strings.ok, style: "cancel" },
+                        
+                    ],
+                    { cancelable: false }
+                );
                 setIsLoading(false);
                 if(json.error){
                     Toast.showToast(json.error);
@@ -294,7 +324,6 @@ const AddBalanceScreen = (props) => {
                     Toast.showToast(json.message);
                 }
                 else {
-
                     Toast.showToast(strings.billet_error);
                 }
             }
@@ -311,9 +340,10 @@ const AddBalanceScreen = (props) => {
 
     const alertAddBalancePix = () => {
         var valueToAdd = getFloatValue();
-
         var msg = strings.confirm_pix_value + " " + valueToAdd + "?";
         var pixMinValue = 1.5; // #todo: setting from api
+        var msgMinimum=strings.minimumValueToCharge + strings.currency + parseFloat(pixMinValue);
+
 
         if(totalToAddBalance && valueToAdd && valueToAdd >= pixMinValue) {
 
@@ -327,16 +357,28 @@ const AddBalanceScreen = (props) => {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(strings.please_digit_value + pixMinValue);
+            Alert.alert(
+                strings.pay_with_pix,
+                msgMinimum,
+                [
+                    { text: strings.ok, style: "cancel" },
+                    
+                ],
+                { cancelable: false }
+            );
+            ;
         }
     }
 
     const alertAddBalanceBillet = () => {
-        var valueToAdd = getFloatValue();
 
-        var msg = strings.confirm_billet_value + " " + valueToAdd + "?";
+        var valueToAdd = getFloatValue();
+        var prepaid_tax_billet = parseFloat(settings.prepaid_tax_billet);
+        var msgMinimum=strings.minimumValueToCharge + strings.currency + parseFloat(settings.prepaid_min_billet_value) + ".";
+
+        var msg = strings.confirm_billet_value + " " + strings.currency + valueToAdd  +"?";
         if(parseFloat(settings.prepaid_tax_billet) > 0) {
-            msg += " " + strings.billet_addition + " " + settings.prepaid_tax_billet;
+            msg += " " + strings.billet_addition + " " + strings.currency + prepaid_tax_billet+ ".";
         }
         if(settings.prepaid_min_billet_value) {
             var prepaidMinValue = parseFloat(settings.prepaid_min_billet_value);
@@ -355,11 +397,20 @@ const AddBalanceScreen = (props) => {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(strings.please_digit_value + prepaidMinValue);
+            Alert.alert(
+                strings.pay_with_billet,
+                msgMinimum,
+                [
+                    { text: strings.ok, style: "cancel" },
+                    
+                ],
+                { cancelable: false }
+            );
         }
     }
     const alertAddBalanceCard = (card) => {
         var valueToAdd = getFloatValue();
+        var msgMinimum=strings.selectvalue
 
         if(totalToAddBalance && valueToAdd && valueToAdd > 0) {
             Alert.alert(
@@ -372,7 +423,15 @@ const AddBalanceScreen = (props) => {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(strings.please_digit_value + "0");
+            Alert.alert(
+                strings.pay_with_card,
+                msgMinimum,
+                [
+                    { text: strings.ok, style: "cancel" },
+                    
+                ],
+                { cancelable: false }
+            );
         }
 
     }
@@ -470,26 +529,26 @@ const AddBalanceScreen = (props) => {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
 
-                    <Text style={styles.modalText}>{strings.new_billet_success}</Text>
-                    <Text style={{color: 'blue', fontSize: 15}} onPress={() => Linking.openURL(billet_url)}>{strings.click_to_download}</Text>
+                        <Text style={styles.modalText}>{strings.new_billet_success}</Text>
+                        <Text style={{ color: 'blue', fontSize: 15 }} onPress={() => Linking.openURL(billet_url)}>{strings.click_to_download}</Text>
 
-                    <TouchableOpacity
-                        onPress={() => copyClipBoard()}
-                    >
-                        <View style={{flexDirection: "row", marginVertical: 20}}>
-                            <Text style={{fontSize: 17}}>{digitable_line}</Text>
-                            <Icon style={{marginLeft: 10}} name="clipboard" size={25} />
+                        <View style={{ flexDirection: "row", marginVertical: 20 }}>
+                            <Text style={{ fontSize: 17 }}>{digitable_line}</Text>
+                            <TouchableOpacity
+                                onPress={() => copyClipBoard()}
+                            >
+                                <Icon style={{ marginLeft: 6, marginTop: 8 }} name="clipboard" size={25} />
+                            </TouchableOpacity>
                         </View>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                        onPress={() => {
-                            setModalVisible(false);
-                        }}
-                    >
-                        <Text style={styles.textStyle}>Fechar</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                            onPress={() => {
+                                setModalVisible(false);
+                            }}
+                        >
+                            <Text style={styles.textStyle}>Fechar</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
@@ -610,7 +669,7 @@ const AddBalanceScreen = (props) => {
                             addBalanceActive && (
                                 (GLOBAL.type == "user" && settings.prepaid_pix_user == "1") ||
                                 (GLOBAL.type == "provider" && settings.prepaid_pix_provider == "1")
-                            )
+                            )&& (totalToAddBalance)
                         ? (
                             <TouchableOpacity
                                 style={styles.listTypes}
@@ -638,7 +697,7 @@ const AddBalanceScreen = (props) => {
                             addBalanceActive && (
                                 (GLOBAL.type == "user" && settings.prepaid_billet_user == "1") ||
                                 (GLOBAL.type == "provider" && settings.prepaid_billet_provider == "1")
-                            )
+                            ) && (totalToAddBalance)
                         ? (
                             <TouchableOpacity
                                 style={styles.listTypes}

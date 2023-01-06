@@ -125,11 +125,9 @@ export default class Api {
         ).then((response) => response.json());
     }
 
-    AddBilletBalance(app_url, provider_id, token, value, type) {
+    AddBilletBalance(app_url, id, token, value, type) {
         let params = new URLSearchParams({
-            provider_id: provider_id,
-            user_id: provider_id,
-            id: provider_id,
+            id: id,
             token: token,
             value: value,
         });

@@ -139,8 +139,8 @@ const RequestPix = (props) => {
     const alertChange = (isPaid) => {
         unsubscribeSocket(); 
         Alert.alert(
-            strings.pix,
-            isPaid ? strings.confirmed_pix : strings.payment_changed,
+            strings.payment,
+            isPaid ? strings.confirmed_payment : strings.payment_changed,
             [
                 { text: strings.confirm, onPress: () => props.onPaid(true) }
             ],
@@ -196,7 +196,7 @@ const RequestPix = (props) => {
             <View style={{flex: 4}}>
                     {copyAndPaste ? 
                         <Text style={[styles.textBold, styles.text, styles.textBlack]}>
-                            strings.pix_info_1 
+                            {strings.pix_info_1}
                         </Text>
                         : null
                     }

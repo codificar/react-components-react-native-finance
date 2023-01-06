@@ -1,4 +1,7 @@
 {
+	"ok": "OK",
+	"minimumValueToCharge":"The minimum value to add balance is ",
+	"currency":"$",
 	"credit": "Credit",
 	"debit": "Debit",
 	"dateInitialError": "INITIAL DATE GREATER THAN LAST DATE",
@@ -66,6 +69,7 @@
 	"confirm_billet_value": "Are you sure you want to generate a boleto for",
 	"billet_addition": "There will be an increase in",
 	"yes": "Yes",
+	"selectvalue": "Please select a value and try again",
 	"no": "No",
 	"pay_with_card": "Pay with card",
 	"confirm_card_value": "Are you sure you want to pay the amount of",
@@ -74,7 +78,7 @@
 	"confirm_remove_card": "Do you want to delete the selected card?",
 	"remove_card_success": "Card successfully deleted",
 	"billet_copied": "Boleto copied successfully!",
-	"new_billet_success": "Boleto generated successfully. It was sent to your email.",
+	"new_billet_success": "Boleto generated successfully",
 	"click_to_download": "Click here to download",
 	"card_refused": "Card Refused",
 	"confirm_pix_value": "Are you sure you want to pay with pix the value of",
@@ -118,5 +122,6 @@
 	"payment_billing": "Billing",
 	"payment_gateway_pix": "Pix Online",
 	"payment_direct_pix": "Direct Pix",
-	"manage_payment_title": "Manage payment"
+	"manage_payment_title": "Manage payment",
+	"try_again":"An error occurred, please try again"
 }
