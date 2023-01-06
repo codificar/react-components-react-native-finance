@@ -196,7 +196,7 @@ const RequestPix = (props) => {
             <View style={{flex: 4}}>
                     {copyAndPaste ? 
                         <Text style={[styles.textBold, styles.text, styles.textBlack]}>
-                            strings.pix_info_1 
+                            {strings.pix_info_1} 
                         </Text>
                         : null
                     }
