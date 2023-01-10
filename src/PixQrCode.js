@@ -199,6 +199,10 @@ const PixQrCode = (props) => {
     }
 
     const goBack = () => {
+        if(transactionType == 'subscription_transaction') {
+            return props.navigation.navigate('SubscriptionDetailsScreen');             
+        }
+
         Alert.alert(
             strings.exit_app,
             strings.exit_app_msg,
