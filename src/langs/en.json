@@ -66,6 +66,7 @@
 	"confirm_billet_value": "Are you sure you want to generate a boleto for",
 	"billet_addition": "There will be an increase in",
 	"yes": "Yes",
+	"selectvalue": "Please select a value and try again",
 	"no": "No",
 	"pay_with_card": "Pay with card",
 	"confirm_card_value": "Are you sure you want to pay the amount of",
