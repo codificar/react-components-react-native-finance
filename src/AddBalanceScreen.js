@@ -50,10 +50,11 @@ const AddBalanceScreen = (props) => {
     GLOBAL.token = GLOBAL.token ? GLOBAL.token : props.token;
     GLOBAL.type = GLOBAL.type ? GLOBAL.type : props.type;
     GLOBAL.socket_url = GLOBAL.socket_url ? GLOBAL.socket_url : props.socket_url;
-    
+
     GLOBAL.toolbar = GLOBAL.toolbar ? GLOBAL.toolbar : props.toolbar;
     GLOBAL.titleHeader = GLOBAL.titleHeader ? GLOBAL.titleHeader : props.titleHeader;
-    
+
+    const [hasBalanceScreen, setHasBalanceScreen] = useState(true);
     const [totalToAddBalance, setTotalToAddBalance] = useState("");
     const [cards, setCards] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -87,26 +88,26 @@ const AddBalanceScreen = (props) => {
     var strings = require('./langs/pt-BR.json');
 
     //If has lang from props, get form props, if not, get from global.
-    if(props && props.lang) {
-        if(props.lang == "pt-BR")
+    if (props && props.lang) {
+        if (props.lang == "pt-BR")
             strings = require('./langs/pt-BR.json');
-        else if(props.lang.indexOf("en") != -1)
+        else if (props.lang.indexOf("en") != -1)
             strings = require('./langs/en.json');
     }
-    else if(GLOBAL.lang) {
-        if(GLOBAL.lang == "pt-BR")
+    else if (GLOBAL.lang) {
+        if (GLOBAL.lang == "pt-BR")
             strings = require('./langs/pt-BR.json');
-        else if(GLOBAL.lang.indexOf("en") != -1)
+        else if (GLOBAL.lang.indexOf("en") != -1)
             strings = require('./langs/en.json');
     }
 
     const api = new Api();
 
 
-    if(GLOBAL.navigation_v5) {
+    if (GLOBAL.navigation_v5) {
         const isVisible = useIsFocused();
         useEffect(() => {
-            if(isVisible) {
+            if (isVisible) {
                 getCardsAndBalanceInfo();
             }
         }, [isVisible]);
@@ -120,39 +121,39 @@ const AddBalanceScreen = (props) => {
         };
 
         const backHandler = BackHandler.addEventListener(
-          "hardwareBackPress",
-          backAction
+            "hardwareBackPress",
+            backAction
         );
 
         return () => backHandler.remove();
     }, []);
 
     const isBallance = () => {
-      let value = '';
-      if(typeof currentBalance == "string") {
-        if(currentBalance.includes('R$')) {
-          value = currentBalance.replace('R$', '');
-          value = value.replace('.', '');
-          value = value.replace(',', '.');
-        } else if(currentBalance.includes('$')) {
-          value = currentBalance.replace('$', '');
-        } else {
-          value = currentBalance;
-        }
+        let value = '';
+        if (typeof currentBalance == "string") {
+            if (currentBalance.includes('R$')) {
+                value = currentBalance.replace('R$', '');
+                value = value.replace('.', '');
+                value = value.replace(',', '.');
+            } else if (currentBalance.includes('$')) {
+                value = currentBalance.replace('$', '');
+            } else {
+                value = currentBalance;
+            }
 
-        value = parseFloat(value);
-        return value > 0;
-      }
+            value = parseFloat(value);
+            return value > 0;
+        }
     }
 
 
 
     /**
-	 * Get all user's cards and their informations
-	 * Pega todos os cartões do usuário e as informações deles
-	 * @param {Number} user_id
-	 * @param {String} user_token
-	 */
+     * Get all user's cards and their informations
+     * Pega todos os cartões do usuário e as informações deles
+     * @param {Number} user_id
+     * @param {String} user_token
+     */
 
     const getCardsAndBalanceInfo = () => {
         setIsLoading(true);
@@ -162,36 +163,36 @@ const AddBalanceScreen = (props) => {
             GLOBAL.token,
             GLOBAL.type
         )
-        .then((json) => {
-            var isBalanceActive = false;
-            if(json && json.settings) {
-                if(GLOBAL.type == "user") {
-                    isBalanceActive = json.settings.prepaid_billet_user == "1" || json.settings.prepaid_card_user == "1" ? true : false;
-                } else if(GLOBAL.type == "provider") {
-                    isBalanceActive = json.settings.prepaid_billet_provider == "1" || json.settings.prepaid_card_provider == "1" ? true : false;
+            .then((json) => {
+                var isBalanceActive = false;
+                if (json && json.settings) {
+                    if (GLOBAL.type == "user") {
+                        isBalanceActive = json.settings.prepaid_billet_user == "1" || json.settings.prepaid_card_user == "1" ? true : false;
+                    } else if (GLOBAL.type == "provider") {
+                        isBalanceActive = json.settings.prepaid_billet_provider == "1" || json.settings.prepaid_card_provider == "1" ? true : false;
+                    }
+                    setHasBalanceScreen(props.hasBalanceScreen == 0 ? false : true);
+                    setCards(json.cards);
+                    setCurrentBalance(json.current_balance);
+                    setSettings(json.settings);
+                    setAddBalanceActive(isBalanceActive);
+                    setReferralBalance(json.referralBalance);
+                    setCumulated_balance_monthly(json.cumulated_balance_monthly);
+                    setIsCustomIndicationEnabled(json.settings.indication_settings ? json.settings.indication_settings.isCustomIndicationEnabled : false);
+                    setProgram_name(json.settings.indication_settings ? json.settings.indication_settings.program_name : false);
+                    setAddCardIsWebview(json.add_card_is_webview);
                 }
-
-                setCards(json.cards);
-                setCurrentBalance(json.current_balance);
-                setSettings(json.settings);
-                setAddBalanceActive(isBalanceActive);
-                setReferralBalance(json.referralBalance);
-                setCumulated_balance_monthly(json.cumulated_balance_monthly);
-                setIsCustomIndicationEnabled(json.settings.indication_settings ? json.settings.indication_settings.isCustomIndicationEnabled : false);
-                setProgram_name(json.settings.indication_settings ? json.settings.indication_settings.program_name : false);
-                setAddCardIsWebview(json.add_card_is_webview);
-            }
-            setIsLoading(false);
-        })
-        .catch((error) => {
-            console.error(error);
-            setIsLoading(false);
-        });
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                console.error(error);
+                setIsLoading(false);
+            });
     }
     const alertOk = (title, msg) => {
         Alert.alert(
             title, msg,
-            [{ text: "Ok"},],
+            [{ text: "Ok" },],
             { cancelable: false }
         );
     }
@@ -207,26 +208,36 @@ const AddBalanceScreen = (props) => {
             cardId,
             GLOBAL.type
         )
-        .then((json) => {
-            if(json.success) {
-                setIsLoading(false);
-                setCurrentBalance(json.current_balance);
+            .then((json) => {
+                if (json.success) {
+                    setIsLoading(false);
+                    setCurrentBalance(json.current_balance);
 
-                alertOk(strings.card, strings.card_success);
-            } else {
+                    alertOk(strings.card, strings.card_success);
+                } else {
+                    setIsLoading(false);
+                    if (json.error) {
+                        msgError = json.error;
+                    }
+                    else {
+                        msgError = strings.card_refused;
+                    }
+
+                    Alert.alert(
+                        strings.card_error,
+                        msgError,
+                        [
+                            { text: strings.ok, style: "cancel" },
+
+                        ],
+                        { cancelable: false }
+                    );
+                }
+            })
+            .catch((error) => {
                 setIsLoading(false);
-                if(json.error){
-                    Toast.showToast(json.error);
-                }
-                else {
-                    Toast.showToast(strings.card_refused);
-                }
-            }
-        })
-        .catch((error) => {
-            setIsLoading(false);
-            console.error(error);
-        });
+                console.error(error);
+            });
 
     }
 
@@ -239,31 +250,41 @@ const AddBalanceScreen = (props) => {
             valueToAdd,
             GLOBAL.type
         )
-        .then((json) => {
-            if(json.success) {
-                setIsLoading(false);
-                GLOBAL.pix_transaction_id = json.transaction_id;
-                props.navigation.navigate('PixScreen',
-                    {
-                        originScreen: 'AddBalanceScreen'
-                    }
-                );
-            } else {
-                setIsLoading(false);
-                if(json.error){
-                    Toast.showToast(json.error);
-                } else if(json.message){
-                    Toast.showToast(json.message);
-                }
-                else {
+            .then((json) => {
+                if (json.success) {
+                    setIsLoading(false);
+                    GLOBAL.pix_transaction_id = json.transaction_id;
+                    props.navigation.navigate('PixScreen',
+                        {
+                            originScreen: 'AddBalanceScreen'
+                        }
+                    );
+                } else {
+                    msgError = strings.try_again
+                    Alert.alert(
+                        strings.billet_error,
+                        msgError,
+                        [
+                            { text: strings.ok, style: "cancel" },
 
-                    Toast.showToast(strings.billet_error);
+                        ],
+                        { cancelable: false }
+                    );
+                    setIsLoading(false);
+                    if (json.error) {
+                        Toast.showToast(json.error);
+                    } else if (json.message) {
+                        Toast.showToast(json.message);
+                    }
+                    else {
+
+                        Toast.showToast(strings.billet_error);
+                    }
                 }
-            }
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
 
 
     }
@@ -278,30 +299,39 @@ const AddBalanceScreen = (props) => {
             valueToAdd,
             GLOBAL.type
         )
-        .then((json) => {
-            if(json.success) {
+            .then((json) => {
+                if (json.success) {
 
-                setIsLoading(false);
-                setDigitable_line(json.digitable_line);
-                setBillet_url(json.billet_url);
-                setModalVisible(true);
+                    setIsLoading(false);
+                    setDigitable_line(json.digitable_line);
+                    setBillet_url(json.billet_url);
+                    setModalVisible(true);
 
-            } else {
-                setIsLoading(false);
-                if(json.error){
-                    Toast.showToast(json.error);
-                } else if (json.message){
-                    Toast.showToast(json.message);
+                } else {
+                    msgError = strings.try_again
+                    Alert.alert(
+                        strings.billet_error,
+                        msgError,
+                        [
+                            { text: strings.ok, style: "cancel" },
+
+                        ],
+                        { cancelable: false }
+                    );
+                    setIsLoading(false);
+                    if (json.error) {
+                        Toast.showToast(json.error);
+                    } else if (json.message) {
+                        Toast.showToast(json.message);
+                    }
+                    else {
+                        Toast.showToast(strings.billet_error);
+                    }
                 }
-                else {
-
-                    Toast.showToast(strings.billet_error);
-                }
-            }
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     //Valor a adicionar convertido em float. Remove as virgulas e substitui por ponto.
@@ -311,11 +341,12 @@ const AddBalanceScreen = (props) => {
 
     const alertAddBalancePix = () => {
         var valueToAdd = getFloatValue();
-
         var msg = strings.confirm_pix_value + " " + valueToAdd + "?";
         var pixMinValue = 1.5; // #todo: setting from api
+        var msgMinimum = strings.minimumValueToCharge + strings.currency + parseFloat(pixMinValue);
 
-        if(totalToAddBalance && valueToAdd && valueToAdd >= pixMinValue) {
+
+        if (totalToAddBalance && valueToAdd && valueToAdd >= pixMinValue) {
 
             Alert.alert(
                 strings.pay_with_pix,
@@ -327,23 +358,35 @@ const AddBalanceScreen = (props) => {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(strings.please_digit_value + pixMinValue);
+            Alert.alert(
+                strings.pay_with_pix,
+                msgMinimum,
+                [
+                    { text: strings.ok, style: "cancel" },
+
+                ],
+                { cancelable: false }
+            );
+            ;
         }
     }
 
     const alertAddBalanceBillet = () => {
-        var valueToAdd = getFloatValue();
 
-        var msg = strings.confirm_billet_value + " " + valueToAdd + "?";
-        if(parseFloat(settings.prepaid_tax_billet) > 0) {
-            msg += " " + strings.billet_addition + " " + settings.prepaid_tax_billet;
+        var valueToAdd = getFloatValue();
+        var prepaid_tax_billet = parseFloat(settings.prepaid_tax_billet);
+        var msgMinimum = strings.minimumValueToCharge + strings.currency + parseFloat(settings.prepaid_min_billet_value) + ".";
+
+        var msg = strings.confirm_billet_value + " " + strings.currency + valueToAdd + "?";
+        if (parseFloat(settings.prepaid_tax_billet) > 0) {
+            msg += " " + strings.billet_addition + " " + strings.currency + prepaid_tax_billet + ".";
         }
-        if(settings.prepaid_min_billet_value) {
+        if (settings.prepaid_min_billet_value) {
             var prepaidMinValue = parseFloat(settings.prepaid_min_billet_value);
         } else {
             var prepaidMinValue = 0;
         }
-        if(totalToAddBalance && valueToAdd && valueToAdd >= prepaidMinValue) {
+        if (totalToAddBalance && valueToAdd && valueToAdd >= prepaidMinValue) {
 
             Alert.alert(
                 strings.pay_with_billet,
@@ -355,13 +398,22 @@ const AddBalanceScreen = (props) => {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(strings.please_digit_value + prepaidMinValue);
+            Alert.alert(
+                strings.pay_with_billet,
+                msgMinimum,
+                [
+                    { text: strings.ok, style: "cancel" },
+
+                ],
+                { cancelable: false }
+            );
         }
     }
     const alertAddBalanceCard = (card) => {
         var valueToAdd = getFloatValue();
+        var msgMinimum = strings.selectvalue
 
-        if(totalToAddBalance && valueToAdd && valueToAdd > 0) {
+        if (totalToAddBalance && valueToAdd && valueToAdd > 0) {
             Alert.alert(
                 strings.pay_with_card,
                 strings.confirm_card_value + " " + valueToAdd + " " + strings.in_card + " **** **** **** " + card.last_four + "?",
@@ -372,13 +424,59 @@ const AddBalanceScreen = (props) => {
                 { cancelable: false }
             );
         } else {
-            Toast.showToast(strings.please_digit_value + "0");
+            Alert.alert(
+                strings.pay_with_card,
+                msgMinimum,
+                [
+                    { text: strings.ok, style: "cancel" },
+
+                ],
+                { cancelable: false }
+            );
         }
 
     }
 
+    const renderBalance = () => {
+        return (
+            <View>
+                {/* Ajustando layout padrão mobilidade */}
+                {GLOBAL.toolbar ? (
+                    <View>
+                        <GLOBAL.toolbar
+                            back={true}
+                            handlePress={() => props.navigation.navigate('MainScreen')}
+                        />
+
+                        <GLOBAL.titleHeader
+                            text={strings.add_balance}
+                            align="flex-start"
+                        />
+                    </View>
+                ) :
+                    <View style={{ flex: 1, flexDirection: "row" }}>
+                        <TouchableOpacity
+                            onPress={() => props.navigation.goBack()}
+                        >
+                            <Text style={{ fontSize: 20, paddingLeft: 20, paddingTop: 20, fontWeight: "bold" }}>X</Text>
+                        </TouchableOpacity>
+                        <View style={{
+                            position: 'absolute',
+                            width: Dimensions.get('window').width,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                        >
+                            <Text style={{ top: 20, fontWeight: "bold", fontSize: 20 }}>{strings.add_balance}</Text>
+                        </View>
+                    </View>
+                }
+            </View>
+        );
+    }
+
     const removeCardAlert = (card) => {
-        if(card) {
+        if (card) {
             Alert.alert(
                 strings.remove_card,
                 strings.confirm_remove_card,
@@ -393,32 +491,32 @@ const AddBalanceScreen = (props) => {
 
     const removeCard = (card) => {
         setIsLoading(true);
-        if(card) {
+        if (card) {
             api.RemoveCard(
                 GLOBAL.removeCardUrl,
                 GLOBAL.id,
                 GLOBAL.token,
                 card.id,
             )
-            .then((json) => {
-                if(json.success) {
-                    setIsLoading(false);
-                    getCardsAndBalanceInfo();
-                    alertOk(strings.card, strings.remove_card_success);
-                } else {
-                    setIsLoading(false);
-                    if(json.error){
-                        Toast.showToast(json.error);
+                .then((json) => {
+                    if (json.success) {
+                        setIsLoading(false);
+                        getCardsAndBalanceInfo();
+                        alertOk(strings.card, strings.remove_card_success);
+                    } else {
+                        setIsLoading(false);
+                        if (json.error) {
+                            Toast.showToast(json.error);
+                        }
+                        else {
+                            Toast.showToast(strings.card_refused);
+                        }
                     }
-                    else {
-                        Toast.showToast(strings.card_refused);
-                    }
-                }
-            })
-            .catch((error) => {
-                setIsLoading(false);
-                console.error(error);
-            });
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.error(error);
+                });
         }
     }
 
@@ -428,7 +526,7 @@ const AddBalanceScreen = (props) => {
     }
 
     const goToAddCardScreen = () => {
-        const screen = addCardIsWebview  ? 'AddCardWebView' : 'AddCardScreenLib';
+        const screen = addCardIsWebview ? 'AddCardWebView' : 'AddCardScreenLib';
         props.navigation.navigate(screen,
             {
                 originScreen: 'AddBalanceScreen',
@@ -445,13 +543,13 @@ const AddBalanceScreen = (props) => {
         )
     }
 
-	const infoTotal = () => {
-		Toast.showToast(strings.infoTotal)
-	}
+    const infoTotal = () => {
+        Toast.showToast(strings.infoTotal)
+    }
 
-	const infoMonthly = () => {
-		Toast.showToast(strings.infoMonthly)
-	}
+    const infoMonthly = () => {
+        Toast.showToast(strings.infoMonthly)
+    }
 
     return (
         <View style={styles.container}>
@@ -470,78 +568,50 @@ const AddBalanceScreen = (props) => {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
 
-                    <Text style={styles.modalText}>{strings.new_billet_success}</Text>
-                    <Text style={{color: 'blue', fontSize: 15}} onPress={() => Linking.openURL(billet_url)}>{strings.click_to_download}</Text>
+                        <Text style={styles.modalText}>{strings.new_billet_success}</Text>
+                        <Text style={{ color: 'blue', fontSize: 15 }} onPress={() => Linking.openURL(billet_url)}>{strings.click_to_download}</Text>
 
-                    <TouchableOpacity
-                        onPress={() => copyClipBoard()}
-                    >
-                        <View style={{flexDirection: "row", marginVertical: 20}}>
-                            <Text style={{fontSize: 17}}>{digitable_line}</Text>
-                            <Icon style={{marginLeft: 10}} name="clipboard" size={25} />
+                        <View style={{ flexDirection: "row", marginVertical: 20 }}>
+                            <Text style={{ fontSize: 17 }}>{digitable_line}</Text>
+                            <TouchableOpacity
+                                onPress={() => copyClipBoard()}
+                            >
+                                <Icon style={{ marginLeft: 6, marginTop: 8 }} name="clipboard" size={25} />
+                            </TouchableOpacity>
                         </View>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                        onPress={() => {
-                            setModalVisible(false);
-                        }}
-                    >
-                        <Text style={styles.textStyle}>Fechar</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                            onPress={() => {
+                                setModalVisible(false);
+                            }}
+                        >
+                            <Text style={styles.textStyle}>Fechar</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
 
             <ScrollView>
+
                 <Loader loading={isLoading} message={strings.loading_message} />
-
-                {/* Ajustando layout padrão mobilidade */}
-                {GLOBAL.toolbar ? (
-                    <View>
-                        <GLOBAL.toolbar
-                            back={true}
-                            handlePress={() => props.navigation.navigate('MainScreen')}
-                        />
-
-                        <GLOBAL.titleHeader
-                            text={strings.add_balance}
-                            align="flex-start"
-                        />
-                    </View>
-                ) :	(
-                    <View style={{flex: 1, flexDirection: "row"}}>
-                        <TouchableOpacity
-                            onPress={() =>  props.navigation.goBack()}
-                        >
-                            <Text style={{fontSize: 20, paddingLeft: 20, paddingTop: 20, fontWeight: "bold"}}>X</Text>
-                        </TouchableOpacity>
-                        <View style={{
-                            position: 'absolute',
-                            width: Dimensions.get('window').width,
-                            justifyContent: 'center',
-                            alignItems: 'center'}}
-                        >
-                            <Text style={{ top: 20, fontWeight: "bold", fontSize: 20 }}>{strings.add_balance}</Text>
-                        </View>
-                    </View>
-                )}
-
+                {!isLoading && hasBalanceScreen == true ? renderBalance() : null}
                 {/* flex 4/10 */}
-                <View style={{flex: 4, marginTop: 5}}>
-                    <View style={{flex: 1, paddingHorizontal: 20, marginBottom: 10}}>
 
-                        {!isLoading ? (
-                          <View style={{ justifyContent: 'center', alignItems: 'center'}}>
-                            <Text style={styles.currentValueText}>{strings.currentBalance}</Text>
-                            <Text style={styles.currentValue}>{currentBalance}</Text>
-                        </View>
+                <View style={{ flex: 4, marginTop: 5 }}>
+
+                    <View style={{ flex: 1, paddingHorizontal: 20, marginBottom: 10 }}>
+
+                        {!isLoading && hasBalanceScreen == true ? (
+                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={styles.currentValueText}>{strings.currentBalance}</Text>
+                                <Text style={styles.currentValue}>{currentBalance}</Text>
+                            </View>
                         ) : null}
 
                         {isCustomIndicationEnabled ? (
                             <View style={styles.indicationContainer}>
-                                <Text style={[styles.currentValueText, {marginBottom: 10, marginTop: 10}]}>{program_name}</Text>
+                                <Text style={[styles.currentValueText, { marginBottom: 10, marginTop: 10 }]}>{program_name}</Text>
                                 <View style={styles.cardContainer}>
                                     {referralBalance !== 0 ? (
                                         <TouchableOpacity style={styles.card} onPress={() => infoTotal()}>
@@ -550,7 +620,7 @@ const AddBalanceScreen = (props) => {
                                                 <Text style={styles.indicationValue}>{referralBalance}</Text>
                                             </View>
                                         </TouchableOpacity>
-                                    ) : null }
+                                    ) : null}
 
                                     {cumulated_balance_monthly !== 0 ? (
                                         <TouchableOpacity style={styles.card} onPress={() => infoMonthly()}>
@@ -559,25 +629,26 @@ const AddBalanceScreen = (props) => {
                                                 <Text style={styles.indicationValue}>{cumulated_balance_monthly}</Text>
                                             </View>
                                         </TouchableOpacity>
-                                    ) : null }
+                                    ) : null}
                                 </View>
                             </View>
-                        ) : null }
+                        ) : null}
                     </View>
 
+
                     { /* verify if exist bank account and app is user and ballance > 0 */}
-                    { isUser && isBallance() && settings.with_draw_enabled == 1 ? (
-                        <View style={{flex: 1, marginTop: 20}}>
-                             <TouchableOpacity
+                    {isUser && isBallance() && settings.with_draw_enabled == 1 ? (
+                        <View style={{ flex: 1, marginTop: 20 }}>
+                            <TouchableOpacity
                                 style={styles.listTypes}
                                 onPress={() => {
                                     goToWithDrawal();
                                 }}
                             >
                                 <View style={{ flex: 0.2 }}>
-                                    <Image 
-                                        style={{flex: 1, width: 30, height: 30, resizeMode: 'contain'}} 
-                                        source={Images.icon_bank_profile } />
+                                    <Image
+                                        style={{ flex: 1, width: 30, height: 30, resizeMode: 'contain' }}
+                                        source={Images.icon_bank_profile} />
                                 </View>
 
                                 <View style={{ flex: 0.7 }}>
@@ -586,76 +657,83 @@ const AddBalanceScreen = (props) => {
 
                             </TouchableOpacity>
                         </View>
-                    ) : null }
+                    ) : null}
 
-                    {addBalanceActive ? (
-                        <View style={{flex: 1, marginTop: 20}}>
-                            <View style={{marginTop: 10}}>
+                    {addBalanceActive && hasBalanceScreen == true ? (
+                        <View style={{ flex: 1, marginTop: 20 }}>
+                            <View style={{ marginTop: 10 }}>
                                 <Text style={styles.formValueTransfer}>{strings.add_balance_msg}</Text>
                                 <View style={styles.form}>
                                     <TextInput
-                                        style={{fontSize: 16, paddingLeft: 10}}
+                                        style={{ fontSize: 16, paddingLeft: 10 }}
                                         keyboardType='numeric'
                                         placeholder={'0,00'}
-                                        onChangeText={ text => setTotalToAddBalance(text) }
+                                        onChangeText={text => setTotalToAddBalance(text)}
                                         value={totalToAddBalance ? String(totalToAddBalance) : null}
                                     />
                                 </View>
                             </View>
                         </View>
-                    ) : ( null ) }
-
+                    ) : (null)}
                     <ScrollView>
                         {
                             addBalanceActive && (
                                 (GLOBAL.type == "user" && settings.prepaid_pix_user == "1") ||
                                 (GLOBAL.type == "provider" && settings.prepaid_pix_provider == "1")
-                            )
-                        ? (
-                            <TouchableOpacity
-                                style={styles.listTypes}
-                                onPress={() => {
-                                    alertAddBalancePix();
-                                }}
-                            >
-                                <View style={{ flex: 0.2 }}>
-                                    <Image source={Images.icon_pix}
-                                        style={{
-                                        width: 45,
-                                        height: 45,
-                                        resizeMode: "contain"
-                                    }} />
-                                </View>
+                            ) && (totalToAddBalance)
+                                ? (
+                                    <TouchableOpacity
+                                        style={styles.listTypes}
+                                        onPress={() => {
+                                            {
+                                                hasBalanceScreen ? (
+                                                    alertAddBalancePix()
+                                                ) : null}
+                                            }
+                                        }
+                                    >
+                                        <View style={{ flex: 0.2 }}>
+                                            <Image source={Images.icon_pix}
+                                                style={{
+                                                    width: 45,
+                                                    height: 45,
+                                                    resizeMode: "contain"
+                                                }} />
+                                        </View>
 
-                                <View style={{ flex: 0.7 }}>
-                                    <Text style={{ fontWeight: 'bold' }}>{strings.pay_with_pix}</Text>
-                                </View>
+                                        <View style={{ flex: 0.7 }}>
+                                            <Text style={{ fontWeight: 'bold' }}>{strings.pay_with_pix}</Text>
+                                        </View>
 
-                            </TouchableOpacity>
-                        ) : ( null ) }
+                                    </TouchableOpacity>
+                                ) : (null)}
 
                         {
                             addBalanceActive && (
                                 (GLOBAL.type == "user" && settings.prepaid_billet_user == "1") ||
                                 (GLOBAL.type == "provider" && settings.prepaid_billet_provider == "1")
-                            )
-                        ? (
-                            <TouchableOpacity
-                                style={styles.listTypes}
-                                onPress={() => {
-                                    alertAddBalanceBillet();
-                                }}
-                            >
-                                <View style={{ flex: 0.2 }}>
-                                    <Icon name="barcode" size={40} />
-                                </View>
+                            ) && (totalToAddBalance)
+                                ? (
+                                    <TouchableOpacity
+                                        style={styles.listTypes}
+                                        onPress={() => {
+                                            {
+                                                hasBalanceScreen ? (
+                                                    alertAddBalanceBillet()
+                                                ) : null}
+                                            }
+                                        }
+                                    >
+                                        <View style={{ flex: 0.2 }}>
+                                            <Icon name="barcode" size={40} />
+                                        </View>
 
-                                <View style={{ flex: 0.7 }}>
-                                    <Text style={{ fontWeight: 'bold' }}>{strings.pay_with_billet}</Text>
-                                </View>
+                                        <View style={{ flex: 0.7 }}>
+                                            <Text style={{ fontWeight: 'bold' }}>{strings.pay_with_billet}</Text>
+                                        </View>
 
-                            </TouchableOpacity>
-                        ) : ( null ) }
+                                    </TouchableOpacity>
+                                ) : (null)}
 
 
                         {/* Add card button */}
@@ -664,63 +742,67 @@ const AddBalanceScreen = (props) => {
                                 (GLOBAL.type == "user" && settings.prepaid_card_user == "1") ||
                                 (GLOBAL.type == "provider" && settings.prepaid_card_provider == "1")
                             )
-                        ? (
-                                <View style={{ flex: 1 }}>
-                                <TouchableOpacity
-                                    style={styles.listTypes}
-                                    onPress={() => {
-                                        goToAddCardScreen();
-                                    }}
-                                >
-                                    <View style={{ flex: 0.2 }}>
-                                        <Icon name="credit-card" size={40} />
-                                    </View>
-
-                                    <View style={{ flex: 0.7 }}>
-                                        <Text style={{ fontWeight: 'bold' }}>{strings.manage_cards}</Text>
-                                    </View>
-                                </TouchableOpacity>
-
-                                <FlatList
-                                    style={{ marginBottom: 30 }}
-                                    data={cards}
-                                    renderItem={({ item }) => (
+                                ? (
+                                    <View style={{ flex: 1 }}>
                                         <TouchableOpacity
                                             style={styles.listTypes}
                                             onPress={() => {
-                                                alertAddBalanceCard(item);
+                                                goToAddCardScreen();
                                             }}
                                         >
                                             <View style={{ flex: 0.2 }}>
-                                                {!item.card_type || item.card_type == "unknown" ? (
-                                                    <Icon name="credit-card" size={40} />
-                                                ) : (
-                                                    <Image source={arrayIconsType[item.card_type]}
-                                                        style={{
-                                                        width: 40,
-                                                        height: 28,
-                                                        resizeMode: "contain"
-                                                    }} />
-                                                )}
+                                                <Icon name="credit-card" size={40} />
                                             </View>
 
                                             <View style={{ flex: 0.7 }}>
-                                                <Text style={{ fontWeight: 'bold' }}>**** **** **** {item.last_four}</Text>
-                                            </View>
-
-                                            <View style={{ flex: 0.1, justifyContent: 'center', alignItems: 'center' }}>
-                                                <TouchableOpacity
-                                                    onPress={() => removeCardAlert(item)}
-                                                >
-                                                    <Image resizeMode="contain" source={Images.icon_remove} style={styles.removeCard} />
-                                                </TouchableOpacity>
+                                                <Text style={{ fontWeight: 'bold' }}>{strings.manage_cards}</Text>
                                             </View>
                                         </TouchableOpacity>
-                                    )}
-                                    keyExtractor={(item, index) => `${index}`}
-                                />
-                            </View>
-                        ) : ( null ) }
+
+                                        <FlatList
+                                            style={{ marginBottom: 30 }}
+                                            data={cards}
+                                            renderItem={({ item }) => (
+                                                <TouchableOpacity
+                                                    style={styles.listTypes}
+                                                    onPress={() => {
+                                                        {
+                                                            hasBalanceScreen ? (
+                                                                alertAddBalanceCard(item)
+                                                            ) : null}
+                                                        }
+                                                    }
+                                                >
+                                                    <View style={{ flex: 0.2 }}>
+                                                        {!item.card_type || item.card_type == "unknown" ? (
+                                                            <Icon name="credit-card" size={40} />
+                                                        ) : (
+                                                            <Image source={arrayIconsType[item.card_type]}
+                                                                style={{
+                                                                    width: 40,
+                                                                    height: 28,
+                                                                    resizeMode: "contain"
+                                                                }} />
+                                                        )}
+                                                    </View>
+
+                                                    <View style={{ flex: 0.7 }}>
+                                                        <Text style={{ fontWeight: 'bold' }}>**** **** **** {item.last_four}</Text>
+                                                    </View>
+
+                                                    <View style={{ flex: 0.1, justifyContent: 'center', alignItems: 'center' }}>
+                                                        <TouchableOpacity
+                                                            onPress={() => removeCardAlert(item)}
+                                                        >
+                                                            <Image resizeMode="contain" source={Images.icon_remove} style={styles.removeCard} />
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            )}
+                                            keyExtractor={(item, index) => `${index}`}
+                                        />
+                                    </View>
+                                ) : (null)}
                     </ScrollView>
                 </View>
             </ScrollView>
@@ -738,7 +820,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
-		paddingHorizontal: 25,
+        paddingHorizontal: 25,
     },
     text: {
         marginBottom: 15,
@@ -760,7 +842,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: "#bfbfbf",
         marginLeft: 5,
-		marginBottom: 10
+        marginBottom: 10
     },
     currentValue: {
         fontSize: 35,
@@ -798,7 +880,7 @@ const styles = StyleSheet.create({
         backgroundColor: "grey",
         borderRadius: 12,
         height: 23
-      },
+    },
     listTypes: {
         margin: 5,
         width: listWidth,
@@ -824,7 +906,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "space-around",
         backgroundColor: "#00000040"
-      },
+    },
     modalView: {
         margin: 20,
         backgroundColor: "white",
@@ -855,49 +937,49 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         textAlign: "center"
     },
-	redDivider: {
-		width: window.width,
-		height: 1,
-		backgroundColor: "#EAEAEA",
-		marginBottom: 5
-	},
-	cardContainer: {
-		width: '100%',
-		height: '60%',
-		padding: 2,
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		justifyContent: 'space-around',
-	},
-	card: {
-		width: '50%',
-		height: '100%',
-		padding: 5,
-		flex: 1
-	},
-	cardText: {
-		flex: 1,
-		backgroundColor: '#FBFBFB',
-		alignItems: 'center',
-		padding: 5
-	},
-	indicationValue: {
-		fontSize: 30,
+    redDivider: {
+        width: window.width,
+        height: 1,
+        backgroundColor: "#EAEAEA",
+        marginBottom: 5
+    },
+    cardContainer: {
+        width: '100%',
+        height: '60%',
+        padding: 2,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+    },
+    card: {
+        width: '50%',
+        height: '100%',
+        padding: 5,
+        flex: 1
+    },
+    cardText: {
+        flex: 1,
+        backgroundColor: '#FBFBFB',
+        alignItems: 'center',
+        padding: 5
+    },
+    indicationValue: {
+        fontSize: 30,
         color: "black",
         marginLeft: 5,
         fontWeight: "bold",
-		flex: 0.60
-	},
-	indicationValueText: {
-		fontSize: 20,
+        flex: 0.60
+    },
+    indicationValueText: {
+        fontSize: 20,
         color: "#bfbfbf",
-		flex: 0.5,
-		textAlign:'center',
-	},
-	indicationContainer: {
-		marginTop: 10,
-		alignItems: "flex-start",
-	},
+        flex: 0.5,
+        textAlign: 'center',
+    },
+    indicationContainer: {
+        marginTop: 10,
+        alignItems: "flex-start",
+    },
     removeCard: {
         height: 15,
         width: 15,
