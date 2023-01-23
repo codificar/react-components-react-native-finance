@@ -216,7 +216,7 @@ const AddBalanceScreen = (props) => {
                     alertOk(strings.card, strings.card_success);
                 } else {
                     setIsLoading(false);
-                    if (json.error) {
+                    if(json.error){
                         msgError = json.error;
                     }
                     else {
@@ -233,7 +233,7 @@ const AddBalanceScreen = (props) => {
                         { cancelable: false }
                     );
                 }
-            })
+                })
             .catch((error) => {
                 setIsLoading(false);
                 console.error(error);
