@@ -123,6 +123,5 @@
 	"payment_gateway_pix": "Pix Online",
 	"payment_direct_pix": "Direct Pix",
 	"manage_payment_title": "Manage payment",
-	"document": "Document",
 	"try_again":"An error occurred, please try again"
 }

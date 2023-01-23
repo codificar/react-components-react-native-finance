@@ -45,7 +45,6 @@ class AddCardScreenLib extends Component {
             cvvError: false,
             expirationError: false,
             numberError: false,
-            document: '',
         }
 
         this.api = new Api();
@@ -157,7 +156,6 @@ class AddCardScreenLib extends Component {
             this.state.cardCvv,
             year,
             month,
-            this.state.document,
         ).then(response => {
             this.setState({
                 isLoading: false
@@ -299,23 +297,6 @@ class AddCardScreenLib extends Component {
                                     </Text>
                                 }   
                             </View>
-                        </View>
-                        <View
-                            style={styles.marginBottom}
-                        >
-                            <Text style={styles.DefaultInputLabel}>
-                                {this.strings.document}
-                            </Text>
-                            <TextInput 
-                                value={this.state.document}
-                                onChangeText={text => {
-                                    this.setState({
-                                        document: text
-                                    })
-                                }}
-                                style={styles.DefaultInputStyle}
-                                placeholder={this.strings.document}
-                            />
                         </View>
                     </View>
                     <View>
