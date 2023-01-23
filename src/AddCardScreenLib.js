@@ -300,6 +300,23 @@ class AddCardScreenLib extends Component {
                                 }   
                             </View>
                         </View>
+                        <View
+                            style={styles.marginBottom}
+                        >
+                            <Text style={styles.DefaultInputLabel}>
+                                {this.strings.document}
+                            </Text>
+                            <TextInput 
+                                value={this.state.document}
+                                onChangeText={text => {
+                                    this.setState({
+                                        document: text
+                                    })
+                                }}
+                                style={styles.DefaultInputStyle}
+                                placeholder={this.strings.document}
+                            />
+                        </View>
                     </View>
                     <View>
                         <TouchableOpacity

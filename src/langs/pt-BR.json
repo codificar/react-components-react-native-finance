@@ -119,5 +119,6 @@
 	"payment_billing": "Boleto",
 	"payment_gateway_pix": "Pix Online",
 	"payment_direct_pix": "Pix direto",
-	"manage_payment_title": "Gerenciar pagamento"
+	"manage_payment_title": "Gerenciar pagamento",
+	"document": "CPF"
 }
