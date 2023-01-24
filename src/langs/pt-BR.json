@@ -78,7 +78,7 @@
 	"confirm_remove_card": "Deseja deletar o cartão selecionado?",
 	"remove_card_success": "Cartão deletado com sucesso",
 	"billet_copied": "Boleto copiado com sucesso!",
-	"new_billet_success": "Boleto gerado com sucesso",
+	"new_billet_success": "Boleto gerado com sucesso. Ele foi enviado para o seu email.",
 	"click_to_download": "Clique aqui para baixar",
 	"card_refused": "Cartão Recusado",
 	"confirm_pix_value": "Tem certeza que deseja pagar com pix o valor de",
@@ -125,5 +125,6 @@
 	"payment_gateway_pix": "Pix Online",
 	"payment_direct_pix": "Pix direto",
 	"manage_payment_title": "Gerenciar pagamento",
-	"try_again":"Ocorreu um erro, por favor tente novamente."
+	"try_again":"Ocorreu um erro, por favor tente novamente.",
+	"cant_remove_card": "Não é possível remover o cartão, pois você possui uma assinatura ativa com o mesmo, aguarde o cancelamento do plano ou cancele o mesmo"
 }

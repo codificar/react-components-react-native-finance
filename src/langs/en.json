@@ -78,7 +78,7 @@
 	"confirm_remove_card": "Do you want to delete the selected card?",
 	"remove_card_success": "Card successfully deleted",
 	"billet_copied": "Boleto copied successfully!",
-	"new_billet_success": "Boleto generated successfully",
+	"new_billet_success": "Boleto generated successfully. It was sent to your email.",
 	"click_to_download": "Click here to download",
 	"card_refused": "Card Refused",
 	"confirm_pix_value": "Are you sure you want to pay with pix the value of",
@@ -123,5 +123,7 @@
 	"payment_gateway_pix": "Pix Online",
 	"payment_direct_pix": "Direct Pix",
 	"manage_payment_title": "Manage payment",
-	"try_again":"An error occurred, please try again"
+	"try_again":"An error occurred, please try again",
+	"cant_remove_card": "It is not possible to withdraw the card because you have an active subscription with it, wait for the plan to be canceled or cancel it"
 }
+

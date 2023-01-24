@@ -216,7 +216,7 @@ const AddBalanceScreen = (props) => {
                     alertOk(strings.card, strings.card_success);
                 } else {
                     setIsLoading(false);
-                    if(json.error){
+                    if (json.error) {
                         msgError = json.error;
                     }
                     else {
@@ -233,7 +233,7 @@ const AddBalanceScreen = (props) => {
                         { cancelable: false }
                     );
                 }
-                })
+            })
             .catch((error) => {
                 setIsLoading(false);
                 console.error(error);
@@ -497,8 +497,7 @@ const AddBalanceScreen = (props) => {
                 GLOBAL.id,
                 GLOBAL.token,
                 card.id,
-            )
-                .then((json) => {
+            ).then((json) => {
                     if (json.success) {
                         setIsLoading(false);
                         getCardsAndBalanceInfo();
@@ -509,7 +508,16 @@ const AddBalanceScreen = (props) => {
                             Toast.showToast(json.error);
                         }
                         else {
-                            Toast.showToast(strings.card_refused);
+                            if(json.message.includes("SQLSTATE[23000]: Integrity constraint violation: 1451 Cannot delete or update a parent row: a foreign key constraint fails")){
+                                Alert.alert(
+                                    strings.remove_card,
+                                    strings.cant_remove_card,
+                                    [
+                                        { text: strings.ok, style: "cancel" },
+                                    ],
+                                    { cancelable: true }
+                                );
+                            }
                         }
                     }
                 })
