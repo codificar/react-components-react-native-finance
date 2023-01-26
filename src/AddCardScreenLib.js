@@ -21,7 +21,7 @@ import GLOBAL from './Functions/Global.js';
 class AddCardScreenLib extends Component {
     constructor(props) {
         super(props);
-
+        this.params = props.navigation.state.params;
         //Get the lang from props. If hasn't lang in props, default is pt-BR
         this.strings = require('./langs/pt-BR.json');
         if(GLOBAL.lang) {
@@ -44,7 +44,8 @@ class AddCardScreenLib extends Component {
             nameError: false,
             cvvError: false,
             expirationError: false,
-            numberError: false
+            numberError: false,
+            document: '',
         }
 
         this.api = new Api();
@@ -147,15 +148,16 @@ class AddCardScreenLib extends Component {
         var year = parseInt(exp[1]);            
 
         this.api.AddCard(
-            GLOBAL.appUrl,
-            GLOBAL.id, 
-            GLOBAL.token,
-            GLOBAL.type,
+            GLOBAL.appUrl || this.params.appUrl,
+            GLOBAL.id || this.params.id, 
+            GLOBAL.token || this.params.token,
+            GLOBAL.type || this.params.type,
             this.state.cardName,
             this.state.cardNumber.split(' ').join(''),
             this.state.cardCvv,
             year,
-            month
+            month,
+            this.state.document,
         ).then(response => {
             this.setState({
                 isLoading: false
@@ -298,12 +300,29 @@ class AddCardScreenLib extends Component {
                                 }   
                             </View>
                         </View>
+                        <View
+                            style={styles.marginBottom}
+                        >
+                            <Text style={styles.DefaultInputLabel}>
+                                {this.strings.document}
+                            </Text>
+                            <TextInput 
+                                value={this.state.document}
+                                onChangeText={text => {
+                                    this.setState({
+                                        document: text
+                                    })
+                                }}
+                                style={styles.DefaultInputStyle}
+                                placeholder={this.strings.document}
+                            />
+                        </View>
                     </View>
                     <View>
                         <TouchableOpacity
                             style={{
                                 width: '100%',
-                                backgroundColor: GLOBAL.color,
+                                backgroundColor: GLOBAL.color || this.params.color,
                                 padding: 12,
                                 alignItems: 'center',
                                 justifyContent: 'center',
