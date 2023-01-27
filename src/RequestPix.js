@@ -139,8 +139,8 @@ const RequestPix = (props) => {
     const alertChange = (isPaid) => {
         unsubscribeSocket(); 
         Alert.alert(
-            strings.pix,
-            isPaid ? strings.confirmed_pix : strings.payment_changed,
+            strings.payment,
+            isPaid ? strings.confirmed_payment : strings.payment_changed,
             [
                 { text: strings.confirm, onPress: () => props.onPaid(true) }
             ],

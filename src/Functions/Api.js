@@ -153,7 +153,7 @@ export default class Api {
         card_number,
         card_cvv,
         card_expiration_year,
-        card_expiration_month
+        card_expiration_month,        
     ) {
         let params = {
             method: 'POST',
