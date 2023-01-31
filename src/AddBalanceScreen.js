@@ -27,6 +27,7 @@ import { NavigationEvents } from "react-navigation";
 import { useIsFocused } from "@react-navigation/native";
 
 import Toast from "./Functions/Toast";
+import { languages } from './langs/index.js';
 
 const AddBalanceScreen = (props) => {
 
@@ -85,21 +86,7 @@ const AddBalanceScreen = (props) => {
     const withDrawalScreen = props.withDrawalScreen ? props.withDrawalScreen : '';
 
     //Get the lang from props. If hasn't lang in props, default is pt-BR
-    var strings = require('./langs/pt-BR.json');
-
-    //If has lang from props, get form props, if not, get from global.
-    if (props && props.lang) {
-        if (props.lang == "pt-BR")
-            strings = require('./langs/pt-BR.json');
-        else if (props.lang.indexOf("en") != -1)
-            strings = require('./langs/en.json');
-    }
-    else if (GLOBAL.lang) {
-        if (GLOBAL.lang == "pt-BR")
-            strings = require('./langs/pt-BR.json');
-        else if (GLOBAL.lang.indexOf("en") != -1)
-            strings = require('./langs/en.json');
-    }
+    var strings = languages(props);
 
     const api = new Api();
 

@@ -17,22 +17,14 @@ import {
 import { TextInputMask } from 'react-native-masked-text';
 import Api from "./Functions/Api";
 import GLOBAL from './Functions/Global.js';
+import { languages } from "./langs";
 
 class AddCardScreenLib extends Component {
     constructor(props) {
         super(props);
         this.params = props.navigation.state.params;
         //Get the lang from props. If hasn't lang in props, default is pt-BR
-        this.strings = require('./langs/pt-BR.json');
-        if(GLOBAL.lang) {
-            if(GLOBAL.lang == "pt-BR") {
-                this.strings = require('./langs/pt-BR.json');
-            } 
-            // if is english
-            else if(GLOBAL.lang.indexOf("en") != -1) {
-                this.strings = require('./langs/en.json');
-            }
-        }
+        this.strings = languages(props);
 
         this.color = this.params.color || GLOBAL.color;
 
