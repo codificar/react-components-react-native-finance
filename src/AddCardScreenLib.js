@@ -224,6 +224,7 @@ class AddCardScreenLib extends Component {
                                         cardNumber: text
                                     })
                                 }}
+                                keyboardType='numeric'
                                 style={styles.DefaultInputStyle}
                                 onFocus={() => this.setState({numberError: false})}
                             />
@@ -249,6 +250,7 @@ class AddCardScreenLib extends Component {
                                     options={{
                                         mask: '99/9999'
                                     }}
+                                    keyboardType='numeric'
                                     value={this.state.cardExpiration}
                                     onChangeText={text => {
                                         this.setState({
@@ -276,6 +278,7 @@ class AddCardScreenLib extends Component {
                                     options={{
                                         mask: '9999'
                                     }}
+                                    keyboardType='numeric'
                                     value={this.state.cardCvv}
                                     onChangeText={text => {
                                         this.setState({
