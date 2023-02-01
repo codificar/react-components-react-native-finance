@@ -218,6 +218,7 @@ class AddCardScreenLib extends Component {
                                 options={{
                                     mask: '9999 9999 9999 9999'
                                 }}
+                                keyboardType='numeric'
                                 value={this.state.cardNumber}
                                 onChangeText={text => {
                                     this.setState({
