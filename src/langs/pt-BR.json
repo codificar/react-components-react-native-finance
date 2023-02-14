@@ -24,6 +24,7 @@
 	"blank_state_message_filter": "Não encontramos registros para a data selecionada. Utilize o filtro (canto superior direito) para escolher outra data.",
 	"reportDetail": "Detalhes do período",
 	"yearReport": "Relatório de ganhos",
+	"typeTransaction": "Tipo de transação",
 	"typeService": "Tipo do serviço",
 	"description": "Descrição",
 	"details": "Detalhes",

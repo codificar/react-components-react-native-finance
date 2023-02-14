@@ -24,6 +24,7 @@
 	"blank_state_message_filter": "We couldn't find any records for the selected date. Use the filter (top right) to choose another date.",
 	"reportDetail": "Period details",
 	"yearReport": "Gain report",
+	"typeTransaction": "Transaction type",
 	"typeService": "Service type",
 	"description": "Description",
 	"details": "Details",
