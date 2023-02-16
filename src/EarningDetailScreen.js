@@ -18,10 +18,12 @@ import TitleHeader from './Functions/TitleHeader'
 import GLOBAL from './Functions/Global.js'
 
 class EarningDetailScreen extends Component {
-    constructor(props) {
+ constructor(props) {
         super(props)
+
+        const item = this?.props?.navigation?.state?.params?.item;
         this.state = {
-            item: this.props.navigation.state.params.item
+          item: item ?? props.route.params.item
         }
 
         //Get the lang from props. If hasn't lang in props, default is pt-BR
@@ -29,7 +31,7 @@ class EarningDetailScreen extends Component {
         if(GLOBAL.lang) {
             if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./langs/pt-BR.json');
-            } 
+            }
             // if is english
             else if(GLOBAL.lang.indexOf("en") != -1) {
                 this.strings = require('./langs/en.json');
