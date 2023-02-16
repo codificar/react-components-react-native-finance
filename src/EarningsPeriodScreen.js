@@ -57,6 +57,12 @@ class EarningsPeriodScreen extends Component {
             this.getCheckingAccount()
         })
 
+        this.willFocus = this.props.navigation.addListener("focus", () => {
+            //Toda vez que entra na tela, pega os params novamente, para atualizar os dados da tela
+            this.param = this.props.navigation.state != undefined ? this.param : this.props.route.params;
+            this.getCheckingAccount()
+        })
+
         //Get the lang from props. If hasn't lang in props, default is pt-BR
         this.strings = require('./langs/pt-BR.json');
         if(GLOBAL.lang) {
