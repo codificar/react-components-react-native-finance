@@ -33,6 +33,7 @@ class AddCardScreenLib extends Component {
                 this.strings = require('./langs/en.json');
             }
         }
+        this.isPtAo =this.props?.settings?.language == 'ao',
 
         this.state = {
             isLoading: false,
@@ -232,6 +233,7 @@ class AddCardScreenLib extends Component {
                                         cardNumber: text
                                     })
                                 }}
+                                keyboardType="numeric"
                                 style={styles.DefaultInputStyle}
                                 onFocus={() => this.setState({numberError: false})}
                             />
@@ -263,6 +265,7 @@ class AddCardScreenLib extends Component {
                                             cardExpiration: text
                                         })
                                     }}
+                                    keyboardType="numeric"
                                     style={styles.DefaultInputStyle}
                                     onFocus={() => this.setState({expirationError: false})}
                                 />
@@ -290,6 +293,7 @@ class AddCardScreenLib extends Component {
                                             cardCvv: text
                                         })
                                     }}
+                                    keyboardType="numeric"
                                     onFocus={() => this.setState({cvvError: false})}
                                     style={styles.DefaultInputStyle}
                                 />
@@ -306,7 +310,9 @@ class AddCardScreenLib extends Component {
                             <Text style={styles.DefaultInputLabel}>
                                 {this.strings.document}
                             </Text>
-                            <TextInput 
+                            <TextInputMask
+                                placeholder={this.strings.document}
+                                type={'custom'}
                                 value={this.state.document}
                                 onChangeText={text => {
                                     this.setState({
@@ -314,7 +320,12 @@ class AddCardScreenLib extends Component {
                                     })
                                 }}
                                 style={styles.DefaultInputStyle}
-                                placeholder={this.strings.document}
+                                keyboardType = {this.isPtAo
+                                    ? null
+                                    : 'numeric'}
+                                options={{
+                                    mask: this.state.document.length <= 14 ? '999.999.999-99*' : '99.999.999/9999-99',
+                                }}
                             />
                         </View>
                     </View>
