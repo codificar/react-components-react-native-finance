@@ -1,4 +1,7 @@
 {
+	"ok": "OK",
+	"minimumValueToCharge":"O valor mínimo para fazer a adição de saldo é ",
+	"currency":"R$",
 	"credit": "Crédito",
 	"debit": "Débito",
 	"dateInitialError": "DATA INICIAL MAIOR QUE A DATA FINAL",
@@ -21,6 +24,7 @@
 	"blank_state_message_filter": "Não encontramos registros para a data selecionada. Utilize o filtro (canto superior direito) para escolher outra data.",
 	"reportDetail": "Detalhes do período",
 	"yearReport": "Relatório de ganhos",
+	"typeTransaction": "Tipo de transação",
 	"typeService": "Tipo do serviço",
 	"description": "Descrição",
 	"details": "Detalhes",
@@ -66,6 +70,7 @@
 	"confirm_billet_value": "Tem certeza que deseja gerar um boleto no valor de",
 	"billet_addition": "Haverá um acréscimo de",
 	"yes": "Sim",
+	"selectvalue": "Por favor insira um valor e tente novamente",
 	"no": "Não",
 	"pay_with_card": "Pagar com cartão",
 	"confirm_card_value": "Tem certeza que deseja pagar o valor de",
@@ -80,6 +85,8 @@
 	"confirm_pix_value": "Tem certeza que deseja pagar com pix o valor de",
 	"pay_with_pix": "Pagar com Pix",
 	"copied": "Código copiado com sucesso!",
+	"payment":"Pagamento",
+	"confirmed_payment": "O pagamento foi confirmado!",
 	"pix": "Pix",
 	"confirmed_pix": "O pagamento Pix foi confirmado!",
 	"pix_info": "Pague com Pix em qualquer dia e a qualquer hora! O pagamento é instantâneo, prático e pode ser feito em poucos segundos. É rápido e seguro.",
@@ -118,5 +125,7 @@
 	"payment_billing": "Boleto",
 	"payment_gateway_pix": "Pix Online",
 	"payment_direct_pix": "Pix direto",
-	"manage_payment_title": "Gerenciar pagamento"
+	"manage_payment_title": "Gerenciar pagamento",
+	"try_again":"Ocorreu um erro, por favor tente novamente.",
+	"cant_remove_card": "Não é possível remover o cartão, pois você possui uma assinatura ativa com o mesmo, aguarde o cancelamento do plano ou cancele o mesmo"
 }
