@@ -33,6 +33,15 @@ class AddCardScreenLib extends Component {
                 this.strings = require('./langs/en.json');
             }
         }
+        if(this.params.lang) {
+            if(this.params.lang == "pt-br") {
+                this.strings = require('./langs/pt-BR.json');
+            } 
+            // if is english
+            else if(this.params.lang.indexOf("en") != -1) {
+                this.strings = require('./langs/en.json');
+            }
+        }
         this.isPtAo =this.props?.settings?.language == 'ao',
 
         this.state = {
@@ -194,7 +203,7 @@ class AddCardScreenLib extends Component {
                         <View
                             style={styles.marginBottom}
                         >
-                            <Text style={styles.DefaultInputLabel}>
+                            <Text style={[styles.DefaultInputLabel,{color:this.params.color}]}>
                                 {this.strings.name}
                             </Text>
                             <TextInput 
@@ -218,7 +227,7 @@ class AddCardScreenLib extends Component {
                         <View
                             style={styles.marginBottom}
                         >
-                            <Text style={styles.DefaultInputLabel}>
+                            <Text style={[styles.DefaultInputLabel,{color:this.params.color}]}>
                                 {this.strings.number}
                             </Text>
                             <TextInputMask
@@ -250,7 +259,7 @@ class AddCardScreenLib extends Component {
                             <View
                                 style={styles.container2Width}
                             >
-                                <Text style={styles.DefaultInputLabel}>
+                                <Text style={[styles.DefaultInputLabel,{color:this.params.color}]}>
                                     {this.strings.exp}
                                 </Text>
                                 <TextInputMask
@@ -278,7 +287,7 @@ class AddCardScreenLib extends Component {
                             <View
                                 style={styles.container2Width}
                             >
-                                <Text style={styles.DefaultInputLabel}>
+                                <Text style={[styles.DefaultInputLabel,{color:this.params.color}]}>
                                     {this.strings.cvv}
                                 </Text>
                                 <TextInputMask
@@ -307,7 +316,7 @@ class AddCardScreenLib extends Component {
                         <View
                             style={styles.marginBottom}
                         >
-                            <Text style={styles.DefaultInputLabel}>
+                            <Text style={[styles.DefaultInputLabel,{color:this.params.color}]}>
                                 {this.strings.document}
                             </Text>
                             <TextInputMask
@@ -333,7 +342,7 @@ class AddCardScreenLib extends Component {
                         <TouchableOpacity
                             style={{
                                 width: '100%',
-                                backgroundColor: GLOBAL.color || this.params.color,
+                                backgroundColor: this.params.color || GLOBAL.color,
                                 padding: 12,
                                 alignItems: 'center',
                                 justifyContent: 'center',
