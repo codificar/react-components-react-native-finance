@@ -29,8 +29,7 @@ import GLOBAL from './Functions/Global.js';
 class EarningsPeriodScreen extends Component {
     constructor(props) {
         super(props)
-
-      this.param = this.props.navigation.state != undefined ? this.param : this.props.route.params;
+        this.param = this.props.navigation.state != undefined ? this.props.navigation.state.params: this.param;
         this.state = {
             iniciate: 0,
             dateInitial: this.param.startDate,
