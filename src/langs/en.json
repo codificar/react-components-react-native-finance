@@ -118,5 +118,9 @@
 	"payment_billing": "Billing",
 	"payment_gateway_pix": "Pix Online",
 	"payment_direct_pix": "Direct Pix",
-	"manage_payment_title": "Manage payment"
+	"manage_payment_title": "Manage payment",
+	"card_registered": "Successful registered card !",
+	"card_declined": "It was not possible to register your card at the moment!Check the data and try again !",
+	"ok": "OK",
+	"card_error_api": "It was not possible to register your card at the moment !"
 }

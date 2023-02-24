@@ -118,5 +118,9 @@
 	"payment_billing": "Boleto",
 	"payment_gateway_pix": "Pix Online",
 	"payment_direct_pix": "Pix direto",
-	"manage_payment_title": "Gerenciar pagamento"
+	"manage_payment_title": "Gerenciar pagamento",
+	"card_registered": "Cartão cadastrado com sucesso !",
+	"card_declined": "Verifique os dados e tente novamente !",
+	"ok": "OK",
+	"card_error_api": "Não foi possível cadastrar seu cartão no momento !"
 }
