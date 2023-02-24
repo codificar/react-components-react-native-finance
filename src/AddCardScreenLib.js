@@ -12,7 +12,8 @@ import {
     BackHandler,
     TouchableOpacity,
     TextInput,
-    StyleSheet
+    StyleSheet,
+    Alert
 } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Api from "./Functions/Api";
@@ -21,7 +22,6 @@ import GLOBAL from './Functions/Global.js';
 class AddCardScreenLib extends Component {
     constructor(props) {
         super(props);
-
         //Get the lang from props. If hasn't lang in props, default is pt-BR
         this.strings = require('./langs/pt-BR.json');
         if(GLOBAL.lang) {
@@ -33,6 +33,9 @@ class AddCardScreenLib extends Component {
                 this.strings = require('./langs/en.json');
             }
         }
+        props?.navigation?.state?.params ? this.params = props.navigation.state.params : null;
+
+        this.color =  GLOBAL.color || this.params.color;
 
         this.state = {
             isLoading: false,
@@ -44,7 +47,7 @@ class AddCardScreenLib extends Component {
             nameError: false,
             cvvError: false,
             expirationError: false,
-            numberError: false
+            numberError: false,
         }
 
         this.api = new Api();
@@ -147,24 +150,50 @@ class AddCardScreenLib extends Component {
         var year = parseInt(exp[1]);            
 
         this.api.AddCard(
-            GLOBAL.appUrl,
-            GLOBAL.id, 
-            GLOBAL.token,
-            GLOBAL.type,
+            GLOBAL.appUrl || this.params.appUrl,
+            GLOBAL.id || this.params.id, 
+            GLOBAL.token || this.params.token,
+            GLOBAL.type || this.params.type,
             this.state.cardName,
             this.state.cardNumber.split(' ').join(''),
             this.state.cardCvv,
             year,
-            month
+            month,
         ).then(response => {
             this.setState({
                 isLoading: false
             });
-            this.props.navigation.goBack();
+            if(response.success){
+                Alert.alert(
+                    this.strings.card,
+                    this.strings.card_registered,
+                    [
+                        { text: this.strings.ok, onPress: () => this.props.navigation.goBack() }
+                    ],
+                    { cancelable: false }
+                );
+            }else{
+                Alert.alert(
+                    this.strings.card,
+                    this.strings.card_declined,
+                    [
+                        { text: this.strings.ok, style: "cancel" },
+                    ],
+                    { cancelable: false }
+                );
+            }
         }).catch(error => {
             this.setState({
                 isLoading: false
             });
+            Alert.alert(
+                this.strings.card,
+                this.strings.card_error_api,
+                [
+                    { text: this.strings.ok, style: "cancel" },
+                ],
+                { cancelable: false }
+            );
         });
     }
 
@@ -191,7 +220,7 @@ class AddCardScreenLib extends Component {
                         <View
                             style={styles.marginBottom}
                         >
-                            <Text style={styles.DefaultInputLabel}>
+                            <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
                                 {this.strings.name}
                             </Text>
                             <TextInput 
@@ -215,7 +244,7 @@ class AddCardScreenLib extends Component {
                         <View
                             style={styles.marginBottom}
                         >
-                            <Text style={styles.DefaultInputLabel}>
+                            <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
                                 {this.strings.number}
                             </Text>
                             <TextInputMask
@@ -224,6 +253,7 @@ class AddCardScreenLib extends Component {
                                 options={{
                                     mask: '9999 9999 9999 9999'
                                 }}
+                                keyboardType='numeric'
                                 value={this.state.cardNumber}
                                 onChangeText={text => {
                                     this.setState({
@@ -246,7 +276,7 @@ class AddCardScreenLib extends Component {
                             <View
                                 style={styles.container2Width}
                             >
-                                <Text style={styles.DefaultInputLabel}>
+                                <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
                                     {this.strings.exp}
                                 </Text>
                                 <TextInputMask
@@ -255,6 +285,7 @@ class AddCardScreenLib extends Component {
                                     options={{
                                         mask: '99/9999'
                                     }}
+                                    keyboardType='numeric'
                                     value={this.state.cardExpiration}
                                     onChangeText={text => {
                                         this.setState({
@@ -273,7 +304,7 @@ class AddCardScreenLib extends Component {
                             <View
                                 style={styles.container2Width}
                             >
-                                <Text style={styles.DefaultInputLabel}>
+                                <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
                                     {this.strings.cvv}
                                 </Text>
                                 <TextInputMask
@@ -282,6 +313,7 @@ class AddCardScreenLib extends Component {
                                     options={{
                                         mask: '9999'
                                     }}
+                                    keyboardType='numeric'
                                     value={this.state.cardCvv}
                                     onChangeText={text => {
                                         this.setState({
@@ -303,7 +335,7 @@ class AddCardScreenLib extends Component {
                         <TouchableOpacity
                             style={{
                                 width: '100%',
-                                backgroundColor: GLOBAL.color,
+                                backgroundColor: this.color,
                                 padding: 12,
                                 alignItems: 'center',
                                 justifyContent: 'center',
