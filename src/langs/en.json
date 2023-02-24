@@ -1,4 +1,7 @@
 {
+	"ok": "OK",
+	"minimumValueToCharge":"The minimum value to add balance is ",
+	"currency":"$",
 	"credit": "Credit",
 	"debit": "Debit",
 	"dateInitialError": "INITIAL DATE GREATER THAN LAST DATE",
@@ -21,6 +24,7 @@
 	"blank_state_message_filter": "We couldn't find any records for the selected date. Use the filter (top right) to choose another date.",
 	"reportDetail": "Period details",
 	"yearReport": "Gain report",
+	"typeTransaction": "Transaction type",
 	"typeService": "Service type",
 	"description": "Description",
 	"details": "Details",
@@ -66,6 +70,7 @@
 	"confirm_billet_value": "Are you sure you want to generate a boleto for",
 	"billet_addition": "There will be an increase in",
 	"yes": "Yes",
+	"selectvalue": "Please select a value and try again",
 	"no": "No",
 	"pay_with_card": "Pay with card",
 	"confirm_card_value": "Are you sure you want to pay the amount of",
@@ -121,6 +126,8 @@
 	"manage_payment_title": "Manage payment",
 	"card_registered": "Successful registered card !",
 	"card_declined": "It was not possible to register your card at the moment!Check the data and try again !",
-	"ok": "OK",
-	"card_error_api": "It was not possible to register your card at the moment !"
+	"card_error_api": "It was not possible to register your card at the moment !",
+	"try_again":"An error occurred, please try again",
+	"cant_remove_card": "It is not possible to withdraw the card because you have an active subscription with it, wait for the plan to be canceled or cancel it"
 }
+

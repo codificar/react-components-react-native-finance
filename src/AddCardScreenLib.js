@@ -18,6 +18,7 @@ import {
 import { TextInputMask } from 'react-native-masked-text';
 import Api from "./Functions/Api";
 import GLOBAL from './Functions/Global.js';
+import { languages } from "./langs";
 
 class AddCardScreenLib extends Component {
     constructor(props) {
@@ -260,6 +261,7 @@ class AddCardScreenLib extends Component {
                                         cardNumber: text
                                     })
                                 }}
+                                keyboardType='numeric'
                                 style={styles.DefaultInputStyle}
                                 onFocus={() => this.setState({numberError: false})}
                             />

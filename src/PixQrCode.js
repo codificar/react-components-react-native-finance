@@ -17,11 +17,13 @@ import {
     TouchableOpacity,
     Modal,
     Dimensions,
-    BackHandler
+    BackHandler,
+    TextInput
 } from 'react-native';
 import Api from "./Functions/Api";
 import WebSocketServer from "./Functions/socket";
 import QRCode from "react-native-qrcode-svg";
+import Clipboard from "@react-native-clipboard/clipboard";
 
 const PixQrCode = (props) => {
 
@@ -41,7 +43,9 @@ const PixQrCode = (props) => {
     const [errorPix, setErrorPix] = useState(false);
     const [formattedValue, setFormattedValue] = useState("");
     const [transactionId, setTransactionId] = useState(0);
+    const [transactionType, setTransactionType] = useState("");
     const [qrCodeBase64, setQrCodeBase64] = useState("");
+    const [copyAndPaste, setCopyAndPaste] = useState("");
     const [isSubscribed, setIsSubscribed] = useState(false);
     const appState = useRef(AppState.currentState);
     const [modalVisible, setModalVisible] = useState(false);
@@ -82,6 +86,12 @@ const PixQrCode = (props) => {
         }
     }
 
+
+    const copyClipBoard = () => {
+        Clipboard.setString(copyAndPaste);
+        Toast.showToast(strings.copied);
+    }
+
     useEffect(() => {
         retrievePix(props.callRetrieve, false);
     }, [props.callRetrieve]);
@@ -99,10 +109,14 @@ const PixQrCode = (props) => {
             if(json.success) {
                 setErrorPix(false);
                 setFormattedValue(json.formatted_value);
+                setCopyAndPaste(json.copy_and_paste);
                 if(json && json.paid) {
                     alertPaid();
                 } else {
                     setTransactionId(json.transaction_id);
+                    if(json.transaction_type) {
+                        setTransactionType(json.transaction_type);
+                    }
                     setQrCodeBase64(json.qr_code_base64);
                     if(showFailMsg) {
                         Toast.showToast(strings.payment_not_confirmed);
@@ -185,6 +199,15 @@ const PixQrCode = (props) => {
     }
 
     const goBack = () => {
+        if(transactionType == 'subscription_transaction') {
+            return props.navigation.navigate('SubscriptionDetailsScreen',{
+                provider: props.providerProfile,
+                route: props.appUrl,
+                routeAPI: props.API_VERSION,
+                routeBack: props.routeBack,
+                isContainerPaymentType: props.isContainerPaymentType,
+            });             
+        }
         Alert.alert(
             strings.exit_app,
             strings.exit_app_msg,
@@ -299,7 +322,7 @@ const PixQrCode = (props) => {
                     marginTop: 20,
                     marginBottom: 20,
                     padding: 10,  
-                    flexDirection: 'row', 
+                    flexDirection: 'column', 
                     alignItems: "center", 
                     justifyContent: "center"
                 }}>
@@ -311,6 +334,24 @@ const PixQrCode = (props) => {
                     ? <QRCode value={qrCodeBase64} size={250} /> 
                     : null  
                 }
+                {copyAndPaste 
+                    && transactionType == 'subscription_transaction' 
+                    && !errorPix ? (<>
+                        <TextInput
+                            style={styles.input}
+                            selectTextOnFocus={true}
+                            showSoftInputOnFocus={false} 
+                            value={copyAndPaste}
+                        />
+
+                        <TouchableOpacity
+                            style={styles.buttonStyle}
+                            onPress={() =>  copyClipBoard()} 
+                        >
+                            <Text style={[styles.greenText, {fontSize: 16, fontWeight: "bold", textAlign: "center" }]}>{strings.copy_pix}</Text>
+                        </TouchableOpacity>
+                    </>) : null
+                    } 
             </View>
 
             {/* Flex vertical of 2/15 */}
@@ -324,14 +365,16 @@ const PixQrCode = (props) => {
             </View>
 
              {/* Flex vertical of 2/15 */}
-             <View style={{flex: 2, alignItems: "center"}}>
-                <Text style={[styles.text, styles.textBlack]}>{strings.pix_problems}</Text>
-                <TouchableOpacity
-                    onPress={() =>  setModalVisible(true)} 
-                >
-                    <Text style={[styles.text, styles.greenText]}>{strings.change_payment_mode}</Text>
-                </TouchableOpacity>
-            </View>
+             { props.request_id && (
+                <View style={{flex: 2, alignItems: "center"}}>
+                    <Text style={[styles.text, styles.textBlack]}>{strings.pix_problems}</Text>
+                    <TouchableOpacity
+                        onPress={() =>  setModalVisible(true)} 
+                    >
+                        <Text style={[styles.text, styles.greenText]}>{strings.change_payment_mode}</Text>
+                    </TouchableOpacity>
+                </View>)
+             }
 
             {/* Flex vertical of 2/15 */}
             <View style={{flex: 2, alignItems: "center"}}>
@@ -410,7 +453,28 @@ const styles = StyleSheet.create({
     },
     buttonClose: {
         backgroundColor: "#2196F3",
-    }
+    },
+    input: {
+        borderColor: "#adadad",
+        width: "90%",
+        height: 50,
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        marginTop: 10,
+        marginBottom: 10
+    },
+    buttonStyle: {
+        borderColor: "white",
+        backgroundColor: '#f0f8f3',
+        width: "90%",
+        height: 50,
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        marginBottom: 10,
+        marginTop: 10,
+    },
 });
 
 export default PixQrCode;
