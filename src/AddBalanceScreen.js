@@ -28,6 +28,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import Toast from "./Functions/Toast";
 import { languages } from './langs/index.js';
+import {handlerException} from '../../../app/Services/Exception';
 
 const AddBalanceScreen = (props) => {
 
@@ -67,7 +68,7 @@ const AddBalanceScreen = (props) => {
     const [referralBalance, setReferralBalance] = useState(0);
     const [cumulated_balance_monthly, setCumulated_balance_monthly] = useState(0);
     const [isCustomIndicationEnabled, setIsCustomIndicationEnabled] = useState(false);
-    const [program_name, setProgram_name] = useState("");
+    const [programName, setProgramName] = useState("");
     const [addCardIsWebview, setAddCardIsWebview] = useState("");
 
     const [settings, setSettings] = useState({
@@ -166,7 +167,7 @@ const AddBalanceScreen = (props) => {
                     setReferralBalance(json.referralBalance);
                     setCumulated_balance_monthly(json.cumulated_balance_monthly);
                     setIsCustomIndicationEnabled(json.settings.indication_settings ? json.settings.indication_settings.isCustomIndicationEnabled : false);
-                    setProgram_name(json.settings.indication_settings ? json.settings.indication_settings.program_name : false);
+                    setProgramName(json.settings.indication_settings ? json.settings.indication_settings.programName : false);
                     setAddCardIsWebview(json.add_card_is_webview);
                 }
                 setIsLoading(false);
@@ -317,7 +318,7 @@ const AddBalanceScreen = (props) => {
                 }
             })
             .catch((error) => {
-                console.error(error);
+                handlerException('RNUnlockDevice', error);
             });
     }
 
@@ -515,6 +516,9 @@ const AddBalanceScreen = (props) => {
         }
     }
 
+    /*
+    * Copy a string and show a toast to a user by toast
+    */
     const copyClipBoard = () => {
         Clipboard.setString(digitable_line);
         Toast.showToast(strings.billet_copied);
@@ -606,7 +610,7 @@ const AddBalanceScreen = (props) => {
 
                         {isCustomIndicationEnabled ? (
                             <View style={styles.indicationContainer}>
-                                <Text style={[styles.currentValueText, { marginBottom: 10, marginTop: 10 }]}>{program_name}</Text>
+                                <Text style={[styles.currentValueText, { marginBottom: 10, marginTop: 10 }]}>{programName}</Text>
                                 <View style={styles.cardContainer}>
                                     {referralBalance !== 0 ? (
                                         <TouchableOpacity style={styles.card} onPress={() => infoTotal()}>
