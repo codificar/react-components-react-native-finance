@@ -28,7 +28,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import Toast from "./Functions/Toast";
 import { languages } from './langs/index.js';
-import {handlerException} from '../../../app/Services/Exception';
+import { handlerException } from 'react-native-finance/src/services/Exception.js';
 
 const AddBalanceScreen = (props) => {
 
@@ -173,7 +173,7 @@ const AddBalanceScreen = (props) => {
                 setIsLoading(false);
             })
             .catch((error) => {
-                console.error(error);
+                handlerException("getCardsAndBalanceInfo",error,GLOBAL.appUrl,GLOBAL.type);
                 setIsLoading(false);
             });
     }
@@ -224,7 +224,7 @@ const AddBalanceScreen = (props) => {
             })
             .catch((error) => {
                 setIsLoading(false);
-                console.error(error);
+                handlerException("addBalanceCard",error,GLOBAL.appUrl,GLOBAL.type);
             });
 
     }
@@ -271,7 +271,7 @@ const AddBalanceScreen = (props) => {
                 }
             })
             .catch((error) => {
-                console.error(error);
+                handlerException("addBalancePix",error,GLOBAL.appUrl,GLOBAL.type);
             });
 
 
@@ -318,7 +318,7 @@ const AddBalanceScreen = (props) => {
                 }
             })
             .catch((error) => {
-                handlerException('RNUnlockDevice', error);
+                handlerException("addBalanceBillet",error,GLOBAL.appUrl,GLOBAL.type);
             });
     }
 
@@ -511,14 +511,11 @@ const AddBalanceScreen = (props) => {
                 })
                 .catch((error) => {
                     setIsLoading(false);
-                    console.error(error);
+                    handlerException("removeCard",error,GLOBAL.appUrl,GLOBAL.type);
                 });
         }
     }
 
-    /*
-    * Copy a string and show a toast to a user by toast
-    */
     const copyClipBoard = () => {
         Clipboard.setString(digitable_line);
         Toast.showToast(strings.billet_copied);
