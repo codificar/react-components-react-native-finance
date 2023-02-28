@@ -17,22 +17,16 @@ import {
 import { TextInputMask } from 'react-native-masked-text';
 import Api from "./Functions/Api";
 import GLOBAL from './Functions/Global.js';
+import { languages } from "./langs";
 
 class AddCardScreenLib extends Component {
     constructor(props) {
         super(props);
-
+        this.params = props.navigation.state.params;
         //Get the lang from props. If hasn't lang in props, default is pt-BR
-        this.strings = require('./langs/pt-BR.json');
-        if(GLOBAL.lang) {
-            if(GLOBAL.lang == "pt-BR") {
-                this.strings = require('./langs/pt-BR.json');
-            } 
-            // if is english
-            else if(GLOBAL.lang.indexOf("en") != -1) {
-                this.strings = require('./langs/en.json');
-            }
-        }
+        this.strings = languages(props);
+
+        this.color = this.params.color || GLOBAL.color;
 
         this.state = {
             isLoading: false,
@@ -44,7 +38,7 @@ class AddCardScreenLib extends Component {
             nameError: false,
             cvvError: false,
             expirationError: false,
-            numberError: false
+            numberError: false,
         }
 
         this.api = new Api();
@@ -147,15 +141,15 @@ class AddCardScreenLib extends Component {
         var year = parseInt(exp[1]);            
 
         this.api.AddCard(
-            GLOBAL.appUrl,
-            GLOBAL.id, 
-            GLOBAL.token,
-            GLOBAL.type,
+            GLOBAL.appUrl || this.params.appUrl,
+            GLOBAL.id || this.params.id, 
+            GLOBAL.token || this.params.token,
+            GLOBAL.type || this.params.type,
             this.state.cardName,
             this.state.cardNumber.split(' ').join(''),
             this.state.cardCvv,
             year,
-            month
+            month,
         ).then(response => {
             this.setState({
                 isLoading: false
@@ -191,7 +185,7 @@ class AddCardScreenLib extends Component {
                         <View
                             style={styles.marginBottom}
                         >
-                            <Text style={styles.DefaultInputLabel}>
+                            <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
                                 {this.strings.name}
                             </Text>
                             <TextInput 
@@ -215,7 +209,7 @@ class AddCardScreenLib extends Component {
                         <View
                             style={styles.marginBottom}
                         >
-                            <Text style={styles.DefaultInputLabel}>
+                            <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
                                 {this.strings.number}
                             </Text>
                             <TextInputMask
@@ -224,12 +218,14 @@ class AddCardScreenLib extends Component {
                                 options={{
                                     mask: '9999 9999 9999 9999'
                                 }}
+                                keyboardType='numeric'
                                 value={this.state.cardNumber}
                                 onChangeText={text => {
                                     this.setState({
                                         cardNumber: text
                                     })
                                 }}
+                                keyboardType='numeric'
                                 style={styles.DefaultInputStyle}
                                 onFocus={() => this.setState({numberError: false})}
                             />
@@ -246,7 +242,7 @@ class AddCardScreenLib extends Component {
                             <View
                                 style={styles.container2Width}
                             >
-                                <Text style={styles.DefaultInputLabel}>
+                                <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
                                     {this.strings.exp}
                                 </Text>
                                 <TextInputMask
@@ -255,6 +251,7 @@ class AddCardScreenLib extends Component {
                                     options={{
                                         mask: '99/9999'
                                     }}
+                                    keyboardType='numeric'
                                     value={this.state.cardExpiration}
                                     onChangeText={text => {
                                         this.setState({
@@ -273,7 +270,7 @@ class AddCardScreenLib extends Component {
                             <View
                                 style={styles.container2Width}
                             >
-                                <Text style={styles.DefaultInputLabel}>
+                                <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
                                     {this.strings.cvv}
                                 </Text>
                                 <TextInputMask
@@ -282,6 +279,7 @@ class AddCardScreenLib extends Component {
                                     options={{
                                         mask: '9999'
                                     }}
+                                    keyboardType='numeric'
                                     value={this.state.cardCvv}
                                     onChangeText={text => {
                                         this.setState({
@@ -303,7 +301,7 @@ class AddCardScreenLib extends Component {
                         <TouchableOpacity
                             style={{
                                 width: '100%',
-                                backgroundColor: GLOBAL.color,
+                                backgroundColor: this.color,
                                 padding: 12,
                                 alignItems: 'center',
                                 justifyContent: 'center',

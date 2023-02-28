@@ -58,20 +58,18 @@ class EarningDetailScreen extends Component {
             case "SIMPLE_INDICATION":
             case "COMPENSATION_INDICATION":
             case "SEPARATE_CREDIT":
+            case "RIDE_CREDIT":
             case "WITHDRAW":
             case "RIDE_CANCELLATION_CREDIT":
             case "RIDE_PAYMENT":
             case "AUTO_WITHDRAW":
                 return this.strings.credit
-                break
             case "RIDE_DEBIT":
-            case "RIDE_CREDIT":
             case "RIDE_LEDGER":
             case "SEPARATE_DEBIT":
             case "RIDE_CANCELLATION_DEBIT":
             case "RIDE_PAYMENT_FAIL_DEBIT":
                 return this.strings.debit
-                break
         }
     }
 
@@ -100,7 +98,7 @@ class EarningDetailScreen extends Component {
                         </Text>
                         <View style={styles.contInfo}>
                             <View style={styles.rowOne}>
-                                <Text style={styles.labelInfo}>{this.strings.typeService}</Text>
+                                <Text style={styles.labelInfo}>{this.strings.typeTransaction}</Text>
                                 <Text style={styles.textDesc}>{this.nameReason(this.state.item.reason)}</Text>
                             </View>
                             <View style={styles.rowTwo}>
