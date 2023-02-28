@@ -66,7 +66,7 @@ const AddBalanceScreen = (props) => {
     const [billet_url, setBillet_url] = useState("");
     const [addBalanceActive, setAddBalanceActive] = useState(false);
     const [referralBalance, setReferralBalance] = useState(0);
-    const [cumulated_balance_monthly, setCumulated_balance_monthly] = useState(0);
+    const [cumulatedBalanceMonthly, setCumulatedBalanceMonthly] = useState(0);
     const [isCustomIndicationEnabled, setIsCustomIndicationEnabled] = useState(false);
     const [programName, setProgramName] = useState("");
     const [addCardIsWebview, setAddCardIsWebview] = useState("");
@@ -165,9 +165,9 @@ const AddBalanceScreen = (props) => {
                     setSettings(json.settings);
                     setAddBalanceActive(isBalanceActive);
                     setReferralBalance(json.referralBalance);
-                    setCumulated_balance_monthly(json.cumulated_balance_monthly);
+                    setCumulatedBalanceMonthly(json.cumulated_balance_monthly);
                     setIsCustomIndicationEnabled(json.settings.indication_settings ? json.settings.indication_settings.isCustomIndicationEnabled : false);
-                    setProgramName(json.settings.indication_settings ? json.settings.indication_settings.programName : false);
+                    setProgramName(json.settings.indication_settings ? json.settings.indication_settings.program_name : false);
                     setAddCardIsWebview(json.add_card_is_webview);
                 }
                 setIsLoading(false);
@@ -621,11 +621,11 @@ const AddBalanceScreen = (props) => {
                                         </TouchableOpacity>
                                     ) : null}
 
-                                    {cumulated_balance_monthly !== 0 ? (
+                                    {cumulatedBalanceMonthly !== 0 ? (
                                         <TouchableOpacity style={styles.card} onPress={() => infoMonthly()}>
                                             <View style={styles.cardText}>
                                                 <Text style={styles.indicationValueText}>{strings.cumulated_balance_monthly}</Text>
-                                                <Text style={styles.indicationValue}>{cumulated_balance_monthly}</Text>
+                                                <Text style={styles.indicationValue}>{cumulatedBalanceMonthly}</Text>
                                             </View>
                                         </TouchableOpacity>
                                     ) : null}
