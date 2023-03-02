@@ -28,7 +28,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import Toast from "./Functions/Toast";
 import { languages } from './langs/index.js';
-import { handlerException } from '@codificar/use-log-errors/src/api/interceptors/exceptionHandler.interceptor';
+import { handleException } from './Services/handleException.js';
 
 const AddBalanceScreen = (props) => {
 
@@ -173,8 +173,7 @@ const AddBalanceScreen = (props) => {
                 setIsLoading(false);
             })
             .catch((error) => {
-                data = {baseUrl : GLOBAL.appUrl, appType: GLOBAL.type, errorInfo: "getCardsAndBalanceInfo", error: error }
-                handlerException(data);
+                handleException({errorInfo:"AddBalanceScreen.getCardsAndBalanceInfo",error: error});
                 setIsLoading(false);
             });
     }
@@ -225,8 +224,7 @@ const AddBalanceScreen = (props) => {
             })
             .catch((error) => {
                 setIsLoading(false);
-                data = {baseUrl : GLOBAL.appUrl, appType: GLOBAL.type, errorInfo: "addBalanceCard", error: error }
-                handlerException(data);
+                handleException({errorInfo:"AddBalanceScreen.addBalanceCard",error: error});
             });
 
     }
@@ -273,11 +271,8 @@ const AddBalanceScreen = (props) => {
                 }
             })
             .catch((error) => {
-                data = {baseUrl : GLOBAL.appUrl, appType: GLOBAL.type, errorInfo: "addBalancePix", error: error }
-                handlerException(data);
+                handleException({errorInfo:"AddBalanceScreen.addBalancePix",error: error});
             });
-
-
     }
 
     const addBalanceBillet = (valueToAdd) => {
@@ -321,8 +316,7 @@ const AddBalanceScreen = (props) => {
                 }
             })
             .catch((error) => {
-                data = {baseUrl : GLOBAL.appUrl, appType: GLOBAL.type, errorInfo: "addBalanceBillet", error: error }
-                handlerException(data);
+                handleException({errorInfo:"AddBalanceScreen.addBalanceBillet",error: error});
             });
     }
 
@@ -515,8 +509,7 @@ const AddBalanceScreen = (props) => {
                 })
                 .catch((error) => {
                     setIsLoading(false);
-                    data = {baseUrl : GLOBAL.appUrl, appType: GLOBAL.type, errorInfo: "removeCard", error: error }
-                    handlerException(data);
+                    handleException({errorInfo:"AddBalanceScreen.removeCard",error: error});
                 });
         }
     }
