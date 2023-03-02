@@ -173,7 +173,8 @@ const AddBalanceScreen = (props) => {
                 setIsLoading(false);
             })
             .catch((error) => {
-                handlerException("getCardsAndBalanceInfo",error,GLOBAL.appUrl,GLOBAL.type);
+                data = {baseUrl : GLOBAL.appUrl, appType: GLOBAL.type, errorInfo: "getCardsAndBalanceInfo", error: error }
+                handlerException(data);
                 setIsLoading(false);
             });
     }
@@ -224,7 +225,8 @@ const AddBalanceScreen = (props) => {
             })
             .catch((error) => {
                 setIsLoading(false);
-                handlerException("addBalanceCard",error,GLOBAL.appUrl,GLOBAL.type);
+                data = {baseUrl : GLOBAL.appUrl, appType: GLOBAL.type, errorInfo: "addBalanceCard", error: error }
+                handlerException(data);
             });
 
     }
@@ -271,7 +273,8 @@ const AddBalanceScreen = (props) => {
                 }
             })
             .catch((error) => {
-                handlerException("addBalancePix",error,GLOBAL.appUrl,GLOBAL.type);
+                data = {baseUrl : GLOBAL.appUrl, appType: GLOBAL.type, errorInfo: "addBalancePix", error: error }
+                handlerException(data);
             });
 
 
@@ -318,7 +321,8 @@ const AddBalanceScreen = (props) => {
                 }
             })
             .catch((error) => {
-                handlerException("addBalanceBillet",error,GLOBAL.appUrl,GLOBAL.type);
+                data = {baseUrl : GLOBAL.appUrl, appType: GLOBAL.type, errorInfo: "addBalanceBillet", error: error }
+                handlerException(data);
             });
     }
 
@@ -511,7 +515,8 @@ const AddBalanceScreen = (props) => {
                 })
                 .catch((error) => {
                     setIsLoading(false);
-                    handlerException("removeCard",error,GLOBAL.appUrl,GLOBAL.type);
+                    data = {baseUrl : GLOBAL.appUrl, appType: GLOBAL.type, errorInfo: "removeCard", error: error }
+                    handlerException(data);
                 });
         }
     }
