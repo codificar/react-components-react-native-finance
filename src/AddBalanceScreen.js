@@ -28,7 +28,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import Toast from "./Functions/Toast";
 import { languages } from './langs/index.js';
-import { handleException } from './Services/handleException.js';
+import { handleException } from './Services/handlerException.js';
 
 const AddBalanceScreen = (props) => {
 
