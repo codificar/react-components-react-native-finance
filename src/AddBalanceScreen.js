@@ -28,7 +28,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import Toast from "./Functions/Toast";
 import { languages } from './langs/index.js';
-import { handlerException } from 'react-native-finance/src/services/Exception.js';
+import { handlerException } from '@codificar/use-log-errors/src/api/interceptors/exceptionHandler.interceptor';
 
 const AddBalanceScreen = (props) => {
 
