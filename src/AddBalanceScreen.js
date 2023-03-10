@@ -249,7 +249,7 @@ const AddBalanceScreen = (props) => {
                 } else {
                     msgError = strings.try_again
                     Alert.alert(
-                        strings.billet_error,
+                        strings.pix_error,
                         msgError,
                         [
                             { text: strings.ok, style: "cancel" },
@@ -265,7 +265,7 @@ const AddBalanceScreen = (props) => {
                     }
                     else {
 
-                        Toast.showToast(strings.billet_error);
+                        Toast.showToast(strings.pix_error);
                     }
                 }
             })
