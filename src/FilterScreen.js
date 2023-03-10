@@ -30,9 +30,10 @@ let params = {}
 class FilterScreen extends Component {
   constructor(props) {
     super(props)
-        params = this.props.route.params
-          ? this.props.route.params
-          : this.props.navigation.state.params;
+    
+    params = this.props?.route?.params
+      ? this.props.route.params
+      : this.props.navigation.state.params;
 
     this.state = {
       selectedStartDate: null,
