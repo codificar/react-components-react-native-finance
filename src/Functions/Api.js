@@ -300,8 +300,9 @@ export default class Api {
 
 	/**
 	 * Recupera o saldo do provider
-	 *
-	 * @param {int} provider_id
+	 * @param {string} app_url
+	 * @param {"provider_id" | "user_id"} key
+	 * @param {int} id
 	 * @param {string} token
 	 */
     getBalance(app_url, key, id, token) {
