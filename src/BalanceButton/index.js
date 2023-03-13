@@ -25,7 +25,7 @@ const BalanceButton = React.forwardRef(({url, show, style, data, navigation = un
       if(!showRender || isLoad) return
       
       setIsLoad(true)
-      const response = await API.getBalance(url, data.id, data.token)
+      const response = await API.getBalance(url, data.type, data.id, data.token)
       
       setShowRender(response.success)
       setIsLoad(false)
