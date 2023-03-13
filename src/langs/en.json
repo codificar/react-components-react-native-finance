@@ -125,6 +125,7 @@
 	"payment_direct_pix": "Direct Pix",
 	"manage_payment_title": "Manage payment",
 	"try_again":"An error occurred, please try again",
-	"cant_remove_card": "It is not possible to withdraw the card because you have an active subscription with it, wait for the plan to be canceled or cancel it"
+	"cant_remove_card": "It is not possible to withdraw the card because you have an active subscription with it, wait for the plan to be canceled or cancel it",
+	"balance": "Balance"
 }
 
