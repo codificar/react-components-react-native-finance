@@ -304,7 +304,7 @@ export default class Api {
 	 * @param {int} provider_id
 	 * @param {string} token
 	 */
-    getBalance(app_url, provider_id, token) {
+    getBalance(app_url, key, id, token) {
         let params = {
             method: 'POST',
             headers: {
@@ -312,7 +312,7 @@ export default class Api {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                provider_id,
+                [key]: id,
                 token,
             }),
         };
