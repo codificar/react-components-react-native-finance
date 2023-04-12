@@ -160,6 +160,7 @@ class AddCardScreenLib extends Component {
             this.state.cardCvv,
             year,
             month,
+            this.state.document
         ).then(response => {
             this.setState({
                 isLoading: false
@@ -323,7 +324,6 @@ class AddCardScreenLib extends Component {
                                             cardCvv: text
                                         })
                                     }}
-                                    keyboardType="numeric"
                                     onFocus={() => this.setState({cvvError: false})}
                                     style={styles.DefaultInputStyle}
                                 />
@@ -341,7 +341,7 @@ class AddCardScreenLib extends Component {
                                 {this.strings.document}
                             </Text>
                             <TextInputMask
-                                placeholder={this.strings.document}
+                                placeholder={'999.999.999-99'}
                                 type={'custom'}
                                 value={this.state.document}
                                 onChangeText={text => {
@@ -354,7 +354,7 @@ class AddCardScreenLib extends Component {
                                     ? null
                                     : 'numeric'}
                                 options={{
-                                    mask: this.state.document.length <= 14 ? '999.999.999-99*' : '99.999.999/9999-99',
+                                    mask: this.state.document?.length <= 14 ? '999.999.999-99*' : '99.999.999/9999-99',
                                 }}
                             />
                         </View>

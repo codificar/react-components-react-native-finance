@@ -130,6 +130,7 @@
 	"card_error_api": "It was not possible to register your card at the moment !",
 	"try_again":"An error occurred, please try again",
 	"cant_remove_card": "It is not possible to withdraw the card because you have an active subscription with it, wait for the plan to be canceled or cancel it",
-	"balance": "Balance"
+	"balance": "Balance",
+	"document": "Document"
 }
 

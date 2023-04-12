@@ -132,5 +132,6 @@
 	"card_error_api": "Não foi possível cadastrar seu cartão no momento !",
 	"try_again":"Ocorreu um erro, por favor tente novamente.",
 	"cant_remove_card": "Não é possível remover o cartão, pois você possui uma assinatura ativa com o mesmo, aguarde o cancelamento do plano ou cancele o mesmo",
-	"balance": "Saldo"
+	"balance": "Saldo",
+	"document": "Documento"
 }
