@@ -153,7 +153,7 @@ export default class Api {
         card_number,
         card_cvv,
         card_expiration_year,
-        card_expiration_month,        
+        card_expiration_month,
     ) {
         let params = {
             method: 'POST',
@@ -297,4 +297,27 @@ export default class Api {
             params
         ).then((response) => response.json());
     }
+
+	/**
+	 * Recupera o saldo do provider
+	 * @param {string} app_url
+	 * @param {"provider_id" | "user_id"} key
+	 * @param {int} id
+	 * @param {string} token
+	 */
+    getBalance(app_url, key, id, token) {
+        let params = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                [key]: id,
+                token,
+            }),
+        };
+        return fetch(app_url, params).then((response) => response.json());
+    }
+
 }
