@@ -128,5 +128,6 @@
 	"payment_direct_pix": "Pix direto",
 	"manage_payment_title": "Gerenciar pagamento",
 	"try_again":"Ocorreu um erro, por favor tente novamente.",
-	"cant_remove_card": "Não é possível remover o cartão, pois você possui uma assinatura ativa com o mesmo, aguarde o cancelamento do plano ou cancele o mesmo"
+	"cant_remove_card": "Não é possível remover o cartão, pois você possui uma assinatura ativa com o mesmo, aguarde o cancelamento do plano ou cancele o mesmo",
+	"balance": "Saldo"
 }
