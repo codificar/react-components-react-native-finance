@@ -67,6 +67,7 @@
 	"card_success": "Pagamento com cartão realizado com sucesso.",
 	"card_error": "Erro no cartão",
 	"billet_error": "Erro ao gerar boleto",
+	"pix_error": "Erro ao gerar pix",
 	"confirm_billet_value": "Tem certeza que deseja gerar um boleto no valor de",
 	"billet_addition": "Haverá um acréscimo de",
 	"yes": "Sim",
@@ -130,5 +131,6 @@
 	"card_declined": "Verifique os dados e tente novamente !",
 	"card_error_api": "Não foi possível cadastrar seu cartão no momento !",
 	"try_again":"Ocorreu um erro, por favor tente novamente.",
-	"cant_remove_card": "Não é possível remover o cartão, pois você possui uma assinatura ativa com o mesmo, aguarde o cancelamento do plano ou cancele o mesmo"
+	"cant_remove_card": "Não é possível remover o cartão, pois você possui uma assinatura ativa com o mesmo, aguarde o cancelamento do plano ou cancele o mesmo",
+	"balance": "Saldo"
 }

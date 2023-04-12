@@ -67,6 +67,7 @@
 	"card_success": "Card payment successful.",
 	"card_error": "Card error",
 	"billet_error": "Error generating ticket",
+	"pix_error": "Error generating pix",
 	"confirm_billet_value": "Are you sure you want to generate a boleto for",
 	"billet_addition": "There will be an increase in",
 	"yes": "Yes",
@@ -128,6 +129,7 @@
 	"card_declined": "It was not possible to register your card at the moment!Check the data and try again !",
 	"card_error_api": "It was not possible to register your card at the moment !",
 	"try_again":"An error occurred, please try again",
-	"cant_remove_card": "It is not possible to withdraw the card because you have an active subscription with it, wait for the plan to be canceled or cancel it"
+	"cant_remove_card": "It is not possible to withdraw the card because you have an active subscription with it, wait for the plan to be canceled or cancel it",
+	"balance": "Balance"
 }
 
