@@ -86,7 +86,9 @@ const PixQrCode = (props) => {
         }
     }
 
-
+    /*
+    * Copy a string and show a toast to a user by toast
+    */
     const copyClipBoard = () => {
         Clipboard.setString(copyAndPaste);
         Toast.showToast(strings.copied);
