@@ -46,7 +46,9 @@ const RequestPix = (props) => {
 
     const api = new Api();
     
-
+    /*
+    * Copy a string and show a toast to a user by toast
+    */
     const copyClipBoard = () => {
         Clipboard.setString(copyAndPaste);
         Toast.showToast(strings.copied);
@@ -196,7 +198,7 @@ const RequestPix = (props) => {
             <View style={{flex: 4}}>
                     {copyAndPaste ? 
                         <Text style={[styles.textBold, styles.text, styles.textBlack]}>
-                            {strings.pix_info_1} 
+                            {strings.pix_code} 
                         </Text>
                         : null
                     }
@@ -227,8 +229,8 @@ const RequestPix = (props) => {
                 <View style={{ flex: 4, alignItems: 'center' }}>
                     <View style={styles.yellowCard}>
                         <Text style={[styles.textBold, styles.yellowText]}>{strings.attention}</Text>
-                        <Text style={styles.yellowText}>{strings.req_pix_info_2}</Text>
-                        <Text style={[{marginBottom: 20}, styles.yellowText]}>{strings.req_pix_info_3}</Text>
+                        <Text style={styles.yellowText}>{strings.req_pix_choose_or_code}</Text>
+                        <Text style={[{marginBottom: 20}, styles.yellowText]}>{strings.req_pix_info}</Text>
                     </View>
                 </View>
             : null}

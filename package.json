@@ -13,6 +13,7 @@
       "url": "git+https://git.codificar.com.br/react-components/react-native-finance"
     },
     "dependencies": {
+      "@codificar/use-log-errors": "git+https://libs:ofImhksJ@git.codificar.com.br/react-components/use-log-errors.git",
       "react-native-elements": "^3.0.0-alpha.1",
       "react-native-calendar-picker": "^6.0.1",
       "react-native-chart-kit": "^6.7.0",
