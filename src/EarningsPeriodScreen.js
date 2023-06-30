@@ -87,21 +87,10 @@ class EarningsPeriodScreen extends Component {
     updateStateFromParams() {
         this.param = this.props.navigation.state != undefined ? this.props.navigation.state.params: this.param;
         this.setState({
-            iniciate: 0,
             dateInitial: this.param.startDate,
             dateFinal: this.param.endDate,
             formattedStartDate: this.param.formattedStartDate,
             formattedEndDate: this.param.formattedEndDate,
-            isLoading: false,
-            financialData: [],
-            isLoadingSummary: false,
-            totalByPeriod: "0",
-            current_balance: "0",
-            nextPageUrl: null,
-            providerId: GLOBAL.id,
-            token: GLOBAL.token,
-            provider_prepaid: false,
-            currency: ""
         })
     }
 
