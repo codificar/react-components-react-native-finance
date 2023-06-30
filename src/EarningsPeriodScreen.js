@@ -78,6 +78,33 @@ class EarningsPeriodScreen extends Component {
 
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.navigation !== this.props.navigation) {
+            this.updateStateFromParams();
+        }
+    }
+    
+    updateStateFromParams() {
+        this.param = this.props.navigation.state != undefined ? this.props.navigation.state.params: this.param;
+        this.setState({
+            iniciate: 0,
+            dateInitial: this.param.startDate,
+            dateFinal: this.param.endDate,
+            formattedStartDate: this.param.formattedStartDate,
+            formattedEndDate: this.param.formattedEndDate,
+            isLoading: false,
+            financialData: [],
+            isLoadingSummary: false,
+            totalByPeriod: "0",
+            current_balance: "0",
+            nextPageUrl: null,
+            providerId: GLOBAL.id,
+            token: GLOBAL.token,
+            provider_prepaid: false,
+            currency: ""
+        })
+    }
+
     nameReason(reason) {
         switch (reason) {
             case "SIMPLE_INDICATION":
