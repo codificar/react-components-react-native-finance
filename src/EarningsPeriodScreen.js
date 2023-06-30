@@ -78,6 +78,22 @@ class EarningsPeriodScreen extends Component {
 
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.navigation !== this.props.navigation) {
+            this.updateStateFromParams();
+        }
+    }
+    
+    updateStateFromParams() {
+        this.param = this.props.navigation.state != undefined ? this.props.navigation.state.params: this.param;
+        this.setState({
+            dateInitial: this.param.startDate,
+            dateFinal: this.param.endDate,
+            formattedStartDate: this.param.formattedStartDate,
+            formattedEndDate: this.param.formattedEndDate,
+        })
+    }
+
     nameReason(reason) {
         switch (reason) {
             case "SIMPLE_INDICATION":
