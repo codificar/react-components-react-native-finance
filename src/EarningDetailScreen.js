@@ -63,7 +63,7 @@ class EarningDetailScreen extends Component {
             case "RIDE_CANCELLATION_CREDIT":
             case "RIDE_PAYMENT":
             case "AUTO_WITHDRAW":
-                return this.strings.credit
+                return this.strings.withdraw
             case "RIDE_DEBIT":
             case "RIDE_LEDGER":
             case "SEPARATE_DEBIT":
