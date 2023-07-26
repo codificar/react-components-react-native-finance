@@ -70,6 +70,7 @@ const AddBalanceScreen = (props) => {
     const [isCustomIndicationEnabled, setIsCustomIndicationEnabled] = useState(false);
     const [programName, setProgramName] = useState("");
     const [addCardIsWebview, setAddCardIsWebview] = useState("");
+    const [disableDoubleClick, setDisableDoubleClick] = useState(false);
 
     const [settings, setSettings] = useState({
         prepaid_min_billet_value: "0",
@@ -225,6 +226,8 @@ const AddBalanceScreen = (props) => {
             .catch((error) => {
                 setIsLoading(false);
                 handleException({errorInfo:"AddBalanceScreen.addBalanceCard",error: error});
+            }).finally(() => {
+              setDisableDoubleClick(false)
             });
 
     }
@@ -272,6 +275,8 @@ const AddBalanceScreen = (props) => {
             })
             .catch((error) => {
                 handleException({errorInfo:"AddBalanceScreen.addBalancePix",error: error});
+            }).finally(() => {
+              setDisableDoubleClick(false)
             });
     }
 
@@ -317,6 +322,8 @@ const AddBalanceScreen = (props) => {
             })
             .catch((error) => {
                 handleException({errorInfo:"AddBalanceScreen.addBalanceBillet",error: error});
+            }).finally(() => {
+              setDisableDoubleClick(false)
             });
     }
 
@@ -326,6 +333,7 @@ const AddBalanceScreen = (props) => {
     }
 
     const alertAddBalancePix = () => {
+        setDisableDoubleClick(true)
         var valueToAdd = getFloatValue();
         var msg = strings.confirm_pix_value + " " + valueToAdd + "?";
         var pixMinValue = 1.5; // #todo: setting from api
@@ -338,7 +346,7 @@ const AddBalanceScreen = (props) => {
                 strings.pay_with_pix,
                 msg,
                 [
-                    { text: strings.cancel, style: "cancel" },
+                    { text: strings.cancel, onPress: () => setDisableDoubleClick(false), style: "cancel" },
                     { text: strings.yes, onPress: () => addBalancePix(valueToAdd) }
                 ],
                 { cancelable: false }
@@ -348,7 +356,7 @@ const AddBalanceScreen = (props) => {
                 strings.pay_with_pix,
                 msgMinimum,
                 [
-                    { text: strings.ok, style: "cancel" },
+                    { text: strings.ok, onPress: () => setDisableDoubleClick(false), style: "cancel" },
 
                 ],
                 { cancelable: false }
@@ -358,7 +366,7 @@ const AddBalanceScreen = (props) => {
     }
 
     const alertAddBalanceBillet = () => {
-
+        setDisableDoubleClick(true)
         var valueToAdd = getFloatValue();
         var prepaid_tax_billet = parseFloat(settings.prepaid_tax_billet);
         var msgMinimum = strings.minimumValueToCharge + strings.currency + parseFloat(settings.prepaid_min_billet_value) + ".";
@@ -373,12 +381,11 @@ const AddBalanceScreen = (props) => {
             var prepaidMinValue = 0;
         }
         if (totalToAddBalance && valueToAdd && valueToAdd >= prepaidMinValue) {
-
             Alert.alert(
                 strings.pay_with_billet,
                 msg,
                 [
-                    { text: strings.cancel, style: "cancel" },
+                    { text: strings.cancel, onPress: () => setDisableDoubleClick(false), style: "cancel" },
                     { text: strings.yes, onPress: () => addBalanceBillet(valueToAdd) }
                 ],
                 { cancelable: false }
@@ -388,7 +395,7 @@ const AddBalanceScreen = (props) => {
                 strings.pay_with_billet,
                 msgMinimum,
                 [
-                    { text: strings.ok, style: "cancel" },
+                    { text: strings.ok, onPress: () => setDisableDoubleClick(false), style: "cancel" },
 
                 ],
                 { cancelable: false }
@@ -396,6 +403,7 @@ const AddBalanceScreen = (props) => {
         }
     }
     const alertAddBalanceCard = (card) => {
+        setDisableDoubleClick(true)
         var valueToAdd = getFloatValue();
         var msgMinimum = strings.selectvalue
 
@@ -404,7 +412,7 @@ const AddBalanceScreen = (props) => {
                 strings.pay_with_card,
                 strings.confirm_card_value + " " + valueToAdd + " " + strings.in_card + " **** **** **** " + card.last_four + "?",
                 [
-                    { text: strings.cancel, style: "cancel" },
+                    { text: strings.cancel, onPress: () => setDisableDoubleClick(false), style: "cancel" },
                     { text: strings.yes, onPress: () => addBalanceCard(valueToAdd, card.id) }
                 ],
                 { cancelable: false }
@@ -414,7 +422,7 @@ const AddBalanceScreen = (props) => {
                 strings.pay_with_card,
                 msgMinimum,
                 [
-                    { text: strings.ok, style: "cancel" },
+                    { text: strings.ok, onPress: () => setDisableDoubleClick(false), style: "cancel" },
 
                 ],
                 { cancelable: false }
@@ -678,6 +686,7 @@ const AddBalanceScreen = (props) => {
                                 ? (
                                     <TouchableOpacity
                                         style={styles.listTypes}
+                                        disabled={disableDoubleClick}
                                         onPress={() => {
                                             {
                                                 hasBalanceScreen ? (
@@ -710,6 +719,7 @@ const AddBalanceScreen = (props) => {
                                 ? (
                                     <TouchableOpacity
                                         style={styles.listTypes}
+                                        disabled={disableDoubleClick}
                                         onPress={() => {
                                             {
                                                 hasBalanceScreen ? (
@@ -759,6 +769,7 @@ const AddBalanceScreen = (props) => {
                                             renderItem={({ item }) => (
                                                 <TouchableOpacity
                                                     style={styles.listTypes}
+                                                    disabled={disableDoubleClick}
                                                     onPress={() => {
                                                         {
                                                             hasBalanceScreen ? (
