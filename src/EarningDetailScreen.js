@@ -64,6 +64,10 @@ class EarningDetailScreen extends Component {
             case "RIDE_PAYMENT":
             case "AUTO_WITHDRAW":
                 return this.strings.withdraw
+            case "WITHDRAW_REJECT":
+                return this.strings.withdraw_reject
+            case "WITHDRAW_REQUESTED":
+                return this.strings.withdraw_requested
             case "RIDE_DEBIT":
             case "RIDE_LEDGER":
             case "SEPARATE_DEBIT":
@@ -94,7 +98,7 @@ class EarningDetailScreen extends Component {
                     <View>
                         <Text style={styles.totalTitle}>{this.state.item.value_formatted}</Text>
                         <Text style={styles.dateTitle}>
-                            {moment(this.state.item.created_at).format('dddd')}, {moment(this.state.item.created_at).format('DD')} {this.strings.of} {moment(this.state.item.created_at).format('MMMM')}
+                            {moment(this.state.item.created_at).format("ddd, DD/MM/YYYY HH:mm")}
                         </Text>
                         <View style={styles.contInfo}>
                             <View style={styles.rowOne}>

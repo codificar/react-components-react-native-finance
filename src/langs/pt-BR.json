@@ -4,6 +4,8 @@
   "currency": "R$",
   "credit": "Crédito",
   "withdraw": "Saque",
+  "withdraw_requested": "Saque Solicitado",
+  "withdraw_reject": "Saque Rejeitado",
   "debit": "Débito",
   "dateInitialError": "DATA INICIAL MAIOR QUE A DATA FINAL",
   "dateFinalError": "DATA FINAL MENOR QUE A INICIAL",

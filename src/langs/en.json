@@ -4,6 +4,8 @@
   "currency": "$",
   "credit": "Credit",
   "withdraw": "withdraw",
+  "withdraw_requested": "Requested withdraw",
+  "withdraw_reject": "Rejected withdraw",
   "debit": "Debit",
   "dateInitialError": "INITIAL DATE GREATER THAN LAST DATE",
   "dateFinalError": "FINAL DATE LOWER THAN INITIAL",

@@ -104,15 +104,15 @@ class EarningsPeriodScreen extends Component {
             case "RIDE_PAYMENT":
             case "AUTO_WITHDRAW":
             case "RIDE_CREDIT":
+            case "WITHDRAW_REJECT":
                 return 'credit'
-                break;
             case "RIDE_DEBIT":
             case "RIDE_LEDGER":
             case "SEPARATE_DEBIT":
             case "RIDE_CANCELLATION_DEBIT":
             case "RIDE_PAYMENT_FAIL_DEBIT":
+            case "WITHDRAW_REQUESTED":
                 return 'debit'
-                break;
         }
     }
 
@@ -126,15 +126,15 @@ class EarningsPeriodScreen extends Component {
             case "RIDE_PAYMENT":
             case "AUTO_WITHDRAW":
             case "RIDE_CREDIT":
+            case "WITHDRAW_REJECT":
                 return "#ffff00"
-                break;
             case "RIDE_DEBIT":
             case "RIDE_LEDGER":
             case "SEPARATE_DEBIT":
             case "RIDE_CANCELLATION_DEBIT":
             case "RIDE_PAYMENT_FAIL_DEBIT":
+            case "WITHDRAW_REQUESTED":
                 return 'tomato'
-                break;
         }
     }
 
@@ -351,12 +351,12 @@ class EarningsPeriodScreen extends Component {
                                   <TouchableOpacity onPress={() => this.openEarningDetail(item)}>
                                       <View style={styles.itemList}>
                                           <View>
-                                              <Text style={styles.textDate}>{moment(item.compensation_date).format('DD MMM')}</Text>
+                                              <Text style={styles.textDate}>{moment(item.compensation_date).format('DD/MM/YYYY')}</Text>
                                               <Text style={styles.textHour}>{moment(item.compensation_date).format('HH:mm')}</Text>
                                           </View>
                                           <View style={styles.contLastColumn}>
                                               {this.renderValue(item)}
-                                              <Icon type='ionicon' name='ios-arrow-forward' size={20} />
+                                              <Icon type='font-awesome' name='chevron-right' size={20} />
                                           </View>
                                       </View>
                                       <Divider style={styles.divider} />
@@ -647,7 +647,7 @@ const styles = StyleSheet.create({
     negativeValue: {
         fontFamily: 'Roboto',
         fontSize: 16,
-        color: 'tomato',
+        color: 'red',
         fontWeight: 'bold',
         marginRight: 15
     },
