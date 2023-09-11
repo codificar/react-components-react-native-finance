@@ -28,7 +28,11 @@ class AddCardScreenLib extends Component {
         if(GLOBAL.lang) {
             if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./langs/pt-BR.json');
-            } 
+            }
+
+            else if(GLOBAL.lang.indexOf("es-PY") != -1) {
+                this.strings = require('./langs/es-PY.json');
+            }
             // if is english
             else if(GLOBAL.lang.indexOf("en") != -1) {
                 this.strings = require('./langs/en.json');
