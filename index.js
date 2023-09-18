@@ -50,6 +50,9 @@ class Finance extends Component {
         if(GLOBAL.lang) {
             if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./src/langs/pt-BR.json');
+            }
+            else if(GLOBAL.lang == "es-PY") {
+                this.strings = require('./src/langs/es-PY.json');
             } 
             // if is english
             else if(GLOBAL.lang.indexOf("en") != -1) {
