@@ -264,8 +264,8 @@ const PixScreen = (props) => {
                 <View style={{ flex: 4, alignItems: 'center' }}>
                     <View style={styles.yellowCard}>
                         <Text style={[styles.textBold, styles.yellowText]}>{strings.attention}</Text>
-                        <Text style={styles.yellowText}>{strings.pix_choose}</Text>
-                        <Text style={[{marginBottom: 20}, styles.yellowText]}>{strings.pix_confirm}</Text>
+                        <Text style={styles.yellowText}>{strings.pix_info_2}</Text>
+                        <Text style={[{marginBottom: 20}, styles.yellowText]}>{strings.pix_info_3}</Text>
                     </View>
                 </View>
             : null}
