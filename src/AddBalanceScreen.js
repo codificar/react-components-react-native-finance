@@ -232,7 +232,6 @@ const AddBalanceScreen = (props) => {
 
         setDisableDoubleClick(false)
 
-        // setIsLoading(false);
 
     }
 
@@ -281,7 +280,6 @@ const AddBalanceScreen = (props) => {
                 handleException({errorInfo:"AddBalanceScreen.addBalancePix",error: error});
             })
         setDisableDoubleClick(false)
-        // setIsLoading(false);
     }
 
     const addBalanceBillet = (valueToAdd) => {
@@ -329,7 +327,6 @@ const AddBalanceScreen = (props) => {
             })
 
         setDisableDoubleClick(false)
-        // setIsLoading(false);
     }
 
     //Valor a adicionar convertido em float. Remove as virgulas e substitui por ponto.
