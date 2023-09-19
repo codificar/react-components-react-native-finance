@@ -176,7 +176,9 @@ const AddBalanceScreen = (props) => {
             .catch((error) => {
                 handleException({errorInfo:"AddBalanceScreen.getCardsAndBalanceInfo",error: error});
                 setIsLoading(false);
-            });
+            })
+
+        setIsLoading(false);
     }
     const alertOk = (title, msg) => {
         Alert.alert(
@@ -226,9 +228,11 @@ const AddBalanceScreen = (props) => {
             .catch((error) => {
                 setIsLoading(false);
                 handleException({errorInfo:"AddBalanceScreen.addBalanceCard",error: error});
-            }).finally(() => {
-              setDisableDoubleClick(false)
-            });
+            })
+
+        setDisableDoubleClick(false)
+
+        // setIsLoading(false);
 
     }
 
@@ -275,9 +279,9 @@ const AddBalanceScreen = (props) => {
             })
             .catch((error) => {
                 handleException({errorInfo:"AddBalanceScreen.addBalancePix",error: error});
-            }).finally(() => {
-              setDisableDoubleClick(false)
-            });
+            })
+        setDisableDoubleClick(false)
+        // setIsLoading(false);
     }
 
     const addBalanceBillet = (valueToAdd) => {
@@ -322,9 +326,10 @@ const AddBalanceScreen = (props) => {
             })
             .catch((error) => {
                 handleException({errorInfo:"AddBalanceScreen.addBalanceBillet",error: error});
-            }).finally(() => {
-              setDisableDoubleClick(false)
-            });
+            })
+
+        setDisableDoubleClick(false)
+        // setIsLoading(false);
     }
 
     //Valor a adicionar convertido em float. Remove as virgulas e substitui por ponto.
@@ -484,8 +489,8 @@ const AddBalanceScreen = (props) => {
     }
 
     const removeCard = (card) => {
-        setIsLoading(true);
         if (card) {
+            setIsLoading(true);
             api.RemoveCard(
                 GLOBAL.removeCardUrl,
                 GLOBAL.id,
@@ -518,7 +523,8 @@ const AddBalanceScreen = (props) => {
                 .catch((error) => {
                     setIsLoading(false);
                     handleException({errorInfo:"AddBalanceScreen.removeCard",error: error});
-                });
+                })
+            setIsLoading(false);
         }
     }
 
