@@ -60,7 +60,10 @@ const PixScreen = (props) => {
     const appState = useRef(AppState.currentState);
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
-    const socket = WebSocketServer.connect(GLOBAL.socket_url);
+    let socket = null;
+    if(GLOBAL.socket_url != undefined ) {
+        socket = WebSocketServer.connect(GLOBAL.socket_url);
+    }
 
     const api = new Api();
     
