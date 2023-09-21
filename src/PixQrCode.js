@@ -55,8 +55,10 @@ const PixQrCode = (props) => {
     const [newPaymentMode, setNewPaymentMode] = useState();
     const [paymentsTypes, setPaymentsTypes] = useState({});
 
-    const socket = WebSocketServer.connect(props.socket_url);
-
+    let socket = null;
+    if(GLOBAL.socket_url || props.socket_url) {
+        socket = WebSocketServer.connect(GLOBAL.socket_url || props.socket_url);
+    }
     const api = new Api();
 
     /**
