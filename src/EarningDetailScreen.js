@@ -58,13 +58,7 @@ class EarningDetailScreen extends Component {
 
     nameReason(reason) {
         switch (reason) {
-            case "SIMPLE_INDICATION":
-            case "COMPENSATION_INDICATION":
-            case "SEPARATE_CREDIT":
-            case "RIDE_CREDIT":
             case "WITHDRAW":
-            case "RIDE_CANCELLATION_CREDIT":
-            case "RIDE_PAYMENT":
             case "AUTO_WITHDRAW":
                 return this.strings.withdraw
             case "WITHDRAW_REJECT":
@@ -77,6 +71,13 @@ class EarningDetailScreen extends Component {
             case "RIDE_CANCELLATION_DEBIT":
             case "RIDE_PAYMENT_FAIL_DEBIT":
                 return this.strings.debit
+            case "SEPARATE_CREDIT":
+            case "SIMPLE_INDICATION":
+            case "COMPENSATION_INDICATION":
+            case "RIDE_CREDIT":
+            case "RIDE_PAYMENT":
+            case "RIDE_CANCELLATION_CREDIT":
+                return this.strings.credit
         }
     }
 
