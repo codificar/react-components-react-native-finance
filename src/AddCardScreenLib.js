@@ -3,6 +3,7 @@ import React, { Component } from "react"
 import Loader from "./Functions/Loader"
 import Toolbar from './Functions/Toolbar'
 import TitleHeader from './Functions/TitleHeader'
+import { RadioButton } from 'react-native-paper';
 
 import Toast from "./Functions/Toast";
 
@@ -49,6 +50,7 @@ class AddCardScreenLib extends Component {
             cvvError: false,
             expirationError: false,
             numberError: false,
+            selectedPaymentOption: 'debito',
         }
 
         this.api = new Api();
@@ -148,7 +150,9 @@ class AddCardScreenLib extends Component {
         
         var exp = this.state.cardExpiration.split('/');
         var month = parseInt(exp[0]);
-        var year = parseInt(exp[1]);            
+        var year = parseInt(exp[1]);   
+        
+        const is_debit = this.state.selectedPaymentOption === 'debit' ? 1 : 0;
 
         this.api.AddCard(
             GLOBAL.appUrl || this.params.appUrl,
@@ -160,7 +164,8 @@ class AddCardScreenLib extends Component {
             this.state.cardCvv,
             year,
             month,
-            this.state.document
+            this.state.document,
+            is_debit,
         ).then(response => {
             this.setState({
                 isLoading: false
@@ -336,27 +341,26 @@ class AddCardScreenLib extends Component {
                         </View>
                         <View
                             style={styles.marginBottom}
-                        >
-                            <Text style={[styles.DefaultInputLabel,{color:this.color}]}>
-                                {this.strings.document}
+                            >
+                            <Text style={[styles.DefaultInputLabel, { color: this.color }]}>
+                                {this.strings.optionPayment}
                             </Text>
-                            <TextInputMask
-                                placeholder={'999.999.999-99'}
-                                type={'custom'}
-                                value={this.state.document}
-                                onChangeText={text => {
-                                    this.setState({
-                                        document: text
-                                    })
-                                }}
-                                style={styles.DefaultInputStyle}
-                                keyboardType = {this.isPtAo
-                                    ? null
-                                    : 'numeric'}
-                                options={{
-                                    mask: this.state.document?.length <= 14 ? '999.999.999-99*' : '99.999.999/9999-99',
-                                }}
-                            />
+                            <RadioButton.Group
+                                onValueChange={(value) => this.setState({ selectedPaymentOption: value })}
+                                value={this.state.selectedPaymentOption}
+                            >
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <RadioButton value="debit" />
+                                        <Text>{this.strings.optionDebit}</Text>
+                                    </View>
+
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <RadioButton value="credit" />
+                                        <Text>{this.strings.optionCredit}</Text>
+                                    </View>
+                                </View>
+                            </RadioButton.Group>
                         </View>
                     </View>
                     <View>

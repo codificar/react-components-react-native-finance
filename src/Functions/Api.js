@@ -154,7 +154,8 @@ export default class Api {
         card_cvv,
         card_expiration_year,
         card_expiration_month,
-        document
+        document,
+        is_debit,     
     ) {
         let params = {
             method: 'POST',
@@ -172,7 +173,8 @@ export default class Api {
                 card_cvv: card_cvv,
                 card_expiration_year: card_expiration_year,
                 card_expiration_month: card_expiration_month,
-                document: document
+                document: document,
+                is_debit: is_debit,
             }),
         };
         return fetch(

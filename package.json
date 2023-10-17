@@ -20,6 +20,7 @@
     "react-native-calendar-picker": "^6.0.1",
     "react-native-chart-kit": "^6.7.0",
     "react-native-elements": "^3.0.0-alpha.1",
+    "react-native-paper": "^5.11.0",
     "react-native-qrcode-svg": "^6.1.2"
   },
   "peerDependencies": {
