@@ -205,16 +205,10 @@ const AddBalanceScreen = (props) => {
                     alertOk(strings.card, strings.card_success);
                 } else {
                     setIsLoading(false);
-                    if (json.error) {
-                        msgError = json.error;
-                    }
-                    else {
-                        msgError = strings.card_refused;
-                    }
 
                     Alert.alert(
                         strings.card_error,
-                        msgError,
+                        strings.card_refused,
                         [
                             { text: strings.ok, style: "cancel" },
 
