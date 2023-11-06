@@ -3,6 +3,7 @@ import {
     View,
     TouchableOpacity,
     Text,
+    Platform,
     StyleSheet,
     TextInput,
     BackHandler,
@@ -813,6 +814,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        marginTop: Platform.OS == 'ios' ? 50 : 0,
         backgroundColor: "white",
         paddingHorizontal: 25,
     },
