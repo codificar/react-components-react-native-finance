@@ -389,7 +389,7 @@ class AddCardScreenLib extends Component {
 const styles = StyleSheet.create({
     parentContainer: {
         flex: 1,
-        marginTop: Platform.OS == constants.ios ? 50 : 0,
+        marginTop: Platform.OS == 'ios' ? 50 : 0,
         padding: 0,
         backgroundColor: "white"
     },
