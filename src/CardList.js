@@ -25,7 +25,7 @@ const CardList = (props) => {
             strings = require('./langs/pt-BR.json');
         }
 
-        else if(props.lang == ("es-PY")) {
+        else if(props.lang == ("es-PY") || GLOBAL.lang.includes('es')) {
             strings = require('./langs/es-PY.json');
         }
         // if is english

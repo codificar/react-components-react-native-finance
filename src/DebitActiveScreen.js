@@ -63,7 +63,7 @@ const DebitActiveScreen = (props) => {
     if(props && props.lang) {
         if(props.lang == "pt-BR")
             strings = require('./langs/pt-BR.json');
-        else if(props.lang.indexOf("es-PY"))
+        else if(props.lang.indexOf("es-PY") || props.lang.includes('es'))
             strings = require('./langs/es-PY.json');
         else if(props.lang.indexOf("en") != -1)
             strings = require('./langs/en.json');
@@ -71,7 +71,7 @@ const DebitActiveScreen = (props) => {
     else if(GLOBAL.lang) {
         if(GLOBAL.lang == "pt-BR")
             strings = require('./langs/pt-BR.json');
-        else if(GLOBAL.lang == ("es-PY"))
+        else if(GLOBAL.lang == ("es-PY") || GLOBAL.lang.includes('es'))
             strings = require('./langs/es-PY.json');
         else if(GLOBAL.lang.indexOf("en") != -1)
             strings = require('./langs/en.json');
