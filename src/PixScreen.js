@@ -42,7 +42,7 @@ const PixScreen = (props) => {
         if(GLOBAL.lang == "pt-BR") {
             strings = require('./langs/pt-BR.json');
         }
-        else if(GLOBAL.lang == ("es-PY")) {
+        else if(GLOBAL.lang == ("es-PY") || GLOBAL.lang.includes('es')) {
             strings = require('./langs/es-PY.json');
           }
         // if is english

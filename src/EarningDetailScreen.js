@@ -32,7 +32,7 @@ class EarningDetailScreen extends Component {
             if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./langs/pt-BR.json');
             }
-            else if(GLOBAL.lang == ("es-PY") != -1) {
+            else if(GLOBAL.lang == ("es-PY") != -1 || GLOBAL.lang.includes('es')) {
                 this.strings = require('./langs/es-PY.json');
             }
             // if is english

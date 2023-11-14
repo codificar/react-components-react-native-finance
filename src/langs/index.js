@@ -16,11 +16,11 @@ export const languages = (props) => {
         return require('./en.json');
     }
 
-    if (props != undefined && props != null && props.lang != undefined && props.lang != null && props.lang.includes('es-PY')) {
+    if (props != undefined && props != null && props.lang != undefined && props.lang != null && props.lang.includes('es')) {
         return require('./es-PY.json');
     }
 
-    if (GLOBAL.lang != undefined && GLOBAL.lang != null && GLOBAL.lang.includes("es-PY")) {
+    if (GLOBAL.lang != undefined && GLOBAL.lang != null && GLOBAL.lang.includes("es")) {
         return require('./es-PY.json');
     }
     //Get the lang from props. If hasn't lang in props, default is pt-BR
