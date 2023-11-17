@@ -42,7 +42,7 @@ const PaymentReceive = (props) => {
       if(props.lang == "pt-BR") {
           strings = require('./langs/pt-BR.json');
       }
-      else if(props.lang == ("es-PY")) {
+      else if(props.lang == ("es-PY") || props.lang.includes('es')) {
         strings = require('./langs/es-PY.json');
       }
       // if is english
