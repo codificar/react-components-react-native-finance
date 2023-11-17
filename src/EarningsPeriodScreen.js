@@ -68,7 +68,7 @@ class EarningsPeriodScreen extends Component {
             if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./langs/pt-BR.json');
             }
-            else if(GLOBAL.lang == ("es-PY")) {
+            else if(GLOBAL.lang == ("es-PY") || GLOBAL.lang.includes('es')) {
                 this.strings = require('./langs/es-PY.json');
             }
             // if is english
