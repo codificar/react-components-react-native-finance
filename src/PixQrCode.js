@@ -269,6 +269,8 @@ const PixQrCode = (props) => {
                                         onValueChange={(itemValue, itemIndex) => setNewPaymentMode(itemValue)}
                                     >
                                         {paymentsTypes.money ? <Picker.Item label="Dinheiro" value={paymentsTypes.money_code} /> : null}
+                                        {paymentsTypes.card ? <Picker.Item label="Cartão" value={paymentsTypes.card_code} /> : null}
+
                                         {paymentsTypes.direct_pix ? <Picker.Item label="Pix Direto em minha conta" value={paymentsTypes.direct_pix_code} /> : null}
                                         {paymentsTypes.machine ? <Picker.Item label="Maquineta de cartão" value={paymentsTypes.machine_code} /> : null}
                                     </Picker>
