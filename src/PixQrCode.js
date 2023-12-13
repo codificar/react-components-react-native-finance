@@ -369,7 +369,7 @@ const PixQrCode = (props) => {
             </View>
 
              {/* Flex vertical of 2/15 */}
-             { props.request_id && (
+             { props.request_id && props.changePayment && (
                 <View style={{flex: 2, alignItems: "center"}}>
                     <Text style={[styles.text, styles.textBlack]}>{strings.pix_problems}</Text>
                     <TouchableOpacity

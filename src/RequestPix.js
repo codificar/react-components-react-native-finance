@@ -11,8 +11,10 @@ import {
     BackHandler,
     TextInput,
     StyleSheet,
+    Modal,
     Text,
     Clipboard,
+    Dimensions,
     AppState,
     TouchableOpacity,
     Alert,
@@ -21,6 +23,7 @@ import {
 import Api from "./Functions/Api";
 import Toast from "./Functions/Toast";
 import WebSocketServer from "./Functions/socket";
+import {Picker} from '@react-native-picker/picker';
 
 const RequestPix = (props) => {
 
@@ -41,6 +44,9 @@ const RequestPix = (props) => {
     const [formattedValue, setFormattedValue] = useState("");
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [transactionId, setTransactionId] = useState(0);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [newPaymentMode, setNewPaymentMode] = useState();
+    const [paymentsTypes, setPaymentsTypes] = useState({});
 
     const socket = WebSocketServer.connect(props.socket_url);
 
@@ -88,6 +94,8 @@ const RequestPix = (props) => {
 
     useEffect(() => {
         retrievePix(props.callRetrieve, false);
+        console.log(props);
+        getPaymentTypes();
     }, [props.callRetrieve]);
 
     const retrievePix = (qtd, showFailMsg) => {
@@ -170,9 +178,112 @@ const RequestPix = (props) => {
         );
     }
 
+    const getPaymentTypes = () => {
+        console.log('called');
+        api.getPaymentTypes(
+            props.appUrl,
+            props.id, 
+            props.token,
+            props.userType
+        )
+        .then((json) => {
+            if(json) {
+                //set money as default change payment type
+                setPaymentsTypes(json);
+                setNewPaymentMode(json.money_code);
+            } else {
+                console.log("error");
+            }
+        })
+        .catch((error) => {
+            console.log("fail");
+
+            console.error(error.message);
+        });
+    }
+
+    const changePayment = () => {
+        setModalVisible(false);
+        setIsLoading(true);
+        api.changePaymentType(
+            props.appUrl,
+            props.id, 
+            props.token,
+            props.request_id,
+            newPaymentMode,
+            props.userType
+        )
+        .then((json) => {
+            setIsLoading(false);
+            console.log('json', JSON.stringify(json, undefined, 4));
+            if(json.success) {
+                props.onPaymentChange(json.bill)
+            } else {
+               // console.log("error aq");
+            }
+        })
+        .catch((error) => {
+            setIsLoading(false);
+           // console.log("deu erro");
+            console.error(error);
+        });
+    }
+
     return (
         <View style={styles.container}>
-            
+            {/* Modal to change payment mode */}
+            <View>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    style={{ backgroundColor: '#FBFBFB' }}
+                    onRequestClose={() => {
+                        Alert.alert("Modal has been closed.");
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                        <View style={styles.modalView}>
+
+                            <View style={{flex: 5, alignItems: "center"}}>
+                                <Text style={[styles.text2, {textAlign: "center"}]}>{strings.change_payment_mode}</Text>
+
+                                <View style={{alignItems: "center", flex: 1, justifyContent: "center", width: "100%"}}>
+                                    <Picker
+                                        selectedValue={newPaymentMode}
+                                        style={{ width: Dimensions.get('window').width/2, height: 40 }}
+                                        onValueChange={(itemValue, itemIndex) => setNewPaymentMode(itemValue)}
+                                    >
+                                        {paymentsTypes.money ? <Picker.Item label="Dinheiro" value={paymentsTypes.money_code} /> : null}
+                                        {paymentsTypes.card ? <Picker.Item label="CartÃ£o" value={paymentsTypes.card_code} /> : null}
+
+                                        {paymentsTypes.direct_pix ? <Picker.Item label="Pix Direto em minha conta" value={paymentsTypes.direct_pix_code} /> : null}
+                                        {paymentsTypes.machine ? <Picker.Item label="Maquineta de cartÃ£o" value={paymentsTypes.machine_code} /> : null}
+                                    </Picker>
+                                </View>
+                                
+                            </View>
+
+                            <View style={{flex: 1, flexDirection:"row", justifyContent: 'flex-end'}}>
+                                <TouchableOpacity
+                                    onPress={() =>  setModalVisible(!modalVisible)}
+                                    style={{justifyContent: 'flex-end'}}
+                                >
+                                    <Text style={[styles.text, styles.greenText]}>{strings.cancel}</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => changePayment()}
+                                    style={{justifyContent: 'flex-end'}}
+                                >
+                                    <Text style={[styles.text, styles.greenText]}>{strings.confirm}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+            </View>
             <Loader loading={isLoading} message={strings.loading_message} />
             
           
@@ -183,7 +294,7 @@ const RequestPix = (props) => {
             <View style={{ marginTop: -15, alignItems: 'center' }}>
                 <Text style={{color: "#363636", fontSize: 20, fontWeight: "bold"}}>{strings.pix_payment}</Text>
             </View>
-
+                    
             {/* Flex vertical of 2/13 */}
             <View style={{flex: 2, marginTop: 10}}>
                 <Text style={[styles.text, {textAlign: 'center'}]}>
@@ -223,6 +334,16 @@ const RequestPix = (props) => {
                         <Image source={Images.warning} style={styles.imgWarning} />
                     }             
                 </View>
+
+                {/*change payment mode modal*/}
+                {props.changePayment ? <View style={{flex: 2, alignItems: "center"}}>
+                    <Text style={[styles.text, styles.textBlack]}>{strings.pix_problems}</Text>
+                    <TouchableOpacity
+                        onPress={() =>  setModalVisible(true)} 
+                    >
+                        <Text style={[styles.text, styles.greenText]}>{strings.change_payment_mode}</Text>
+                    </TouchableOpacity>
+                </View> : null}
             </View>
             {/* Flex vertical of 4/13 */}
             {copyAndPaste ?
@@ -324,6 +445,28 @@ const styles = StyleSheet.create({
         width: 130, 
         height: 130, 
         resizeMode: 'contain'
+    },
+    modalView: {
+        margin: 5,
+        width: "60%",
+        height: "40%",
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: "5%",
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    text2: {
+        color: 'grey', 
+        fontSize: 16, 
+        marginHorizontal: 20
     },
 });
 
