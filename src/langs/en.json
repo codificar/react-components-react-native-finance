@@ -131,6 +131,8 @@
 	"try_again":"An error occurred, please try again",
 	"cant_remove_card": "It is not possible to withdraw the card because you have an active subscription with it, wait for the plan to be canceled or cancel it",
 	"balance": "Balance",
-	"document": "Document"
+	"document": "Document",
+	"payment": "Payment",
+    "confirmed_payment": "Pix payment has been confirmed!"
 }
 

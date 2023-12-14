@@ -70,11 +70,12 @@ const RequestPix = (props) => {
             .emit('subscribe', {
                 channel: 'pix.' + id,
             })
-            .on('pixUpate', (channel, data) => {
+            .on('pixUpate', (channel, data) => {                
+                if(data.is_paid) {
+                    alertChange(true);
+                }
                 if(data.payment_change) {
                     alertChange(false);
-                } else {
-                    alertChange(true);
                 }
             })
         }
@@ -94,8 +95,8 @@ const RequestPix = (props) => {
 
     useEffect(() => {
         retrievePix(props.callRetrieve, false);
-        console.log(props);
         getPaymentTypes();
+
     }, [props.callRetrieve]);
 
     const retrievePix = (qtd, showFailMsg) => {
@@ -108,8 +109,8 @@ const RequestPix = (props) => {
             "user" // only user do pix in a request
         )
         .then((json) => {
-            //console.log(json);
             if(json.success) {
+                subscribeSocket(json.transaction_id);
                 setCopyAndPaste(json.copy_and_paste);
                 setFormattedValue(json.formatted_value);
                 if(json && json.paid) {
@@ -142,7 +143,7 @@ const RequestPix = (props) => {
         .catch((error) => {
             console.log("fail");
             Toast.showToast(strings.payment_error);
-            console.error(error);
+            console.error(error.message);
         });
     }
 
@@ -179,12 +180,11 @@ const RequestPix = (props) => {
     }
 
     const getPaymentTypes = () => {
-        console.log('called');
         api.getPaymentTypes(
             props.appUrl,
             props.id, 
             props.token,
-            props.userType
+            props.type
         )
         .then((json) => {
             if(json) {
@@ -196,8 +196,6 @@ const RequestPix = (props) => {
             }
         })
         .catch((error) => {
-            console.log("fail");
-
             console.error(error.message);
         });
     }
@@ -211,21 +209,19 @@ const RequestPix = (props) => {
             props.token,
             props.request_id,
             newPaymentMode,
-            props.userType
+            props.type
         )
         .then((json) => {
             setIsLoading(false);
-            console.log('json', JSON.stringify(json, undefined, 4));
             if(json.success) {
                 props.onPaymentChange(json.bill)
             } else {
-               // console.log("error aq");
+               console.log("an error as occurred, unable to change payment");
             }
         })
         .catch((error) => {
             setIsLoading(false);
-           // console.log("deu erro");
-            console.error(error);
+            console.error(error.message);
         });
     }
 
@@ -256,10 +252,10 @@ const RequestPix = (props) => {
                                         onValueChange={(itemValue, itemIndex) => setNewPaymentMode(itemValue)}
                                     >
                                         {paymentsTypes.money ? <Picker.Item label="Dinheiro" value={paymentsTypes.money_code} /> : null}
-                                        {paymentsTypes.card ? <Picker.Item label="CartÃ£o" value={paymentsTypes.card_code} /> : null}
+                                        {paymentsTypes.card ? <Picker.Item label="Cartão" value={paymentsTypes.card_code} /> : null}
 
                                         {paymentsTypes.direct_pix ? <Picker.Item label="Pix Direto em minha conta" value={paymentsTypes.direct_pix_code} /> : null}
-                                        {paymentsTypes.machine ? <Picker.Item label="Maquineta de cartÃ£o" value={paymentsTypes.machine_code} /> : null}
+                                        {paymentsTypes.machine ? <Picker.Item label="Maquineta de Cartão" value={paymentsTypes.machine_code} /> : null}
                                     </Picker>
                                 </View>
                                 
