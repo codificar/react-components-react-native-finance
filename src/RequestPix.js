@@ -331,15 +331,6 @@ const RequestPix = (props) => {
                     }             
                 </View>
 
-                {/*change payment mode modal*/}
-                {props.changePayment ? <View style={{flex: 2, alignItems: "center"}}>
-                    <Text style={[styles.text, styles.textBlack]}>{strings.pix_problems}</Text>
-                    <TouchableOpacity
-                        onPress={() =>  setModalVisible(true)} 
-                    >
-                        <Text style={[styles.text, styles.greenText]}>{strings.change_payment_mode}</Text>
-                    </TouchableOpacity>
-                </View> : null}
             </View>
             {/* Flex vertical of 4/13 */}
             {copyAndPaste ?
@@ -351,6 +342,16 @@ const RequestPix = (props) => {
                     </View>
                 </View>
             : null}
+
+            {/*change payment mode modal*/}
+            {props.changePayment ? <View style={{flex: 2, alignItems: "center"}}>
+                <Text style={[styles.text, styles.textBlack]}>{strings.pix_problems}</Text>
+                <TouchableOpacity
+                    onPress={() =>  setModalVisible(true)} 
+                >
+                    <Text style={[styles.text, styles.greenText]}>{strings.change_payment_mode}</Text>
+                </TouchableOpacity>
+            </View> : null}
 
             {/* Flex vertical of 1/13 */}
             <View style={{flex: 1, alignItems: "center"}}>
