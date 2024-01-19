@@ -10,6 +10,8 @@ import ReportScreen from './src/ReportScreen'
 
 //moment date
 import moment from 'moment'
+import 'moment/locale/es';
+import 'moment/locale/pt';
 
 // Provider API
 import Api from "./src/Functions/Api";
@@ -48,14 +50,14 @@ class Finance extends Component {
         //Get the lang from props. If hasn't lang in props, default is pt-BR
         this.strings = require('./src/langs/pt-BR.json');
         if(GLOBAL.lang) {
-            if(GLOBAL.lang == "pt-BR") {
+            if(GLOBAL.lang.indexOf('pt') === 0) {
                 this.strings = require('./src/langs/pt-BR.json');
             }
-            else if(GLOBAL.lang == "es-PY") {
+            else if(GLOBAL.lang.indexOf("es") === 0) {
                 this.strings = require('./src/langs/es-PY.json');
-            } 
+            }
             // if is english
-            else if(GLOBAL.lang.indexOf("en") != -1) {
+            else{
                 this.strings = require('./src/langs/en.json');
             }
         }
@@ -69,7 +71,7 @@ class Finance extends Component {
 			this.props.navigation.goBack()
 			return true
         });
-        
+
         let currentYear = moment().format('YYYY')
         this.getReport(currentYear)
         this.calcDaysWeek()
@@ -79,7 +81,7 @@ class Finance extends Component {
     componentWillUnmount() {
 		this.backHandler.remove();
     }
-    
+
     /**
 	 * return const navigate = this.props.navigation
 	 */
@@ -87,15 +89,16 @@ class Finance extends Component {
 		const { navigate } = this.props.navigation
 		return navigate
     }
-    
+
 
     /**
      * Take the first and last days of current week
      */
     calcDaysWeek() {
-        
         if (GLOBAL.lang.indexOf("pt") === 0) {
             momentLocal = "pt"
+        } else if(GLOBAL.lang.indexOf("es") === 0){
+            momentLocal = "es"
         } else {
             momentLocal = "en"
         }
@@ -119,8 +122,8 @@ class Finance extends Component {
 
         this.api.GetReport(
             GLOBAL.appUrl,
-            GLOBAL.id, 
-            GLOBAL.token, 
+            GLOBAL.id,
+            GLOBAL.token,
             year,
             type
         )
@@ -137,15 +140,18 @@ class Finance extends Component {
                 let momentLocal = ''
                 if (GLOBAL.lang.indexOf("pt") === 0) {
                     momentLocal = "pt"
-                } else {
+                 } else if(GLOBAL.lang.indexOf("es") === 0){
+                    momentLocal = "es"
+                  }
+                  else {
                     momentLocal = "en"
                 }
+
                 for (let i = 0; i < arrayResponse.length; i++) {
                     lineGraphic.labels.push(moment().locale(momentLocal).day(arrayResponse[i].day - 1).format('ddd'))
                     arrayValues.push(parseFloat(arrayResponse[i].value).toFixed(2))
                     formattedList.push({ id: i, day: moment().locale(momentLocal).day(arrayResponse[i].day - 1).format('ddd'), value: arrayResponse[i].value, year: year })
                 }
-
 
                 lineGraphic.datasets.push({ data: arrayValues, strokeWidth: 2 })
                 this.setState({
@@ -222,7 +228,7 @@ class Finance extends Component {
                         align="flex-start"
                     />
                 </View>
-                
+
                 {this.state.reportData && JSON.stringify(this.state.reportData) != "{}" ? (
                     <ReportScreen
                         openEarnings={this.openEarnings.bind()}
