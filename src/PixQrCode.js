@@ -54,6 +54,21 @@ const PixQrCode = (props) => {
 
     const socket = WebSocketServer.connect(props.socket_url);
 
+    const [shouldRetrievePix, setShouldRetrievePix] = useState(true);
+
+    const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            console.log(paymentConfirmed, "aquiiii")
+            if (paymentConfirmed === false && shouldRetrievePix) {
+                retrievePix(false, true);
+            }
+        }, 20000);
+    
+        return () => clearInterval(intervalId);
+    }, [paymentConfirmed, shouldRetrievePix]);
+
     const api = new Api();
 
     /**
@@ -105,15 +120,17 @@ const PixQrCode = (props) => {
             props.token, 
             props.pix_transaction_id,
             props.request_id,
-            "provider" // only provider has qr code screen
+            "provider"
         )
         .then((json) => {
             if(json.success) {
                 setErrorPix(false);
                 setFormattedValue(json.formatted_value);
                 setCopyAndPaste(json.copy_and_paste);
-                if(json && json.paid) {
+                if (json && json.paid && !paymentConfirmed) {
                     alertPaid();
+                    setPaymentConfirmed(true);
+                    setShouldRetrievePix(false);
                 } else {
                     setTransactionId(json.transaction_id);
                     if(json.transaction_type) {
@@ -130,8 +147,11 @@ const PixQrCode = (props) => {
                     }
                 }
             } else {
-                if(json.paid) {
+                if(json && json.paid && !paymentConfirmed) {
                     alertPaid();
+                    alertChange(true);
+                    setPaymentConfirmed(true);
+                    setShouldRetrievePix(false);
                 } else {
                     if(json.formatted_value) {
                         setFormattedValue(json.formatted_value);

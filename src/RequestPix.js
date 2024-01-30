@@ -48,6 +48,23 @@ const RequestPix = (props) => {
     const [newPaymentMode, setNewPaymentMode] = useState();
     const [paymentsTypes, setPaymentsTypes] = useState({});
 
+    const [shouldRetrievePix, setShouldRetrievePix] = useState(true);
+
+    const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            console.log(paymentConfirmed, "aquiiii")
+            if (paymentConfirmed === false && shouldRetrievePix) {
+                retrievePix(false, true);
+            }
+        }, 20000);
+    
+        return () => clearInterval(intervalId);
+    }, [paymentConfirmed, shouldRetrievePix]);
+    
+
     const socket = WebSocketServer.connect(props.socket_url);
 
     const api = new Api();
@@ -106,33 +123,35 @@ const RequestPix = (props) => {
             props.token, 
             null,
             props.request_id,
-            "user" // only user do pix in a request
+            "user"
         )
         .then((json) => {
-            if(json.success) {
+            if (json.success) {
                 subscribeSocket(json.transaction_id);
                 setCopyAndPaste(json.copy_and_paste);
                 setFormattedValue(json.formatted_value);
-                if(json && json.paid) {
+                if (json.paid && !paymentConfirmed) {
                     alertChange(true);
-                }
-                else if(json && json.payment_changed) {
+                    setPaymentConfirmed(true);
+                    setShouldRetrievePix(false); // Evita chamadas adicionais após o pagamento confirmado
+                } else if (json.payment_changed) {
                     alertChange(false);
                 } else {
                     setTransactionId(json.transaction_id);
-                    if(showFailMsg) {
+                    if (showFailMsg) {
                         Toast.showToast(strings.payment_not_confirmed);
                     }
-                    //se for a primeira vez que chama essa api (qtd = 0), entao se inscreve no socket
-                    if(qtd == 0) {
+                    if (qtd === 0) {
                         subscribeSocket(json.transaction_id);
                     }
                 }
             } else {
-                if(json.paid) {
+                if (json.paid && !paymentConfirmed) {
                     alertChange(true);
+                    setPaymentConfirmed(true);
+                    setShouldRetrievePix(false); // Evita chamadas adicionais após o pagamento confirmado
                 } else {
-                    if(json.formatted_value) {
+                    if (json.formatted_value) {
                         setFormattedValue(json.formatted_value);
                     }
                     Toast.showToast(strings.payment_error);
