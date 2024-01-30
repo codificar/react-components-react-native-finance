@@ -52,7 +52,6 @@ const RequestPix = (props) => {
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            console.log(paymentConfirmed, "aquiiii")
             if (paymentConfirmed === false && shouldRetrievePix) {
                 retrievePix(false, true);
             }
