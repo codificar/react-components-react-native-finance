@@ -149,8 +149,8 @@ class Finance extends Component {
 
                 for (let i = 0; i < arrayResponse.length; i++) {
                     lineGraphic.labels.push(moment().locale(momentLocal).day(arrayResponse[i].day - 1).format('ddd'))
-                    arrayValues.push(parseFloat(arrayResponse[i].value).toFixed(2))
                     formattedList.push({ id: i, day: moment().locale(momentLocal).day(arrayResponse[i].day - 1).format('ddd'), value: arrayResponse[i].value, year: year })
+                    this.props.currency === '₲' ? arrayValues.push(parseFloat(arrayResponse[i].value).toFixed(0)) : arrayValues.push(parseFloat(arrayResponse[i].value).toFixed(2));
                 }
 
                 lineGraphic.datasets.push({ data: arrayValues, strokeWidth: 2 })
