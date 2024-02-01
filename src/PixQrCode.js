@@ -120,7 +120,7 @@ const PixQrCode = (props) => {
             props.token, 
             props.pix_transaction_id,
             props.request_id,
-            "provider"
+            type = "provider"
         )
         .then((json) => {
             if(json.success) {
