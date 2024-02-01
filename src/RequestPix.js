@@ -122,7 +122,7 @@ const RequestPix = (props) => {
             props.token, 
             null,
             props.request_id,
-            "user"
+            type = "user"
         )
         .then((json) => {
             if (json.success) {
