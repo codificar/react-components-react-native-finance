@@ -224,6 +224,7 @@ export default class Api {
             token: token,
             transaction_id: transaction_id,
             request_id: request_id,
+            type: type
         });
         return fetch(
             app_url + '/libs/finance/' + type + '/retrieve_pix' + '?' + params,
