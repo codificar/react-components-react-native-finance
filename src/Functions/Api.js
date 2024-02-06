@@ -216,12 +216,13 @@ export default class Api {
         ).then((response) => response.json());
     }
 
-    RetrievePix(app_url, id, token, transaction_id, request_id, type) {
+    RetrievePix(app_url, id, token, transaction_id, debit_id, request_id, type) {
         let params = new URLSearchParams({
             provider_id: id,
             user_id: id,
             id: id,
             token: token,
+            debit_id: debit_id,
             transaction_id: transaction_id,
             request_id: request_id,
             type: type
