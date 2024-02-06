@@ -21,6 +21,8 @@ import {
 import Api from "./Functions/Api";
 import Toast from "./Functions/Toast";
 import WebSocketServer from "./Functions/socket";
+import {Picker} from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 
 const RequestPix = (props) => {
 
@@ -95,7 +97,8 @@ const RequestPix = (props) => {
             props.appUrl,
             props.id, 
             props.token, 
-            null,
+            props.transaction_id,
+            props.debit_id,
             props.request_id,
             "user" // only user do pix in a request
         )
@@ -144,12 +147,17 @@ const RequestPix = (props) => {
             strings.payment,
             isPaid ? strings.confirmed_payment : strings.payment_changed,
             [
-                { text: strings.confirm, onPress: () => props.onPaid(true) }
+                { text: strings.confirm, onPress: () => {
+                    if (props.debit_id) {
+                        props.onPaidOnDebit(true);
+                    } else {
+                        props.onPaid(true);
+                    }
+                }}
             ],
             { cancelable: false }
         );
-        
-    }
+    };    
 
     const goBack = () => {
         Alert.alert(

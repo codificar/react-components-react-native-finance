@@ -114,15 +114,20 @@ const PixScreen = (props) => {
     /**
      * @description  subscribe scoket
      */
-    const subscribeSocket = () => {
+    const subscribeSocket = (id) => {
         if (socket !== null && !isSubscribed) {
             setIsSubscribed(true);
             socket
             .emit('subscribe', {
-                channel: 'pix.' + GLOBAL.pix_transaction_id,
+                channel: 'pix.' + id,
             })
             .on('pixUpate', (channel, data) => {
-                alertPaid();
+                if(data.is_paid) {
+                    alertChange(true);
+                }
+                if(data.payment_change) {
+                    alertChange(false);
+                }
             })
         }
     }
