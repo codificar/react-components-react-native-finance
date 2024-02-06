@@ -153,7 +153,8 @@ export default class Api {
         card_number,
         card_cvv,
         card_expiration_year,
-        card_expiration_month,        
+        card_expiration_month,
+        document
     ) {
         let params = {
             method: 'POST',
@@ -171,6 +172,7 @@ export default class Api {
                 card_cvv: card_cvv,
                 card_expiration_year: card_expiration_year,
                 card_expiration_month: card_expiration_month,
+                document: document
             }),
         };
         return fetch(
@@ -223,6 +225,7 @@ export default class Api {
             debit_id: debit_id,
             transaction_id: transaction_id,
             request_id: request_id,
+            type: type
         });
         return fetch(
             app_url + '/libs/finance/' + type + '/retrieve_pix' + '?' + params,
@@ -264,7 +267,7 @@ export default class Api {
         ).then((response) => response.json());
     }
 
-    getPaymentTypes(app_url, id, token) {
+    getPaymentTypes(app_url, id, token, user_type) {
         let params = new URLSearchParams({
             provider_id: id,
             id: id,
@@ -272,13 +275,13 @@ export default class Api {
         });
         return fetch(
             app_url +
-                '/libs/finance/provider/change_pix_payment_types' +
+                `/libs/finance/${user_type}/change_pix_payment_types` +
                 '?' +
                 params,
             this.get
         ).then((response) => response.json());
     }
-    changePaymentType(app_url, id, token, request_id, new_payment_mode) {
+    changePaymentType(app_url, id, token, request_id, new_payment_mode, user_type) {
         let params = {
             method: 'POST',
             headers: {
@@ -294,8 +297,31 @@ export default class Api {
             }),
         };
         return fetch(
-            app_url + '/libs/finance/provider/change_pix_payment',
+            app_url + `/libs/finance/${user_type}/change_pix_payment`,            
             params
         ).then((response) => response.json());
     }
+
+	/**
+	 * Recupera o saldo do provider
+	 * @param {string} app_url
+	 * @param {"provider_id" | "user_id"} key
+	 * @param {int} id
+	 * @param {string} token
+	 */
+    getBalance(app_url, key, id, token) {
+        let params = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                [key]: id,
+                token,
+            }),
+        };
+        return fetch(app_url, params).then((response) => response.json());
+    }
+
 }

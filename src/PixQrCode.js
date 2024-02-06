@@ -54,6 +54,21 @@ const PixQrCode = (props) => {
 
     const socket = WebSocketServer.connect(props.socket_url);
 
+    const [shouldRetrievePix, setShouldRetrievePix] = useState(true);
+
+    const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            console.log(paymentConfirmed, "aquiiii")
+            if (paymentConfirmed === false && shouldRetrievePix) {
+                retrievePix(false, true);
+            }
+        }, 20000);
+    
+        return () => clearInterval(intervalId);
+    }, [paymentConfirmed, shouldRetrievePix]);
+
     const api = new Api();
 
     /**
@@ -105,15 +120,17 @@ const PixQrCode = (props) => {
             props.token, 
             props.pix_transaction_id,
             props.request_id,
-            "provider" // only provider has qr code screen
+            type = "provider"
         )
         .then((json) => {
             if(json.success) {
                 setErrorPix(false);
                 setFormattedValue(json.formatted_value);
                 setCopyAndPaste(json.copy_and_paste);
-                if(json && json.paid) {
+                if (json && json.paid && !paymentConfirmed) {
                     alertPaid();
+                    setPaymentConfirmed(true);
+                    setShouldRetrievePix(false);
                 } else {
                     setTransactionId(json.transaction_id);
                     if(json.transaction_type) {
@@ -130,8 +147,11 @@ const PixQrCode = (props) => {
                     }
                 }
             } else {
-                if(json.paid) {
+                if(json && json.paid && !paymentConfirmed) {
                     alertPaid();
+                    alertChange(true);
+                    setPaymentConfirmed(true);
+                    setShouldRetrievePix(false);
                 } else {
                     if(json.formatted_value) {
                         setFormattedValue(json.formatted_value);
@@ -140,14 +160,13 @@ const PixQrCode = (props) => {
                 }
                 getPaymentTypes();
                 setErrorPix(true);
-                console.log("error: ", json);
                 Toast.showToast(strings.payment_error);
             }
         })
         .catch((error) => {
             getPaymentTypes();
             setErrorPix(true);
-            console.log('retrievePix error',error);
+            console.log('retrievePix error:', error.message);
             Toast.showToast(strings.payment_error);
         });
     }
@@ -156,7 +175,8 @@ const PixQrCode = (props) => {
         api.getPaymentTypes(
             props.appUrl,
             props.id, 
-            props.token
+            props.token,
+            props.type
         )
         .then((json) => {
             if(json) {
@@ -168,9 +188,7 @@ const PixQrCode = (props) => {
             }
         })
         .catch((error) => {
-            console.log("fail");
-
-            console.error(error);
+            console.error(error.message);
         });
     }
 
@@ -182,7 +200,8 @@ const PixQrCode = (props) => {
             props.id, 
             props.token,
             props.request_id,
-            newPaymentMode
+            newPaymentMode,
+            props.type
         )
         .then((json) => {
             setIsLoading(false);
@@ -190,13 +209,12 @@ const PixQrCode = (props) => {
             if(json.success) {
                 props.onPaymentChange(json.bill)
             } else {
-                console.log("error aq");
+                console.log("an error as occurred, unable to change payment");
             }
         })
         .catch((error) => {
             setIsLoading(false);
-            console.log("deu erro");
-            console.error(error);
+            console.error(error.message);
         });
     }
 
@@ -269,6 +287,8 @@ const PixQrCode = (props) => {
                                         onValueChange={(itemValue, itemIndex) => setNewPaymentMode(itemValue)}
                                     >
                                         {paymentsTypes.money ? <Picker.Item label="Dinheiro" value={paymentsTypes.money_code} /> : null}
+                                        {paymentsTypes.card ? <Picker.Item label="Cartão" value={paymentsTypes.card_code} /> : null}
+
                                         {paymentsTypes.direct_pix ? <Picker.Item label="Pix Direto em minha conta" value={paymentsTypes.direct_pix_code} /> : null}
                                         {paymentsTypes.machine ? <Picker.Item label="Maquineta de cartão" value={paymentsTypes.machine_code} /> : null}
                                     </Picker>
@@ -367,7 +387,7 @@ const PixQrCode = (props) => {
             </View>
 
              {/* Flex vertical of 2/15 */}
-             { props.request_id && (
+             { props.request_id && props.changePayment && (
                 <View style={{flex: 2, alignItems: "center"}}>
                     <Text style={[styles.text, styles.textBlack]}>{strings.pix_problems}</Text>
                     <TouchableOpacity
