@@ -32,6 +32,9 @@ class EarningDetailScreen extends Component {
             if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./langs/pt-BR.json');
             }
+            else if(GLOBAL.lang == ("es-PY") != -1 || GLOBAL.lang.includes('es')) {
+                this.strings = require('./langs/es-PY.json');
+            }
             // if is english
             else if(GLOBAL.lang.indexOf("en") != -1) {
                 this.strings = require('./langs/en.json');
@@ -55,21 +58,26 @@ class EarningDetailScreen extends Component {
 
     nameReason(reason) {
         switch (reason) {
-            case "SIMPLE_INDICATION":
-            case "COMPENSATION_INDICATION":
-            case "SEPARATE_CREDIT":
-            case "RIDE_CREDIT":
             case "WITHDRAW":
-            case "RIDE_CANCELLATION_CREDIT":
-            case "RIDE_PAYMENT":
             case "AUTO_WITHDRAW":
-                return this.strings.credit
+                return this.strings.withdraw
+            case "WITHDRAW_REJECT":
+                return this.strings.withdraw_reject
+            case "WITHDRAW_REQUESTED":
+                return this.strings.withdraw_requested
             case "RIDE_DEBIT":
             case "RIDE_LEDGER":
             case "SEPARATE_DEBIT":
             case "RIDE_CANCELLATION_DEBIT":
             case "RIDE_PAYMENT_FAIL_DEBIT":
                 return this.strings.debit
+            case "SEPARATE_CREDIT":
+            case "SIMPLE_INDICATION":
+            case "COMPENSATION_INDICATION":
+            case "RIDE_CREDIT":
+            case "RIDE_PAYMENT":
+            case "RIDE_CANCELLATION_CREDIT":
+                return this.strings.credit
         }
     }
 
@@ -94,7 +102,7 @@ class EarningDetailScreen extends Component {
                     <View>
                         <Text style={styles.totalTitle}>{this.state.item.value_formatted}</Text>
                         <Text style={styles.dateTitle}>
-                            {moment(this.state.item.created_at).format('dddd')}, {moment(this.state.item.created_at).format('DD')} {this.strings.of} {moment(this.state.item.created_at).format('MMMM')}
+                            {moment(this.state.item.created_at).format("ddd, DD/MM/YYYY HH:mm")}
                         </Text>
                         <View style={styles.contInfo}>
                             <View style={styles.rowOne}>

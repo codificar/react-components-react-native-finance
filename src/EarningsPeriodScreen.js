@@ -68,6 +68,9 @@ class EarningsPeriodScreen extends Component {
             if(GLOBAL.lang == "pt-BR") {
                 this.strings = require('./langs/pt-BR.json');
             }
+            else if(GLOBAL.lang == ("es-PY") || GLOBAL.lang.includes('es')) {
+                this.strings = require('./langs/es-PY.json');
+            }
             // if is english
             else if(GLOBAL.lang.indexOf("en") != -1) {
                 this.strings = require('./langs/en.json');
@@ -104,15 +107,15 @@ class EarningsPeriodScreen extends Component {
             case "RIDE_PAYMENT":
             case "AUTO_WITHDRAW":
             case "RIDE_CREDIT":
+            case "WITHDRAW_REJECT":
                 return 'credit'
-                break;
             case "RIDE_DEBIT":
             case "RIDE_LEDGER":
             case "SEPARATE_DEBIT":
             case "RIDE_CANCELLATION_DEBIT":
             case "RIDE_PAYMENT_FAIL_DEBIT":
+            case "WITHDRAW_REQUESTED":
                 return 'debit'
-                break;
         }
     }
 
@@ -126,15 +129,15 @@ class EarningsPeriodScreen extends Component {
             case "RIDE_PAYMENT":
             case "AUTO_WITHDRAW":
             case "RIDE_CREDIT":
+            case "WITHDRAW_REJECT":
                 return "#ffff00"
-                break;
             case "RIDE_DEBIT":
             case "RIDE_LEDGER":
             case "SEPARATE_DEBIT":
             case "RIDE_CANCELLATION_DEBIT":
             case "RIDE_PAYMENT_FAIL_DEBIT":
+            case "WITHDRAW_REQUESTED":
                 return 'tomato'
-                break;
         }
     }
 
@@ -182,7 +185,8 @@ class EarningsPeriodScreen extends Component {
         this.setState({ isLoading: true })
 
         const type = GLOBAL.type == 'user' ? GLOBAL.type : 'provider';
-
+        this.param = this.props.navigation.state != undefined ? this.props.navigation.state.params: this.param;
+        
         this.api.GetCheckingAccount(
             this.param.appUrl,
             this.state.providerId,
@@ -350,12 +354,12 @@ class EarningsPeriodScreen extends Component {
                                   <TouchableOpacity onPress={() => this.openEarningDetail(item)}>
                                       <View style={styles.itemList}>
                                           <View>
-                                              <Text style={styles.textDate}>{moment(item.compensation_date).format('DD MMM')}</Text>
+                                              <Text style={styles.textDate}>{moment(item.compensation_date).format('DD/MM/YYYY')}</Text>
                                               <Text style={styles.textHour}>{moment(item.compensation_date).format('HH:mm')}</Text>
                                           </View>
                                           <View style={styles.contLastColumn}>
                                               {this.renderValue(item)}
-                                              <Icon type='ionicon' name='ios-arrow-forward' size={20} />
+                                              <Icon type='font-awesome' name='chevron-right' size={20} />
                                           </View>
                                       </View>
                                       <Divider style={styles.divider} />
@@ -646,7 +650,7 @@ const styles = StyleSheet.create({
     negativeValue: {
         fontFamily: 'Roboto',
         fontSize: 16,
-        color: 'tomato',
+        color: 'red',
         fontWeight: 'bold',
         marginRight: 15
     },

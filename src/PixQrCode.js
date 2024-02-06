@@ -32,7 +32,10 @@ const PixQrCode = (props) => {
     if(props.lang) {
         if(props.lang == "pt-BR") {
             strings = require('./langs/pt-BR.json');
-        } 
+        }
+        else if(props.lang == ("es-PY") || props.lang.includes('es')) {
+            strings = require('./langs/es-PY.json');
+        }
         // if is english
         else if(props.lang.indexOf("en") != -1) {
             strings = require('./langs/en.json');
@@ -52,8 +55,10 @@ const PixQrCode = (props) => {
     const [newPaymentMode, setNewPaymentMode] = useState();
     const [paymentsTypes, setPaymentsTypes] = useState({});
 
-    const socket = WebSocketServer.connect(props.socket_url);
-
+    let socket = null;
+    if(GLOBAL.socket_url || props.socket_url) {
+        socket = WebSocketServer.connect(GLOBAL.socket_url || props.socket_url);
+    }
     const api = new Api();
 
     /**

@@ -24,7 +24,7 @@ const PaymentList = (props) => {
     //Get the lang from props. If hasn't lang in props, default is pt-BR
     var strings = require('./langs/pt-BR.json');
     const isBrazilian = NativeModules.I18nManager.localeIdentifier === 'pt_BR';
-    if (!isBrazilian) strings = require('./langs/en.json');
+    if (!isBrazilian) strings = require('./langs/es-PY.json');
 
     const [arrayIconsType, setArrayIconsType] = useState({
         visa: Images.icon_ub_creditcard_visa,
