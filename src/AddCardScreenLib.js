@@ -13,7 +13,10 @@ import {
     TouchableOpacity,
     TextInput,
     StyleSheet,
-    Alert
+    Alert,
+    TouchableWithoutFeedback, 
+    Keyboard,
+    KeyboardAvoidingView
 } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Api from "./Functions/Api";
@@ -201,185 +204,187 @@ class AddCardScreenLib extends Component {
 
     render() {
         return (
-            <View style={styles.parentContainer}>
-                <Loader 
-                    loading={this.state.isLoading}
-                    message={this.state.loading_message} 
-                />
-                <Toolbar
-                    back={true}
-                    handlePress={() => this.props.navigation.goBack()}
-                />
-                <TitleHeader
-                    text={this.strings.addCardTitle}
-                    align="flex-start"
-                />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View style={styles.parentContainer}>
+                    <Loader 
+                        loading={this.state.isLoading}
+                        message={this.state.loading_message} 
+                    />
+                    <Toolbar
+                        back={true}
+                        handlePress={() => this.props.navigation.goBack()}
+                    />
+                    <TitleHeader
+                        text={this.strings.addCardTitle}
+                        align="flex-start"
+                    />
 
-                <View
-                    style={styles.container}
-                >
-                    <View>
-                        <View
-                            style={styles.marginBottom}
-                        >
-                            <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
-                                {this.strings.name}
-                            </Text>
-                            <TextInput 
-                                value={this.state.cardName}
-                                onChangeText={text => {
-                                    this.setState({
-                                        cardName: text
-                                    })
-                                }}
-                                style={styles.DefaultInputStyle}
-                                placeholder={this.strings.namePlaceholder}
-                                onFocus={() => this.setState({nameError: false})}
-                            />
-                            { this.state.nameError &&  
-                                <Text style={styles.ErrorLabel} >
-                                    {this.strings.nameError}
-                                </Text>
-                            }
-                        </View>
-                        
-                        <View
-                            style={styles.marginBottom}
-                        >
-                            <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
-                                {this.strings.number}
-                            </Text>
-                            <TextInputMask
-                                placeholder={this.strings.numberPlaceholder}
-                                type={'custom'}
-                                options={{
-                                    mask: '9999 9999 9999 9999'
-                                }}
-                                keyboardType='numeric'
-                                value={this.state.cardNumber}
-                                onChangeText={text => {
-                                    this.setState({
-                                        cardNumber: text
-                                    })
-                                }}
-                                keyboardType='numeric'
-                                style={styles.DefaultInputStyle}
-                                onFocus={() => this.setState({numberError: false})}
-                            />
-                            { this.state.numberError &&  
-                                <Text style={styles.ErrorLabel} >
-                                    {this.strings.numberError}
-                                </Text>
-                            }
-                        </View>
-
-                        <View
-                            style={styles.container2}
-                        >
+                    <View
+                        style={styles.container}
+                    >
+                        <View>
                             <View
-                                style={styles.container2Width}
+                                style={styles.marginBottom}
                             >
                                 <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
-                                    {this.strings.exp}
+                                    {this.strings.name}
                                 </Text>
-                                <TextInputMask
-                                    placeholder='MM/AAAA'
-                                    type={'custom'}
-                                    options={{
-                                        mask: '99/9999'
-                                    }}
-                                    keyboardType='numeric'
-                                    value={this.state.cardExpiration}
+                                <TextInput 
+                                    value={this.state.cardName}
                                     onChangeText={text => {
                                         this.setState({
-                                            cardExpiration: text
+                                            cardName: text
                                         })
                                     }}
-                                    keyboardType="numeric"
                                     style={styles.DefaultInputStyle}
-                                    onFocus={() => this.setState({expirationError: false})}
+                                    placeholder={this.strings.namePlaceholder}
+                                    onFocus={() => this.setState({nameError: false})}
                                 />
-                                { this.state.expirationError &&  
+                                { this.state.nameError &&  
                                     <Text style={styles.ErrorLabel} >
-                                        {this.strings.expError}
+                                        {this.strings.nameError}
                                     </Text>
                                 }
                             </View>
+                            
                             <View
-                                style={styles.container2Width}
+                                style={styles.marginBottom}
                             >
                                 <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
-                                    {this.strings.cvv}
+                                    {this.strings.number}
                                 </Text>
                                 <TextInputMask
-                                    placeholder='123'
+                                    placeholder={this.strings.numberPlaceholder}
                                     type={'custom'}
                                     options={{
-                                        mask: '9999'
+                                        mask: '9999 9999 9999 9999'
                                     }}
                                     keyboardType='numeric'
-                                    value={this.state.cardCvv}
+                                    value={this.state.cardNumber}
                                     onChangeText={text => {
                                         this.setState({
-                                            cardCvv: text
+                                            cardNumber: text
                                         })
                                     }}
-                                    onFocus={() => this.setState({cvvError: false})}
+                                    keyboardType='numeric'
                                     style={styles.DefaultInputStyle}
+                                    onFocus={() => this.setState({numberError: false})}
                                 />
-                                { this.state.cvvError &&  
+                                { this.state.numberError &&  
                                     <Text style={styles.ErrorLabel} >
-                                        {this.strings.cvvError}
+                                        {this.strings.numberError}
                                     </Text>
-                                }   
+                                }
+                            </View>
+
+                            <View
+                                style={styles.container2}
+                            >
+                                <View
+                                    style={styles.container2Width}
+                                >
+                                    <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
+                                        {this.strings.exp}
+                                    </Text>
+                                    <TextInputMask
+                                        placeholder='MM/AAAA'
+                                        type={'custom'}
+                                        options={{
+                                            mask: '99/9999'
+                                        }}
+                                        keyboardType='numeric'
+                                        value={this.state.cardExpiration}
+                                        onChangeText={text => {
+                                            this.setState({
+                                                cardExpiration: text
+                                            })
+                                        }}
+                                        keyboardType="numeric"
+                                        style={styles.DefaultInputStyle}
+                                        onFocus={() => this.setState({expirationError: false})}
+                                    />
+                                    { this.state.expirationError &&  
+                                        <Text style={styles.ErrorLabel} >
+                                            {this.strings.expError}
+                                        </Text>
+                                    }
+                                </View>
+                                <View
+                                    style={styles.container2Width}
+                                >
+                                    <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
+                                        {this.strings.cvv}
+                                    </Text>
+                                    <TextInputMask
+                                        placeholder='123'
+                                        type={'custom'}
+                                        options={{
+                                            mask: '9999'
+                                        }}
+                                        keyboardType='numeric'
+                                        value={this.state.cardCvv}
+                                        onChangeText={text => {
+                                            this.setState({
+                                                cardCvv: text
+                                            })
+                                        }}
+                                        onFocus={() => this.setState({cvvError: false})}
+                                        style={styles.DefaultInputStyle}
+                                    />
+                                    { this.state.cvvError &&  
+                                        <Text style={styles.ErrorLabel} >
+                                            {this.strings.cvvError}
+                                        </Text>
+                                    }   
+                                </View>
+                            </View>
+                            <View
+                                style={styles.marginBottom}
+                            >
+                                <Text style={[styles.DefaultInputLabel,{color:this.color}]}>
+                                    {this.strings.document}
+                                </Text>
+                                <TextInputMask
+                                    placeholder={'999.999.999-99'}
+                                    type={'custom'}
+                                    value={this.state.document}
+                                    onChangeText={text => {
+                                        this.setState({
+                                            document: text
+                                        })
+                                    }}
+                                    style={styles.DefaultInputStyle}
+                                    keyboardType = {this.isPtAo
+                                        ? null
+                                        : 'numeric'}
+                                    options={{
+                                        mask: this.state.document?.length <= 14 ? '999.999.999-99*' : '99.999.999/9999-99',
+                                    }}
+                                />
                             </View>
                         </View>
-                        <View
-                            style={styles.marginBottom}
-                        >
-                            <Text style={[styles.DefaultInputLabel,{color:this.color}]}>
-                                {this.strings.document}
-                            </Text>
-                            <TextInputMask
-                                placeholder={'999.999.999-99'}
-                                type={'custom'}
-                                value={this.state.document}
-                                onChangeText={text => {
-                                    this.setState({
-                                        document: text
-                                    })
+                        <View>
+                            <TouchableOpacity
+                                style={{
+                                    width: '100%',
+                                    backgroundColor: this.color,
+                                    padding: 12,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginBottom: 25
                                 }}
-                                style={styles.DefaultInputStyle}
-                                keyboardType = {this.isPtAo
-                                    ? null
-                                    : 'numeric'}
-                                options={{
-                                    mask: this.state.document?.length <= 14 ? '999.999.999-99*' : '99.999.999/9999-99',
-                                }}
-                            />
+                                onPress={() => this.onPress()}
+                            >
+                                <Text
+                                    style={styles.BtnText}
+                                >
+                                    {this.strings.save}
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                    <View>
-                        <TouchableOpacity
-                            style={{
-                                width: '100%',
-                                backgroundColor: this.color,
-                                padding: 12,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginBottom: 25
-                            }}
-                            onPress={() => this.onPress()}
-                        >
-                            <Text
-                                style={styles.BtnText}
-                            >
-                                {this.strings.save}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         );
     }
 }
@@ -389,6 +394,7 @@ const styles = StyleSheet.create({
     parentContainer: {
         flex: 1,
         padding: 0,
+        paddingTop: 15,
         backgroundColor: "white"
     },
     DefaultInputStyle: {
