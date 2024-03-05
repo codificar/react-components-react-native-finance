@@ -157,11 +157,9 @@ const RequestPix = (props) => {
                     }
                     Toast.showToast(strings.payment_error);
                 }
-                console.log("error: ", json);
             }
         })
         .catch((error) => {
-            console.log("fail");
             Toast.showToast(strings.payment_error);
             console.error(error.message);
         });
@@ -217,7 +215,6 @@ const RequestPix = (props) => {
                 setPaymentsTypes(json);
                 setNewPaymentMode(json.money_code);
             } else {
-                console.log("error");
             }
         })
         .catch((error) => {
@@ -240,8 +237,29 @@ const RequestPix = (props) => {
             setIsLoading(false);
             if(json.success) {
                 props.onPaymentChange(json.bill)
+                Alert.alert(
+                    strings.payment,
+                    strings.payment_changed_success,
+                  [
+                    {
+                      text: strings.ok,
+                      style: 'cancel',
+                    },
+                  ],
+                  { cancelable: false },
+                );
             } else {
-               console.log("an error as occurred, unable to change payment");
+                Alert.alert(
+                    strings.warning,
+                    strings.payment_changed_error,
+                  [
+                    {
+                      text: strings.ok,
+                      style: 'cancel',
+                    },
+                  ],
+                  { cancelable: false },
+                );
             }
         })
         .catch((error) => {
