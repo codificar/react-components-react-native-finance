@@ -166,22 +166,29 @@ const RequestPix = (props) => {
     }
 
     const alertChange = (isPaid) => {
-        unsubscribeSocket(); 
-        Alert.alert(
-            strings.payment,
-            isPaid ? strings.confirmed_payment : strings.payment_changed,
-            [
-                { text: strings.confirm, onPress: () => {
-                    if (props.debit_id) {
-                        props.onPaidOnDebit(true);
-                    } else {
-                        props.onPaid(true);
+        unsubscribeSocket();
+    
+        if (isPaid) {
+            Alert.alert(
+                strings.payment,
+                strings.confirmed_payment,
+                [
+                    {
+                        text: strings.confirm,
+                        onPress: () => {
+                            if (props.debit_id) {
+                                props.onPaidOnDebit(true);
+                            } else {
+                                props.onPaid(true);
+                            }
+                        }
                     }
-                }}
-            ],
-            { cancelable: false }
-        );
-    };    
+                ],
+                { cancelable: false }
+            );
+        }
+    };
+    
 
     const goBack = () => {
         Alert.alert(
