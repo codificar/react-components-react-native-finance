@@ -263,6 +263,13 @@ class EarningsPeriodScreen extends Component {
         this.props.navigation.navigate('AddBalanceScreen',
             {
                 originScreen: 'EarningsPeriodScreen',
+                startDate: this.params.startDate,
+                endDate: this.params.endDate,
+                formattedStartDate: this.params.firstDayWeek,
+                formattedEndDate: this.params.lastDayWeek,
+                isHelp: this.params.isHelp,
+                PrimaryButton: this.params.PrimaryButton,
+                navigation_v5: this.params.navigation_v5
             }
         )
     }
