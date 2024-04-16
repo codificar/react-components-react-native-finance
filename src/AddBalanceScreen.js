@@ -98,12 +98,14 @@ const AddBalanceScreen = (props) => {
 
 
     if (GLOBAL.navigation_v5) {
-        const isVisible = useIsFocused();
-        useEffect(() => {
-            if (isVisible) {
-                getCardsAndBalanceInfo();
-            }
-        }, [isVisible]);
+        React.useEffect(() => {
+            const subscribe = props.navigation.addListener('focus', () => {
+              getCardsAndBalanceInfo();
+            });
+        
+            // Return the function to unsubscribe from the event so it gets removed on unmount
+            return subscribe;
+        }, [props.navigation]);
     }
 
 
