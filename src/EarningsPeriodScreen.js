@@ -263,6 +263,7 @@ class EarningsPeriodScreen extends Component {
         this.props.navigation.navigate('AddBalanceScreen',
             {
                 originScreen: 'EarningsPeriodScreen',
+                navigation_v5: this.param.navigation_v5
             }
         )
     }
