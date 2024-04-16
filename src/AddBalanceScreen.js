@@ -44,7 +44,12 @@ const AddBalanceScreen = (props) => {
 
     GLOBAL.lang = GLOBAL.lang ? GLOBAL.lang : props.lang;
     GLOBAL.color = GLOBAL.color ? GLOBAL.color : props.PrimaryButton;
-    GLOBAL.navigation_v5 = GLOBAL.navigation_v5 ? GLOBAL.navigation_v5 : props.navigation_v5;
+
+    const checkParam = (paramProps) =>{
+        return paramProps.navigation.state != undefined ? paramProps.navigation.state.params: paramProps.route.params;
+    }
+
+    GLOBAL.navigation_v5 = GLOBAL.navigation_v5 ? GLOBAL.navigation_v5 : checkParam(props).navigation_v5;
 
     GLOBAL.appUrl = GLOBAL.appUrl ? GLOBAL.appUrl : props.appUrl;
     GLOBAL.removeCardUrl = GLOBAL.removeCardUrl ? GLOBAL.removeCardUrl : props.removeCardUrl;
