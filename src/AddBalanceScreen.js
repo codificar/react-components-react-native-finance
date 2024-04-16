@@ -69,7 +69,7 @@ const AddBalanceScreen = (props) => {
     const [cumulatedBalanceMonthly, setCumulatedBalanceMonthly] = useState(0);
     const [isCustomIndicationEnabled, setIsCustomIndicationEnabled] = useState(false);
     const [programName, setProgramName] = useState("");
-    const [addCardIsWebview, setAddCardIsWebview] = useState("");
+    const [addCardIsWebview, setAddCardIsWebview] = useState(true);
 
     const [settings, setSettings] = useState({
         prepaid_min_billet_value: "0",
