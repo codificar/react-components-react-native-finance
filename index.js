@@ -183,7 +183,8 @@ class Finance extends Component {
                     isHelp: this.props.isHelp,
                     appUrl: GLOBAL.appUrl,
                     removeCardUrl: GLOBAL.removeCardUrl,
-                    PrimaryButton: this.props.PrimaryButton
+                    PrimaryButton: this.props.PrimaryButton,
+                    navigation_v5: this.props.navigation_v5
                 }
             )
         }
@@ -231,6 +232,7 @@ class Finance extends Component {
                         lastDayWeek={this.state.lastDayWeek}
                         reportData={this.state.reportData}
                         PrimaryButton={this.props.PrimaryButton}
+                        navigation_v5={this.props.navigation_v5}
                         requestType={this.props.requestType ? this.props.requestType : this.strings.racing}
                     />
                 ) : null}
