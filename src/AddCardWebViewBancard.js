@@ -20,7 +20,7 @@ import {
 import Api from "react-native-finance/src/Functions/Api.js";
 import GLOBAL from 'react-native-finance/src/Functions/Global.js';
 
-const AddCardWebView = (props) => {
+const AddCardWebViewBancard = (props) => {
 
     //Get the lang from props. If hasn't lang in props, default is pt-BR
     var strings = require('react-native-finance/src/langs/pt-BR.json');
@@ -48,31 +48,28 @@ const AddCardWebView = (props) => {
         }, [isVisible]);
     }
 
-    const getUrl = async () => {
-
-        const requestBody = {
-            id: 3,
-            provider_id: 3,
-            user_id: 3,
-            token: "2y10sNDgsa3YoK5uUd0HmQXm4eM32K2Zzu2onVhxBA420F59VSKRIJXUe",
-        };
+    const getUrl = () => {
+        setIsLoading(true); 
     
-        try {
-            const response = await fetch('http://192.168.0.16/libs/finance/provider/add_credit_card', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',  
-                },
-                body: JSON.stringify(requestBody),  
-            });
-            const jsonResponse = await response.json();
-            const iframeUrl = jsonResponse.url;
-        } catch (error) {
-            console.error('Error fetching the URL: ', error);
-        }
-
-        var url = iframeUrl;
-        setWebviewUrl(url);
+        
+        api.AddCardBancard(
+            GLOBAL.appUrl || this.params.appUrl,
+            GLOBAL.id || this.params.id, 
+            GLOBAL.token || this.params.token,
+            GLOBAL.type || this.params.type,
+                 
+        ).then(response => {
+            setIsLoading(false); 
+            if (response.success) {
+                var url = GLOBAL.appUrl + "/libs/gateways/bancard/iframe_card/" + response.process_id;
+                setWebviewUrl(url); 
+            } else {
+                alert('Erro ao obter a URL: ' + response.message);
+            }
+        }).catch(error => {
+            setIsLoading(false);  
+            alert('Erro na API: ' + error.message);
+        });
     }
 
     return (
@@ -120,4 +117,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddCardWebView;
+export default AddCardWebViewBancard;
