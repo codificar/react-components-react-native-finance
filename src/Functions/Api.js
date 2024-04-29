@@ -335,7 +335,7 @@ export default class Api {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                provider_id: id,
+                [`${type}_id`]: id,
                 token: token,
             }),
         };
