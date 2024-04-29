@@ -51,12 +51,17 @@ const AddCardWebViewBancard = (props) => {
     const getUrl = () => {
         setIsLoading(true); 
     
-        
+        const {appUrl, id, token, type} = props.navigation.state.params
+            GLOBAL.appUrl = GLOBAL.appUrl || appUrl,
+            GLOBAL.id = GLOBAL.id || id,
+            GLOBAL.token = GLOBAL.token || token,
+            GLOBAL.type = GLOBAL.type || type,
+
         api.AddCardBancard(
-            GLOBAL.appUrl || this.params.appUrl,
-            GLOBAL.id || this.params.id, 
-            GLOBAL.token || this.params.token,
-            GLOBAL.type || this.params.type,
+            GLOBAL.appUrl,
+            GLOBAL.id,
+            GLOBAL.token,
+            GLOBAL.type,
                  
         ).then(response => {
             setIsLoading(false); 
