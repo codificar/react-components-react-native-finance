@@ -24,7 +24,7 @@ import Loader from "./Functions/Loader"
 import Toolbar from './Functions/Toolbar'
 import TitleHeader from './Functions/TitleHeader'
 
-import GLOBAL from './Functions/Global.js';
+import GLOBAL, { appUrl } from './Functions/Global.js';
 
 class EarningsPeriodScreen extends Component {
     constructor(props) {
@@ -255,7 +255,8 @@ class EarningsPeriodScreen extends Component {
     openFilter() {
         this.props.navigation.navigate('FilterScreen', {
             originScreen: 'EarningsPeriodScreen',
-            PrimaryButton: this.param.PrimaryButton
+            PrimaryButton: this.param.PrimaryButton,
+            appUrl: this.param.appUrl
         })
     }
 
