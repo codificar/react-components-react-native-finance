@@ -110,7 +110,8 @@ class FilterScreen extends Component {
         startDate: startDate,
         endDate: endDate,
         formattedStartDate: formattedStartDate,
-        formattedEndDate: formattedEndDate
+        formattedEndDate: formattedEndDate,
+        appUrl: params.appUrl
       })
     }
   }
