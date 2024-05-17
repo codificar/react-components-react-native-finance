@@ -69,8 +69,10 @@ const AddBalanceScreen = (props) => {
     const [cumulatedBalanceMonthly, setCumulatedBalanceMonthly] = useState(0);
     const [isCustomIndicationEnabled, setIsCustomIndicationEnabled] = useState(false);
     const [programName, setProgramName] = useState("");
-    const [addCardIsWebview, setAddCardIsWebview] = useState("");
-    const [disableDoubleClick, setDisableDoubleClick] = useState(false);
+    const [addCardIsWebview, setAddCardIsWebview] = useState(false);
+    const [paymentGateway, setpaymentGateway] = useState("");
+
+
 
     const [settings, setSettings] = useState({
         prepaid_min_billet_value: "0",
@@ -80,7 +82,6 @@ const AddBalanceScreen = (props) => {
         prepaid_card_user: "0",
         prepaid_card_provider: "0",
         with_draw_enabled: false,
-
     });
 
     const isUser = GLOBAL.type == "user";
@@ -170,6 +171,7 @@ const AddBalanceScreen = (props) => {
                     setIsCustomIndicationEnabled(json.settings.indication_settings ? json.settings.indication_settings.isCustomIndicationEnabled : false);
                     setProgramName(json.settings.indication_settings ? json.settings.indication_settings.program_name : false);
                     setAddCardIsWebview(json.add_card_is_webview);
+                    setpaymentGateway(json.payment_gateway)
                 }
                 setIsLoading(false);
             })
@@ -525,10 +527,17 @@ const AddBalanceScreen = (props) => {
     }
 
     const goToAddCardScreen = () => {
-        const screen = addCardIsWebview ? 'AddCardWebView' : 'AddCardScreenLib';
+
+        let screen = 'AddCardScreenLib';
+
+        if (addCardIsWebview) {
+          if (paymentGateway === 'bancard') screen = 'AddCardWebViewBancard'
+          else if (paymentGateway === 'juno') screen = 'AddCardWebView'
+        }
+
         props.navigation.navigate(screen,
             {
-                originScreen: 'AddBalanceScreen',
+                originScreen: screen,
                 cards: cards
             }
         )

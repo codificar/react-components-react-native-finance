@@ -322,4 +322,27 @@ export default class Api {
         return fetch(app_url, params).then((response) => response.json());
     }
 
+    AddCardBancard(
+        app_url,
+        id,
+        token,
+        type,
+    ) {
+        let params = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                [`${type}_id`]: id,
+                token: token,
+            }),
+        };
+        return fetch(
+            app_url + '/libs/finance/' + type + '/add_bancard_credit_card',
+            params
+        ).then((response) => response.json());
+    }
+
 }
