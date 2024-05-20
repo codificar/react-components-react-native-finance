@@ -69,6 +69,7 @@ const AddBalanceScreen = (props) => {
     const [cumulatedBalanceMonthly, setCumulatedBalanceMonthly] = useState(0);
     const [isCustomIndicationEnabled, setIsCustomIndicationEnabled] = useState(false);
     const [programName, setProgramName] = useState("");
+    const [disableDoubleClick, setDisableDoubleClick] = useState(false);
     const [addCardIsWebview, setAddCardIsWebview] = useState(false);
     const [paymentGateway, setpaymentGateway] = useState("");
 
