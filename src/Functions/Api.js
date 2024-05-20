@@ -216,14 +216,16 @@ export default class Api {
         ).then((response) => response.json());
     }
 
-    RetrievePix(app_url, id, token, transaction_id, request_id, type) {
+    RetrievePix(app_url, id, token, transaction_id, debit_id, request_id, type) {
         let params = new URLSearchParams({
             provider_id: id,
             user_id: id,
             id: id,
             token: token,
+            debit_id: debit_id,
             transaction_id: transaction_id,
             request_id: request_id,
+            type: type
         });
         return fetch(
             app_url + '/libs/finance/' + type + '/retrieve_pix' + '?' + params,
@@ -265,7 +267,7 @@ export default class Api {
         ).then((response) => response.json());
     }
 
-    getPaymentTypes(app_url, id, token) {
+    getPaymentTypes(app_url, id, token, user_type) {
         let params = new URLSearchParams({
             provider_id: id,
             id: id,
@@ -273,13 +275,13 @@ export default class Api {
         });
         return fetch(
             app_url +
-                '/libs/finance/provider/change_pix_payment_types' +
+                `/libs/finance/${user_type}/change_pix_payment_types` +
                 '?' +
                 params,
             this.get
         ).then((response) => response.json());
     }
-    changePaymentType(app_url, id, token, request_id, new_payment_mode) {
+    changePaymentType(app_url, id, token, request_id, new_payment_mode, user_type) {
         let params = {
             method: 'POST',
             headers: {
@@ -295,7 +297,7 @@ export default class Api {
             }),
         };
         return fetch(
-            app_url + '/libs/finance/provider/change_pix_payment',
+            app_url + `/libs/finance/${user_type}/change_pix_payment`,            
             params
         ).then((response) => response.json());
     }
