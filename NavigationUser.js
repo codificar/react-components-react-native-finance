@@ -8,9 +8,12 @@ import PixScreen from './src/PixScreen'
 import EarningsPeriodScreen from './src/EarningsPeriodScreen'
 import EarningDetailScreen from './src/EarningDetailScreen'
 import FilterScreen from './src/FilterScreen'
+import AddCardWebViewBancard from './src/AddCardWebViewBancard'
+
 
     const screens = {
         AddBalanceScreen: { screen: AddBalanceScreen },
+        AddCardWebViewBancard: { screen: AddCardWebViewBancard },
         AddCardScreenLib: { screen: AddCardScreenLib },
         AddCardWebView: { screen: AddCardWebView },
         PixScreen: { screen: PixScreen },

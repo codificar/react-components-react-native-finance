@@ -10,6 +10,7 @@ import DebitActiveScreen from './src/DebitActiveScreen'
 import AddCardWebView from './src/AddCardWebView'
 import PixScreen from './src/PixScreen'
 import PixQrCode from './src/PixQrCode'
+import AddCardWebViewBancard from './src/AddCardWebViewBancard'
 
 const screens = {
     EarningsPeriodScreen: { screen: EarningsPeriodScreen },
@@ -19,11 +20,13 @@ const screens = {
     DebitActiveScreen: { screen: DebitActiveScreen },
     AddCardScreenLib: { screen: AddCardScreenLib },
     AddCardWebView: { screen: AddCardWebView },
+    AddCardWebViewBancard: { screen: AddCardWebViewBancard },
     PixScreen: { screen: PixScreen },
     PixQrCode: { screen: PixQrCode }
 };
 
 export {
+    AddCardWebViewBancard,
     AddCardWebView,
     AddCardScreenLib,
     EarningDetailScreen,
