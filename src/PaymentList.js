@@ -86,7 +86,7 @@ const PaymentList = (props) => {
                                 >
                                     <View style={{ flex: 0.2 }}>
                                         <Image
-                                            source={arrayIconsType[item.card_type]}
+                                            source={arrayIconsType[item.card_type.toLowerCase()]}
                                             style={{
                                             width: 50,
                                             height: 30,
@@ -124,7 +124,7 @@ const PaymentList = (props) => {
                                 >
                                     <View style={{ flex: 0.2 }}>
                                         <Image
-                                            source={arrayIconsType[item.icon]}
+                                            source={arrayIconsType[item.icon.toLowerCase()]}
                                             style={{
                                             width: 42,
                                             height: 27,

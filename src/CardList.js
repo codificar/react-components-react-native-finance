@@ -61,7 +61,7 @@ const CardList = (props) => {
                                 <View style={{ flex: 0.2 }}>
 
                                     <Image
-                                        source={arrayIconsType[item.card_type]}
+                                        source={arrayIconsType[item.card_type.toLowerCase()]}
                                         style={{ width: 50, height: 30, resizeMode: "contain" }}
                                     />
 
