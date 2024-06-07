@@ -586,7 +586,7 @@ const AddBalanceScreen = (props) => {
                                                 {!item.card_type || item.card_type == "unknown" ? (
                                                     <Icon name="credit-card" size={40} />
                                                 ) : (
-                                                    <Image source={arrayIconsType[item.card_type]}
+                                                    <Image source={arrayIconsType[item.card_type.toLowerCase()]}
                                                         style={{
                                                         width: 40,
                                                         height: 28,
