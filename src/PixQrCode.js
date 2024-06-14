@@ -5,10 +5,12 @@ import Images from "./img/Images";
 import Loader from "./Functions/Loader"
 import Toolbar from './Functions/Toolbar'
 import Toast from "./Functions/Toast";
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 
-import { 
-    View, 
+import GLOBAL from './Functions/Global';
+
+import {
+    View,
     Image,
     StyleSheet,
     Text,
@@ -29,15 +31,15 @@ const PixQrCode = (props) => {
 
     //Get the lang from props. If hasn't lang in props, default is pt-BR
     var strings = require('./langs/pt-BR.json');
-    if(props.lang) {
-        if(props.lang == "pt-BR") {
+    if (props.lang) {
+        if (props.lang == "pt-BR") {
             strings = require('./langs/pt-BR.json');
         }
-        else if(props.lang == ("es-PY") || props.lang.includes('es')) {
+        else if (props.lang == ("es-PY") || props.lang.includes('es')) {
             strings = require('./langs/es-PY.json');
         }
         // if is english
-        else if(props.lang.indexOf("en") != -1) {
+        else if (props.lang.indexOf("en") != -1) {
             strings = require('./langs/en.json');
         }
     }
@@ -56,7 +58,7 @@ const PixQrCode = (props) => {
     const [paymentsTypes, setPaymentsTypes] = useState({});
 
     let socket = null;
-    if(GLOBAL.socket_url || props.socket_url) {
+    if (GLOBAL.socket_url || props.socket_url) {
         socket = WebSocketServer.connect(GLOBAL.socket_url || props.socket_url);
     }
     const api = new Api();
@@ -68,14 +70,14 @@ const PixQrCode = (props) => {
         if (socket !== null && !isSubscribed) {
             setIsSubscribed(true);
             socket
-            .emit('subscribe', {
-                channel: 'pix.' + id,
-            })
-            .on('pixUpate', (channel, data) => {
-                if(data.is_paid) {
-                    alertPaid();
-                }
-            })
+                .emit('subscribe', {
+                    channel: 'pix.' + id,
+                })
+                .on('pixUpate', (channel, data) => {
+                    if (data.is_paid) {
+                        alertPaid();
+                    }
+                })
         }
     }
 
@@ -87,7 +89,7 @@ const PixQrCode = (props) => {
             socket.disconnect();
             socket.removeAllListeners("pixUpate");
             socket.removeAllListeners("pix");
-            socket.removeAllListeners("pix." + transactionId); 
+            socket.removeAllListeners("pix." + transactionId);
         }
     }
 
@@ -106,77 +108,77 @@ const PixQrCode = (props) => {
     const retrievePix = (qtd, showFailMsg) => {
         api.RetrievePix(
             props.appUrl,
-            props.id, 
-            props.token, 
+            props.id,
+            props.token,
             props.pix_transaction_id,
             props.request_id,
             "provider" // only provider has qr code screen
         )
-        .then((json) => {
-            if(json.success) {
-                setErrorPix(false);
-                setFormattedValue(json.formatted_value);
-                setCopyAndPaste(json.copy_and_paste);
-                if(json && json.paid) {
-                    alertPaid();
+            .then((json) => {
+                if (json.success) {
+                    setErrorPix(false);
+                    setFormattedValue(json.formatted_value);
+                    setCopyAndPaste(json.copy_and_paste);
+                    if (json && json.paid) {
+                        alertPaid();
+                    } else {
+                        setTransactionId(json.transaction_id);
+                        if (json.transaction_type) {
+                            setTransactionType(json.transaction_type);
+                        }
+                        setQrCodeBase64(json.qr_code_base64);
+                        if (showFailMsg) {
+                            Toast.showToast(strings.payment_not_confirmed);
+                        }
+                        //se for a primeira vez que chama essa api (qtd = 0), entao se inscreve no socket
+                        if (qtd == 0) {
+                            subscribeSocket(json.transaction_id);
+                            getPaymentTypes();
+                        }
+                    }
                 } else {
-                    setTransactionId(json.transaction_id);
-                    if(json.transaction_type) {
-                        setTransactionType(json.transaction_type);
+                    if (json.paid) {
+                        alertPaid();
+                    } else {
+                        if (json.formatted_value) {
+                            setFormattedValue(json.formatted_value);
+                        }
+                        Toast.showToast(strings.payment_error);
                     }
-                    setQrCodeBase64(json.qr_code_base64);
-                    if(showFailMsg) {
-                        Toast.showToast(strings.payment_not_confirmed);
-                    }
-                    //se for a primeira vez que chama essa api (qtd = 0), entao se inscreve no socket
-                    if(qtd == 0) {
-                        subscribeSocket(json.transaction_id);
-                        getPaymentTypes();
-                    }
-                }
-            } else {
-                if(json.paid) {
-                    alertPaid();
-                } else {
-                    if(json.formatted_value) {
-                        setFormattedValue(json.formatted_value);
-                    }
+                    getPaymentTypes();
+                    setErrorPix(true);
+                    console.log("error: ", json);
                     Toast.showToast(strings.payment_error);
                 }
+            })
+            .catch((error) => {
                 getPaymentTypes();
                 setErrorPix(true);
-                console.log("error: ", json);
+                console.log('retrievePix error', error);
                 Toast.showToast(strings.payment_error);
-            }
-        })
-        .catch((error) => {
-            getPaymentTypes();
-            setErrorPix(true);
-            console.log('retrievePix error',error);
-            Toast.showToast(strings.payment_error);
-        });
+            });
     }
 
     const getPaymentTypes = () => {
         api.getPaymentTypes(
             props.appUrl,
-            props.id, 
+            props.id,
             props.token
         )
-        .then((json) => {
-            if(json) {
-                //set money as default change payment type
-                setPaymentsTypes(json);
-                setNewPaymentMode(json.money_code);
-            } else {
-                console.log("error");
-            }
-        })
-        .catch((error) => {
-            console.log("fail");
+            .then((json) => {
+                if (json) {
+                    //set money as default change payment type
+                    setPaymentsTypes(json);
+                    setNewPaymentMode(json.money_code);
+                } else {
+                    console.log("error");
+                }
+            })
+            .catch((error) => {
+                console.log("fail");
 
-            console.error(error);
-        });
+                console.error(error);
+            });
     }
 
     const changePayment = () => {
@@ -184,36 +186,36 @@ const PixQrCode = (props) => {
         setIsLoading(true);
         api.changePaymentType(
             props.appUrl,
-            props.id, 
+            props.id,
             props.token,
             props.request_id,
             newPaymentMode
         )
-        .then((json) => {
-            setIsLoading(false);
+            .then((json) => {
+                setIsLoading(false);
 
-            if(json.success) {
-                props.onPaymentChange(json.bill)
-            } else {
-                console.log("error aq");
-            }
-        })
-        .catch((error) => {
-            setIsLoading(false);
-            console.log("deu erro");
-            console.error(error);
-        });
+                if (json.success) {
+                    props.onPaymentChange(json.bill)
+                } else {
+                    console.log("error aq");
+                }
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                console.log("deu erro");
+                console.error(error);
+            });
     }
 
     const goBack = () => {
-        if(transactionType == 'subscription_transaction') {
-            return props.navigation.navigate('SubscriptionDetailsScreen',{
+        if (transactionType == 'subscription_transaction') {
+            return props.navigation.navigate('SubscriptionDetailsScreen', {
                 provider: props.providerProfile,
                 route: props.appUrl,
                 routeAPI: props.API_VERSION,
                 routeBack: props.routeBack,
                 isContainerPaymentType: props.isContainerPaymentType,
-            });             
+            });
         }
         Alert.alert(
             strings.exit_app,
@@ -261,16 +263,16 @@ const PixQrCode = (props) => {
                         setModalVisible(!modalVisible);
                     }}
                 >
-                    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
                         <View style={styles.modalView}>
 
-                            <View style={{flex: 5, alignItems: "center"}}>
-                                <Text style={[styles.text, {textAlign: "center"}]}>{strings.change_payment_mode}</Text>
+                            <View style={{ flex: 5, alignItems: "center" }}>
+                                <Text style={[styles.text, { textAlign: "center" }]}>{strings.change_payment_mode}</Text>
 
-                                <View style={{alignItems: "center", flex: 1, justifyContent: "center", width: "100%"}}>
+                                <View style={{ alignItems: "center", flex: 1, justifyContent: "center", width: "100%" }}>
                                     <Picker
                                         selectedValue={newPaymentMode}
-                                        style={{ width: Dimensions.get('window').width/2, height: 40 }}
+                                        style={{ width: Dimensions.get('window').width / 2, height: 40 }}
                                         onValueChange={(itemValue, itemIndex) => setNewPaymentMode(itemValue)}
                                     >
                                         {paymentsTypes.money ? <Picker.Item label="Dinheiro" value={paymentsTypes.money_code} /> : null}
@@ -278,20 +280,20 @@ const PixQrCode = (props) => {
                                         {paymentsTypes.machine ? <Picker.Item label="Maquineta de cartão" value={paymentsTypes.machine_code} /> : null}
                                     </Picker>
                                 </View>
-                                
+
                             </View>
 
-                            <View style={{flex: 1, flexDirection:"row", justifyContent: 'flex-end'}}>
+                            <View style={{ flex: 1, flexDirection: "row", justifyContent: 'flex-end' }}>
                                 <TouchableOpacity
-                                    onPress={() =>  setModalVisible(!modalVisible)}
-                                    style={{justifyContent: 'flex-end'}}
+                                    onPress={() => setModalVisible(!modalVisible)}
+                                    style={{ justifyContent: 'flex-end' }}
                                 >
                                     <Text style={[styles.text, styles.greenText]}>{strings.cancel}</Text>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
                                     onPress={() => changePayment()}
-                                    style={{justifyContent: 'flex-end'}}
+                                    style={{ justifyContent: 'flex-end' }}
                                 >
                                     <Text style={[styles.text, styles.greenText]}>{strings.confirm}</Text>
                                 </TouchableOpacity>
@@ -303,96 +305,96 @@ const PixQrCode = (props) => {
 
             <Toolbar
                 back={true}
-                handlePress={() => goBack() }
+                handlePress={() => goBack()}
             />
             <View style={{ marginTop: -15, alignItems: 'center' }}>
-                <Text style={{color: "#363636", fontSize: 20, fontWeight: "bold"}}>{strings.pix_payment}</Text>
+                <Text style={{ color: "#363636", fontSize: 20, fontWeight: "bold" }}>{strings.pix_payment}</Text>
             </View>
 
             <Loader loading={isLoading} message={strings.loading_message} />
 
 
             {/* Flex vertical of 2/15 */}
-            <View style={{flex: 2, marginTop: 15 }}>
-                <Text style={{color: 'grey', textAlign: 'center', fontSize: 16, marginHorizontal: 20}}>
-                    {qrCodeBase64 && !errorPix 
-                        ? strings.pix_qr_info 
+            <View style={{ flex: 2, marginTop: 15 }}>
+                <Text style={{ color: 'grey', textAlign: 'center', fontSize: 16, marginHorizontal: 20 }}>
+                    {qrCodeBase64 && !errorPix
+                        ? strings.pix_qr_info
                         : strings.payment_error
                     }
                 </Text>
             </View>
 
-             {/* Flex vertical of 7/15 */}
-             <View 
+            {/* Flex vertical of 7/15 */}
+            <View
                 style={{
-                    flex: 7, 
+                    flex: 7,
                     marginTop: 20,
                     marginBottom: 20,
-                    padding: 10,  
-                    flexDirection: 'column', 
-                    alignItems: "center", 
+                    padding: 10,
+                    flexDirection: 'column',
+                    alignItems: "center",
                     justifyContent: "center"
                 }}>
-                {errorPix 
+                {errorPix
                     ? <Image source={Images.warning} style={styles.imgWarning} />
-                    : null 
+                    : null
                 }
-                { qrCodeBase64 && !errorPix
-                    ? <QRCode value={qrCodeBase64} size={250} /> 
-                    : null  
+                {qrCodeBase64 && !errorPix
+                    ? <QRCode value={qrCodeBase64} size={250} />
+                    : null
                 }
-                {copyAndPaste 
-                    && transactionType == 'subscription_transaction' 
+                {copyAndPaste
+                    && transactionType == 'subscription_transaction'
                     && !errorPix ? (<>
                         <TextInput
                             style={styles.input}
                             selectTextOnFocus={true}
-                            showSoftInputOnFocus={false} 
+                            showSoftInputOnFocus={false}
                             value={copyAndPaste}
                         />
 
                         <TouchableOpacity
                             style={styles.buttonStyle}
-                            onPress={() =>  copyClipBoard()} 
+                            onPress={() => copyClipBoard()}
                         >
-                            <Text style={[styles.greenText, {fontSize: 16, fontWeight: "bold", textAlign: "center" }]}>{strings.copy_pix}</Text>
+                            <Text style={[styles.greenText, { fontSize: 16, fontWeight: "bold", textAlign: "center" }]}>{strings.copy_pix}</Text>
                         </TouchableOpacity>
                     </>) : null
-                    } 
+                }
             </View>
 
             {/* Flex vertical of 2/15 */}
-            <View style={{flex: 2, alignItems: "center"}}>
-                <Text style={[styles.text, styles.textBlack, {paddingTop: 10}]}>{strings.payment_made}</Text>
+            <View style={{ flex: 2, alignItems: "center" }}>
+                <Text style={[styles.text, styles.textBlack, { paddingTop: 10 }]}>{strings.payment_made}</Text>
                 <TouchableOpacity
-                    onPress={() =>  retrievePix(false, true)} 
+                    onPress={() => retrievePix(false, true)}
                 >
                     <Text style={[styles.text, styles.greenText]}>{strings.check_payment}</Text>
                 </TouchableOpacity>
             </View>
 
-             {/* Flex vertical of 2/15 */}
-             { props.request_id && (
-                <View style={{flex: 2, alignItems: "center"}}>
+            {/* Flex vertical of 2/15 */}
+            {props.request_id && (
+                <View style={{ flex: 2, alignItems: "center" }}>
                     <Text style={[styles.text, styles.textBlack]}>{strings.pix_problems}</Text>
                     <TouchableOpacity
-                        onPress={() =>  setModalVisible(true)} 
+                        onPress={() => setModalVisible(true)}
                     >
                         <Text style={[styles.text, styles.greenText]}>{strings.change_payment_mode}</Text>
                     </TouchableOpacity>
                 </View>)
-             }
+            }
 
             {/* Flex vertical of 2/15 */}
-            <View style={{flex: 2, alignItems: "center"}}>
-                <View style={styles.hr}/>
+            <View style={{ flex: 2, alignItems: "center" }}>
+                <View style={styles.hr} />
 
-                <View style={{flexDirection: 'row', width: '90%', justifyContent: 'space-between'}}>
+                <View style={{ flexDirection: 'row', width: '90%', justifyContent: 'space-between' }}>
                     <Text style={styles.valueText}>{strings.total}</Text>
                     <Text style={[styles.valueText, styles.textBold]}>{formattedValue}</Text>
                 </View>
-                
-                <View style={styles.hr}/>
+
+                <View style={styles.hr} />
             </View>
 
         </View>
@@ -405,8 +407,8 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     text: {
-        color: 'grey', 
-        fontSize: 16, 
+        color: 'grey',
+        fontSize: 16,
         marginHorizontal: 20
     },
     textBold: {
@@ -416,21 +418,21 @@ const styles = StyleSheet.create({
         color: 'black'
     },
     valueText: {
-        color: '#808080', 
+        color: '#808080',
         fontSize: 20,
     },
     greenText: {
         color: '#6EB986'
     },
     hr: {
-        backgroundColor: '#e3e3e3', 
-        height: 1, 
+        backgroundColor: '#e3e3e3',
+        height: 1,
         width: "90%",
         marginVertical: 10
     },
     imgWarning: {
-        width: 130, 
-        height: 130, 
+        width: 130,
+        height: 130,
         resizeMode: 'contain'
     },
     modalView: {
