@@ -63,6 +63,7 @@
 	"card_success": "Card payment successful.",
 	"card_error": "Card error",
 	"billet_error": "Error generating ticket",
+	"pix_error": "Error generating ticket pix ",
 	"confirm_billet_value": "Are you sure you want to generate a boleto for",
 	"billet_addition": "There will be an increase in",
 	"yes": "Yes",

@@ -63,6 +63,7 @@
 	"card_success": "Pagamento com cartão realizado com sucesso.",
 	"card_error": "Erro no cartão",
 	"billet_error": "Erro ao gerar boleto",
+	"pix_error": "Erro ao gerar pix",
 	"confirm_billet_value": "Tem certeza que deseja gerar um boleto no valor de",
 	"billet_addition": "Haverá um acréscimo de",
 	"yes": "Sim",
