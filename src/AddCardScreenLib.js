@@ -9,6 +9,7 @@ import Toast from "./Functions/Toast";
 import { 
     View, 
     Text,
+    Platform,
     BackHandler,
     TouchableOpacity,
     TextInput,
@@ -388,6 +389,7 @@ class AddCardScreenLib extends Component {
 const styles = StyleSheet.create({
     parentContainer: {
         flex: 1,
+        marginTop: Platform.OS == 'ios' ? 50 : 0,
         padding: 0,
         backgroundColor: "white"
     },
