@@ -1,38 +1,32 @@
 {
-    "name": "react-native-finance",
-    "version": "1.0.0",
-    "description": "A component for earnings report and account statement",
-    "main": "index.js",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "license": "MIT",
-
-    "repository": {
-      "type": "git",
-      "url": "git+https://git.codificar.com.br/react-components/react-native-finance"
-    },
-    "dependencies": {
-      "@codificar/use-log-errors": "git+https://libs:ofImhksJ@git.codificar.com.br/react-components/use-log-errors.git",
-      "react-native-elements": "^3.0.0-alpha.1",
-      "react-native-calendar-picker": "^6.0.1",
-      "react-native-chart-kit": "^6.7.0",
-      "@react-navigation/drawer": "^5.12.4",
-      "@react-navigation/native": "^5.9.3",
-      "@react-navigation/stack": "^5.14.3",
-      "react-native-qrcode-svg": "^6.1.2"
-    },
-    
-    "peerDependencies": {
-        "react-native": ">=0.47.0"
-    },
-
-    "author": "Codificar",
-
-    "bugs": {
-      "url": "https://git.codificar.com.br/react-components/react-native-finance/issues"
-    },
-
-    "homepage": "https://git.codificar.com.br/react-components/react-native-finance#readme"
-  }
-
+  "name": "react-native-finance",
+  "version": "1.0.0",
+  "description": "A component for earnings report and account statement",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codificar/react-components-react-native-finance"
+  },
+  "dependencies": {
+    "@codificar/use-log-errors": "git+https://github.com/codificar/react-components-use-log-errors.git",
+    "react-native-elements": "^3.0.0-alpha.1",
+    "react-native-calendar-picker": "^6.0.1",
+    "react-native-chart-kit": "^6.7.0",
+    "@react-navigation/drawer": "^5.12.4",
+    "@react-navigation/native": "^5.9.3",
+    "@react-navigation/stack": "^5.14.3",
+    "react-native-qrcode-svg": "^6.1.2"
+  },
+  "peerDependencies": {
+    "react-native": ">=0.47.0"
+  },
+  "author": "Codificar",
+  "bugs": {
+    "url": "https://github.com/codificar/react-components-react-native-finance/issues"
+  },
+  "homepage": "https://github.com/codificar/react-components-react-native-finance#readme"
+}
