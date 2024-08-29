@@ -12,7 +12,7 @@
     "url": "git+https://git.codificar.com.br/react-components/react-native-finance"
   },
   "dependencies": {
-    "@codificar/use-log-errors": "git+https://libs:ofImhksJ@git.codificar.com.br/react-components/use-log-errors.git",
+    "@codificar/use-log-errors": "git+https://github.com/codificar/react-components-use-log-errors",
     "@react-native-clipboard/clipboard": "^1.11.2",
     "@react-navigation/drawer": "^5.12.4",
     "@react-navigation/native": "^5.9.3",
@@ -27,7 +27,7 @@
   },
   "author": "Codificar",
   "bugs": {
-    "url": "https://git.codificar.com.br/react-components/react-native-finance/issues"
+    "url": "https://github.com/codificar/react-components-react-native-finance/issues"
   },
-  "homepage": "https://git.codificar.com.br/react-components/react-native-finance#readme"
+  "homepage": "https://github.com/codificar/react-components-react-native-finance#readme"
 }
