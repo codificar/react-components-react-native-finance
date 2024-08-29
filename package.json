@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://git.codificar.com.br/react-components/react-native-finance"
+    "url": "git+https://github.com/codificar/react-components-react-native-finance"
   },
   "dependencies": {
     "@codificar/use-log-errors": "git+https://github.com/codificar/react-components-use-log-errors",
