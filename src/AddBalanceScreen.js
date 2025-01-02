@@ -13,7 +13,8 @@ import {
     Alert,
     Modal,
     Linking,
-    Clipboard
+    Clipboard,
+    SafeAreaView
 } from "react-native";
 const listWidth = Dimensions.get('window').width - 60;
 
@@ -432,7 +433,7 @@ const AddBalanceScreen = (props) => {
 
     const renderBalance = () => {
         return (
-            <View>
+            <SafeAreaView>
                 {/* Ajustando layout padrão mobilidade */}
                 {GLOBAL.toolbar ? (
                     <View>
@@ -464,7 +465,7 @@ const AddBalanceScreen = (props) => {
                         </View>
                     </View>
                 }
-            </View>
+            </SafeAreaView>
         );
     }
 
