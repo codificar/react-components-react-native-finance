@@ -10,7 +10,8 @@ import {
     PixelRatio,
     TouchableOpacity,
     ScrollView,
-    Platform
+    Platform,
+    SafeAreaView
 } from "react-native"
 import { Icon, Divider } from 'react-native-elements'
 
@@ -86,7 +87,7 @@ class EarningsPeriodScreen extends Component {
             this.updateStateFromParams();
         }
     }
-    
+
     updateStateFromParams() {
         this.param = this.props.navigation.state != undefined ? this.props.navigation.state.params: this.param;
         this.setState({
@@ -186,7 +187,7 @@ class EarningsPeriodScreen extends Component {
 
         const type = GLOBAL.type == 'user' ? GLOBAL.type : 'provider';
         this.param = this.props.navigation.state != undefined ? this.props.navigation.state.params: this.param;
-        
+
         this.api.GetCheckingAccount(
             this.param.appUrl,
             this.state.providerId,
@@ -297,11 +298,10 @@ class EarningsPeriodScreen extends Component {
 
     render() {
         return (
-            <View style={styles.parentContainer}>
+            <SafeAreaView style={styles.parentContainer}>
                 {/* Flex 8/10 */}
                 <View style={{flex: 9}}>
                     <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
-                    <View style={{ marginTop: Platform.OS === 'android' ? 0 : 25 }}>
                         <Toolbar
                             back={true}
                             nextStep={false}
@@ -316,7 +316,6 @@ class EarningsPeriodScreen extends Component {
                             text={this.strings.reportDetail}
                             align="flex-start"
                         />
-                    </View>
                     <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                         <View style={{paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
                             <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
@@ -381,7 +380,7 @@ class EarningsPeriodScreen extends Component {
                         </TouchableOpacity>
                     </View>
                 : null}
-              </View>
+              </SafeAreaView>
         )
     }
 }
