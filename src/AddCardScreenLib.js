@@ -6,14 +6,15 @@ import TitleHeader from './Functions/TitleHeader'
 
 import Toast from "./Functions/Toast";
 
-import { 
-    View, 
+import {
+    View,
     Text,
     BackHandler,
     TouchableOpacity,
     TextInput,
     StyleSheet,
-    Alert
+    Alert,
+    SafeAreaView
 } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import Api from "./Functions/Api";
@@ -73,7 +74,7 @@ class AddCardScreenLib extends Component {
             });
             return true;
         }
-        
+
         return false;
     }
 
@@ -122,14 +123,14 @@ class AddCardScreenLib extends Component {
 
     validationNumber() {
         const number = this.state.cardNumber.split(' ').join('');
-        
+
         if (number.length < 16) {
             this.setState({
                 numberError: true
             });
             return true;
-        } 
-        
+        }
+
         return false;
     }
 
@@ -149,14 +150,14 @@ class AddCardScreenLib extends Component {
         this.setState({
             isLoading: true
         });
-        
+
         var exp = this.state.cardExpiration.split('/');
         var month = parseInt(exp[0]);
-        var year = parseInt(exp[1]);            
+        var year = parseInt(exp[1]);
 
         this.api.AddCard(
             GLOBAL.appUrl || this.params.appUrl,
-            GLOBAL.id || this.params.id, 
+            GLOBAL.id || this.params.id,
             GLOBAL.token || this.params.token,
             GLOBAL.type || this.params.type,
             this.state.cardName,
@@ -205,10 +206,10 @@ class AddCardScreenLib extends Component {
 
     render() {
         return (
-            <View style={styles.parentContainer}>
-                <Loader 
+            <SafeAreaView style={styles.parentContainer}>
+                <Loader
                     loading={this.state.isLoading}
-                    message={this.state.loading_message} 
+                    message={this.state.loading_message}
                 />
                 <Toolbar
                     back={true}
@@ -229,7 +230,7 @@ class AddCardScreenLib extends Component {
                             <Text style={[styles.DefaultInputLabel, {color: this.color}]}>
                                 {this.strings.name}
                             </Text>
-                            <TextInput 
+                            <TextInput
                                 value={this.state.cardName}
                                 onChangeText={text => {
                                     this.setState({
@@ -240,13 +241,13 @@ class AddCardScreenLib extends Component {
                                 placeholder={this.strings.namePlaceholder}
                                 onFocus={() => this.setState({nameError: false})}
                             />
-                            { this.state.nameError &&  
+                            { this.state.nameError &&
                                 <Text style={styles.ErrorLabel} >
                                     {this.strings.nameError}
                                 </Text>
                             }
                         </View>
-                        
+
                         <View
                             style={styles.marginBottom}
                         >
@@ -270,7 +271,7 @@ class AddCardScreenLib extends Component {
                                 style={styles.DefaultInputStyle}
                                 onFocus={() => this.setState({numberError: false})}
                             />
-                            { this.state.numberError &&  
+                            { this.state.numberError &&
                                 <Text style={styles.ErrorLabel} >
                                     {this.strings.numberError}
                                 </Text>
@@ -303,7 +304,7 @@ class AddCardScreenLib extends Component {
                                     style={styles.DefaultInputStyle}
                                     onFocus={() => this.setState({expirationError: false})}
                                 />
-                                { this.state.expirationError &&  
+                                { this.state.expirationError &&
                                     <Text style={styles.ErrorLabel} >
                                         {this.strings.expError}
                                     </Text>
@@ -331,11 +332,11 @@ class AddCardScreenLib extends Component {
                                     onFocus={() => this.setState({cvvError: false})}
                                     style={styles.DefaultInputStyle}
                                 />
-                                { this.state.cvvError &&  
+                                { this.state.cvvError &&
                                     <Text style={styles.ErrorLabel} >
                                         {this.strings.cvvError}
                                     </Text>
-                                }   
+                                }
                             </View>
                         </View>
                         <View
@@ -383,7 +384,7 @@ class AddCardScreenLib extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 }
@@ -412,7 +413,7 @@ const styles = StyleSheet.create({
         color: "red"
     },
     BtnText: {
-        color: '#fff', 
+        color: '#fff',
         fontSize: 16,
         fontWeight: 'bold'
     },
