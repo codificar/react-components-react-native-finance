@@ -24,6 +24,7 @@ const Images = {
     iconCarto: require('./paymentIcons/carto.png'),
     payment_balance: require("./paymentIcons/baseline-account-balance.png"),
     payment_billing: require("./paymentIcons/voucher.png"),
+    payment_association: require("./paymentIcons/association.png")
 };
 
 export default Images;

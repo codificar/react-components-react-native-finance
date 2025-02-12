@@ -34,7 +34,8 @@ const PaymentReceive = (props) => {
     payment_balance: Images.payment_balance,
     payment_billing: Images.payment_billing,
     payment_gateway_pix: Images.icon_pix,
-    payment_direct_pix: Images.icon_pix
+    payment_direct_pix: Images.icon_pix,
+    payment_association: Images.payment_association
   }
 
   var strings = require('./langs/pt-BR.json');
