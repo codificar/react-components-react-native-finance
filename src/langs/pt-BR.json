@@ -67,6 +67,7 @@
   "infoTotal": "Saldo total acumulado de indicação",
   "infoMonthly": "Saldo mensal acumulado de indicação",
   "card": "Cartão",
+  "card_registered": "Seu cartão foi adicionado com sucesso",
   "card_success": "Pagamento com cartão realizado com sucesso.",
   "card_error": "Erro no cartão",
   "billet_error": "Erro ao gerar boleto",
