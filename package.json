@@ -12,8 +12,8 @@
     "url": "git+https://github.com/codificar/react-components-react-native-finance"
   },
   "dependencies": {
-    "@codificar/use-log-errors": "git+https://github.com/codificar/react-components-use-log-errors",
-    "@react-native-clipboard/clipboard": "^1.11.2",
+    "@codificar/use-log-errors": "git+https://github.com/codificar/react-components-use-log-errors.git",
+    "@react-native-clipboard/clipboard": "1.11.2",
     "@react-navigation/drawer": "^5.12.4",
     "@react-navigation/native": "^5.9.3",
     "@react-navigation/stack": "^5.14.3",
