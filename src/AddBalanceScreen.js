@@ -433,7 +433,7 @@ const AddBalanceScreen = (props) => {
 
     const renderBalance = () => {
         return (
-            <SafeAreaView>
+            <View>
                 {/* Ajustando layout padrão mobilidade */}
                 {GLOBAL.toolbar ? (
                     <View>
@@ -465,7 +465,7 @@ const AddBalanceScreen = (props) => {
                         </View>
                     </View>
                 }
-            </SafeAreaView>
+            </View>
         );
     }
 
