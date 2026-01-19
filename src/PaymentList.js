@@ -18,13 +18,12 @@ const listWidth = Dimensions.get('window').width - 60;
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconCheck from 'react-native-vector-icons/Feather';
+import { languages } from './langs/index.js';
 
 const PaymentList = (props) => {
 
     //Get the lang from props. If hasn't lang in props, default is pt-BR
-    var strings = require('./langs/pt-BR.json');
-    const isBrazilian = NativeModules.I18nManager.localeIdentifier === 'pt_BR';
-    if (!isBrazilian) strings = require('./langs/en.json');
+    const strings = languages(props);
 
     const [arrayIconsType, setArrayIconsType] = useState({
         visa: Images.icon_ub_creditcard_visa,
