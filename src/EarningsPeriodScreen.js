@@ -23,6 +23,7 @@ import moment from 'moment'
 import Loader from "./Functions/Loader"
 import Toolbar from './Functions/Toolbar'
 import TitleHeader from './Functions/TitleHeader'
+import { SafeAreaInsetsContext } from "react-native-safe-area-context";
 
 import GLOBAL, { appUrl } from './Functions/Global.js';
 
@@ -299,22 +300,26 @@ class EarningsPeriodScreen extends Component {
                 {/* Flex 8/10 */}
                 <View style={{flex: 9}}>
                     <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
-                    <View style={{ marginTop: Platform.OS === 'android' ? 0 : 25 }}>
-                        <Toolbar
-                            back={true}
-                            nextStep={false}
-                            isFilter={true}
-                            isHelp={this.param.isHelp}
-                            handlePress={() => this.props.navigation.goBack()}
-                            nextPress={() => { }}
-                            filterPress={() => this.openFilter()}
-                            helpPress={() => this.openHelp()}
-                        />
-                        <TitleHeader
-                            text={this.strings.reportDetail}
-                            align="flex-start"
-                        />
-                    </View>
+                    <SafeAreaInsetsContext.Consumer>
+                        {(insets) => (
+                            <View style={{ paddingTop: insets?.top ?? 0 }}>
+                                <Toolbar
+                                    back={true}
+                                    nextStep={false}
+                                    isFilter={true}
+                                    isHelp={this.param.isHelp}
+                                    handlePress={() => this.props.navigation.goBack()}
+                                    nextPress={() => { }}
+                                    filterPress={() => this.openFilter()}
+                                    helpPress={() => this.openHelp()}
+                                />
+                                <TitleHeader
+                                    text={this.strings.reportDetail}
+                                    align="flex-start"
+                                />
+                            </View>
+                        )}
+                    </SafeAreaInsetsContext.Consumer>
                     <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                         <View style={{paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
                             <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
