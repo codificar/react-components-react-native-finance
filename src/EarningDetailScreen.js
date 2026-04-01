@@ -3,9 +3,9 @@ import {
     Text,
     BackHandler,
     View,
-    StyleSheet,
-    Platform
+    StyleSheet
 } from "react-native"
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import { Divider } from 'react-native-elements'
 
 //moment date
@@ -85,8 +85,10 @@ class EarningDetailScreen extends Component {
 
     render() {
         return (
+            <SafeAreaInsetsContext.Consumer>
+                {(insets) => (
             <View style={styles.parentContainer}>
-               	<View style={{ marginTop: Platform.OS === 'android' ? 0 : 25 }}>
+                <View style={{ paddingTop: insets?.top ?? 0 }}>
                     <Toolbar
                         back={true}
                         nextStep={false}
@@ -125,6 +127,8 @@ class EarningDetailScreen extends Component {
                     </View>
                 ) : null}
             </View>
+                )}
+            </SafeAreaInsetsContext.Consumer>
         )
     }
 }
