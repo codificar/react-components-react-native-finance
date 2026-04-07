@@ -2,9 +2,7 @@ import React, { useRef, useState, useEffect } from "react"
 
 import Toolbar from './Functions/Toolbar'
 
-import { NavigationEvents } from "react-navigation";
-import { useIsFocused } from "@react-navigation/native";
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Loader from "./Functions/Loader"
 import Images from "./img/Images";
 
@@ -66,18 +64,15 @@ const PixScreen = (props) => {
     }
 
     const api = new Api();
-    
-    // caso a o react navigation seja v5, entao usa isso ao inves do onWillFocus
-    if(GLOBAL.navigation_v5) {
-        const isVisible = useIsFocused();
-        useEffect(() => {
-            if(isVisible) {
-                retrievePix(true, false);
-            }
-        }, [isVisible]);
-    }
+    const insets = useSafeAreaInsets();
 
-   
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            retrievePix(true, false);
+        });
+        return unsubscribe;
+    }, []);
+
     useEffect(() => {
         const backAction = () => {
             goBack();
@@ -205,14 +200,7 @@ const PixScreen = (props) => {
     }
 
     return (
-        <View style={styles.container}>
-            {!GLOBAL.navigation_v5 ? (
-                <NavigationEvents
-                    onWillFocus={() => {
-                        retrievePix(true, false);
-                    }}
-                />
-            ) : null}
+        <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
             <Loader loading={isLoading} message={strings.loading_message} />
             
           

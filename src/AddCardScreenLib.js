@@ -14,8 +14,8 @@ import {
     TextInput,
     StyleSheet,
     Alert,
-    SafeAreaView
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInputMask } from 'react-native-masked-text';
 import Api from "./Functions/Api";
 import GLOBAL from './Functions/Global.js';
@@ -206,7 +206,7 @@ class AddCardScreenLib extends Component {
 
     render() {
         return (
-            <SafeAreaView style={styles.parentContainer}>
+            <SafeAreaView style={styles.parentContainer} edges={['top', 'bottom', 'left', 'right']}>
                 <Loader
                     loading={this.state.isLoading}
                     message={this.state.loading_message}

@@ -4,8 +4,7 @@ import Toolbar from 'react-native-finance/src/Functions/Toolbar.js'
 import TitleHeader from 'react-native-finance/src/Functions/TitleHeader.js'
 
 import { WebView } from 'react-native-webview';
-import { NavigationEvents } from "react-navigation";
-import { useIsFocused } from "@react-navigation/native";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Loader from "react-native-finance/src/Functions/Loader.js"
 
 import { 
@@ -38,15 +37,14 @@ const AddCardWebViewBancard = (props) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const api = new Api();
+    const insets = useSafeAreaInsets();
 
-    if(GLOBAL.navigation_v5) {
-        const isVisible = useIsFocused();
-        useEffect(() => {
-            if(isVisible) {
-                getUrl();
-            }
-        }, [isVisible]);
-    }
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            getUrl();
+        });
+        return unsubscribe;
+    }, []);
 
     const getUrl = () => {
         setIsLoading(true); 
@@ -78,15 +76,7 @@ const AddCardWebViewBancard = (props) => {
     }
 
     return (
-        <View style={styles.container}>
-            {!GLOBAL.navigation_v5 ? (
-                <NavigationEvents
-                    onWillFocus={() => {
-                        getUrl();
-                    }}
-                />
-            ) : null}
-
+        <View style={[styles.container, { paddingTop: insets.top }]}>
             <Loader loading={isLoading} message={strings.loading_message} />
             
             <Toolbar

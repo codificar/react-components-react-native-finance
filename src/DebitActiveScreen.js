@@ -22,9 +22,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Images from "./img/Images";
 import Api from "./Functions/Api";
 import Loader from "./Functions/Loader"
-import { NavigationEvents } from "react-navigation";
-
-import { useIsFocused } from "@react-navigation/native";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DebitActiveScreen = (props) => {
 
@@ -78,6 +76,7 @@ const DebitActiveScreen = (props) => {
     }
 
     const api = new Api();
+    const insets = useSafeAreaInsets();
 
     if (props) {
         if (props.toolbar) {
@@ -143,14 +142,7 @@ const DebitActiveScreen = (props) => {
 
 
     return (
-        <View style={styles.container}>
-            {!GLOBAL.navigation_v5 ? (
-                <NavigationEvents
-                    onWillFocus={() => {
-                        getCardsAndBalanceInfo();
-                    }}
-                />
-            ) : null}
+        <View style={[styles.container, { paddingTop: insets.top }]}>
             <Loader loading={isLoading} message={strings.loading_message} />
 
             {/* Ajustando layout padrão mobilidade */}
@@ -195,7 +187,7 @@ const DebitActiveScreen = (props) => {
                         <Text style={styles.currentValueText}>{strings.current_debit_active}</Text>
                         <Text style={styles.currentValue}>{currentBalance}</Text>
                         <TouchableOpacity
-                            style={[styles.buttonToAddBallance, {backgroundColor: primaryColor}]}
+                            style={[styles.buttonToAddBallance, {backgroundColor: primaryColor, bottom: insets.bottom}]}
                             onPress={openAddBalanceScreen} 
                         >
                             <Text style={{color: 'white', fontSize: 16, fontWeight: "bold", textAlign: "center" }}>{strings.add_balance}</Text>
