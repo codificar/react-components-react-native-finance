@@ -19,6 +19,7 @@ import { TextInputMask } from 'react-native-masked-text';
 import Api from "./Functions/Api";
 import GLOBAL from './Functions/Global.js';
 import { languages } from "./langs";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 class AddCardScreenLib extends Component {
     constructor(props) {
@@ -201,7 +202,7 @@ class AddCardScreenLib extends Component {
 
     render() {
         return (
-            <View style={styles.parentContainer}>
+            <SafeAreaView edges={['right', 'bottom', 'left']} style={styles.parentContainer}>
                 <Loader 
                     loading={this.state.isLoading}
                     message={this.state.loading_message} 
@@ -379,7 +380,7 @@ class AddCardScreenLib extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 }

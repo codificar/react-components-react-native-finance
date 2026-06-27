@@ -29,6 +29,7 @@ import { useIsFocused } from "@react-navigation/native";
 import Toast from "./Functions/Toast";
 import { languages } from './langs/index.js';
 import { handleException } from './Services/handlerException.js';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AddBalanceScreen = (props) => {
 
@@ -553,7 +554,7 @@ const AddBalanceScreen = (props) => {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView edges={['right', 'bottom', 'left']} style={styles.container}>
             {!GLOBAL.navigation_v5 ? (
                 <NavigationEvents
                     onWillFocus={() => {
@@ -807,7 +808,7 @@ const AddBalanceScreen = (props) => {
                     </ScrollView>
                 </View>
             </ScrollView>
-        </View>
+        </SafeAreaView>
     )
 }
 

@@ -25,6 +25,7 @@ import Toolbar from './Functions/Toolbar'
 import TitleHeader from './Functions/TitleHeader'
 
 import GLOBAL, { appUrl } from './Functions/Global.js';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 class EarningsPeriodScreen extends Component {
     constructor(props) {
@@ -295,7 +296,7 @@ class EarningsPeriodScreen extends Component {
 
     render() {
         return (
-            <View style={styles.parentContainer}>
+            <SafeAreaView edges={['right', 'bottom', 'left']} style={styles.parentContainer}>
                 {/* Flex 8/10 */}
                 <View style={{flex: 9}}>
                     <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
@@ -379,7 +380,7 @@ class EarningsPeriodScreen extends Component {
                         </TouchableOpacity>
                     </View>
                 : null}
-              </View>
+              </SafeAreaView>
         )
     }
 }
