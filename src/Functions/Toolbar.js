@@ -3,6 +3,7 @@ import { View, Image, StyleSheet, TouchableOpacity, Dimensions, Platform } from 
 
 import Icon from 'react-native-vector-icons/Feather';
 import { Icon as ElementIcon } from 'react-native-elements';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import GLOBAL from './Global.js';
 
@@ -10,10 +11,12 @@ var { width } = Dimensions.get('window');
 
 export default function Toolbar({ handlePress, nextPress, filterPress, helpPress, back = false, isMain = false, nextStep = false, isFilter = false, isHelp = false, img, PrimaryButton }) {
 
+    const insets = useSafeAreaInsets();
+
     return (
         <>
             {!isMain ?
-                <View style={styles.principal2}>
+                <View style={[styles.principal2, { marginTop: 20 + insets.top }]}>
                     <View style={{ height: 40 }}>
                         <TouchableOpacity style={{ marginLeft: 2, width: 60 }} onPress={handlePress}>
                             <Icon name="arrow-left" size={26} color={"#000000"} />
@@ -80,7 +83,6 @@ const styles = StyleSheet.create({
     principal2: {
         height: 40,
         width: "100%",
-        marginTop: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',
         elevation: 1,

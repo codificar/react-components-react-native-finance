@@ -10,9 +10,9 @@ import {
     PixelRatio,
     TouchableOpacity,
     ScrollView,
-    Platform,
-    SafeAreaView
+    Platform
 } from "react-native"
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon, Divider } from 'react-native-elements'
 
 import Api from "./Functions/Api";
@@ -298,7 +298,7 @@ class EarningsPeriodScreen extends Component {
 
     render() {
         return (
-            <SafeAreaView style={styles.parentContainer}>
+            <SafeAreaView edges={['right', 'bottom', 'left']} style={styles.parentContainer}>
                 {/* Flex 8/10 */}
                 <View style={{flex: 9}}>
                     <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
