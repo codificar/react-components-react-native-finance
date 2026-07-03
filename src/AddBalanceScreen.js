@@ -15,7 +15,7 @@ import {
     Linking,
     Clipboard
 } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const listWidth = Dimensions.get('window').width - 60;
 
 import GLOBAL from './Functions/Global.js';
@@ -23,10 +23,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Images from "./img/Images";
 import Api from "./Functions/Api";
 import Loader from "./Functions/Loader"
-import { NavigationEvents } from "react-navigation";
-
-import { useIsFocused } from "@react-navigation/native";
-
 import Toast from "./Functions/Toast";
 import { languages } from './langs/index.js';
 import { handleException } from './Services/handlerException.js';
@@ -94,17 +90,14 @@ const AddBalanceScreen = (props) => {
     var strings = languages(props);
 
     const api = new Api();
+    const insets = useSafeAreaInsets();
 
-
-    if (GLOBAL.navigation_v5) {
-        const isVisible = useIsFocused();
-        useEffect(() => {
-            if (isVisible) {
-                getCardsAndBalanceInfo();
-            }
-        }, [isVisible]);
-    }
-
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener('focus', () => {
+            getCardsAndBalanceInfo();
+        });
+        return unsubscribe;
+    }, []);
 
     useEffect(() => {
         const backAction = () => {
@@ -433,7 +426,7 @@ const AddBalanceScreen = (props) => {
 
     const renderBalance = () => {
         return (
-            <SafeAreaView edges={['right', 'bottom', 'left']}>
+            <View>
                 {/* Ajustando layout padrão mobilidade */}
                 {GLOBAL.toolbar ? (
                     <View>
@@ -465,7 +458,7 @@ const AddBalanceScreen = (props) => {
                         </View>
                     </View>
                 }
-            </SafeAreaView>
+            </View>
         );
     }
 
@@ -562,14 +555,7 @@ const AddBalanceScreen = (props) => {
     }
 
     return (
-        <View style={styles.container}>
-            {!GLOBAL.navigation_v5 ? (
-                <NavigationEvents
-                    onWillFocus={() => {
-                        getCardsAndBalanceInfo();
-                    }}
-                />
-            ) : null}
+        <View style={[styles.container, { paddingTop: insets.top }]}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -602,7 +588,7 @@ const AddBalanceScreen = (props) => {
                 </View>
             </Modal>
 
-            <ScrollView>
+            <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom }}>
 
                 <Loader loading={isLoading} message={strings.loading_message} />
                 {!isLoading && hasBalanceScreen == true ? renderBalance() : null}

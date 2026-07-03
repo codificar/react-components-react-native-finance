@@ -206,7 +206,7 @@ class AddCardScreenLib extends Component {
 
     render() {
         return (
-            <SafeAreaView edges={['right', 'bottom', 'left']} style={styles.parentContainer}>
+            <SafeAreaView style={styles.parentContainer} edges={['top', 'bottom', 'left', 'right']}>
                 <Loader
                     loading={this.state.isLoading}
                     message={this.state.loading_message}
