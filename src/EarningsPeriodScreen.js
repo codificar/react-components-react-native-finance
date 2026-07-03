@@ -260,7 +260,8 @@ class EarningsPeriodScreen extends Component {
     openFilter() {
         this.props.navigation.navigate('FilterScreen', {
             originScreen: 'EarningsPeriodScreen',
-            PrimaryButton: this.param.PrimaryButton
+            PrimaryButton: this.param.PrimaryButton,
+            appUrl: this.param.appUrl
         })
     }
 
