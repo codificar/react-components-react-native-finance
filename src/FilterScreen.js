@@ -5,9 +5,9 @@ import {
   View,
   StyleSheet,
   PixelRatio,
-  TouchableOpacity,
-  Platform
+  TouchableOpacity
 } from "react-native"
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 
 //moment date
 import moment from 'moment'
@@ -124,8 +124,10 @@ class FilterScreen extends Component {
     let borderSelectedDay = this.state.selectedEndDate != null ? 0 : 20
     const today = moment().format("YYYY-MM-DD")
     return (
+      <SafeAreaInsetsContext.Consumer>
+        {(insets) => (
       <View style={styles.parentContainer}>
-        	<View style={{ marginTop: Platform.OS === 'android' ? 0 : 25 }}>
+        <View style={{ paddingTop: insets?.top ?? 0 }}>
           <Toolbar
             back={true}
             nextStep={false}
@@ -155,6 +157,8 @@ class FilterScreen extends Component {
           </TouchableOpacity>
         </View>
       </View>
+        )}
+      </SafeAreaInsetsContext.Consumer>
     )
   }
 }

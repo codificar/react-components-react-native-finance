@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react"
 import { FlatList } from "react-native";
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import Feather from 'react-native-vector-icons/Feather';
 import Api from "./Functions/Api";
 import Loader from "./Functions/Loader";
@@ -123,47 +124,51 @@ const PaymentReceive = (props) => {
   },[provider_payments_selected]);
 
   return (
-    <>
-      {!props.disableHeader && 
-        <View style={{ marginTop: Platform.OS === 'android' ? 0 : 25 }}>
-          <Toolbar
-              back={true}
-              handlePress={() => props.navigation.goBack()}
-          />
-          <TitleHeader
-              text={strings.manage_payment_title}
-              align="flex-start"
+    <SafeAreaInsetsContext.Consumer>
+      {(insets) => (
+      <>
+        {!props.disableHeader && 
+          <View style={{ paddingTop: insets?.top ?? 0 }}>
+            <Toolbar
+                back={true}
+                handlePress={() => props.navigation.goBack()}
+            />
+            <TitleHeader
+                text={strings.manage_payment_title}
+                align="flex-start"
+            />
+          </View>
+        }
+        <Loader loading={isLoading} message={strings.loading_message} />
+
+        <View style={styles.parentContainer}>
+          <FlatList
+            data={payment}
+            extraData={payment}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              !item.disabled &&
+              <TouchableOpacity
+                key={item.id}
+                disabled={item.disabled}
+                style={styles.card}
+                activeOpacity={0.6}
+                onPress={() => handleSelect(item.id)}
+              >
+                <Image style={styles.flag} source={item.flag} />
+                <Text style={[styles.textMessage, { color: item.disabled ? "#C3C3C3" : "#222" }]}>{item.name}</Text>
+                {provider_payments_selected.includes(item.id) && (
+                  <View style={styles.iconCheck}>
+                    <Feather name="check" size={18} color={'#86ba52'} />
+                  </View>
+                )}
+              </TouchableOpacity>
+            )}
           />
         </View>
-      }
-      <Loader loading={isLoading} message={strings.loading_message} />
-
-      <View style={styles.parentContainer}>
-        <FlatList
-          data={payment}
-          extraData={payment}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            !item.disabled &&
-            <TouchableOpacity
-              key={item.id}
-              disabled={item.disabled}
-              style={styles.card}
-              activeOpacity={0.6}
-              onPress={() => handleSelect(item.id)}
-            >
-              <Image style={styles.flag} source={item.flag} />
-              <Text style={[styles.textMessage, { color: item.disabled ? "#C3C3C3" : "#222" }]}>{item.name}</Text>
-              {provider_payments_selected.includes(item.id) && (
-                <View style={styles.iconCheck}>
-                  <Feather name="check" size={18} color={'#86ba52'} />
-                </View>
-              )}
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-    </>
+      </>
+      )}
+    </SafeAreaInsetsContext.Consumer>
   );
 }
 

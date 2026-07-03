@@ -12,7 +12,7 @@ import {
     ScrollView,
     Platform
 } from "react-native"
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import { Icon, Divider } from 'react-native-elements'
 
 import Api from "./Functions/Api";
@@ -298,10 +298,13 @@ class EarningsPeriodScreen extends Component {
 
     render() {
         return (
-            <SafeAreaView edges={['right', 'bottom', 'left']} style={styles.parentContainer}>
+            <SafeAreaInsetsContext.Consumer>
+                {(insets) => (
+            <View style={styles.parentContainer}>
                 {/* Flex 8/10 */}
                 <View style={{flex: 9}}>
                     <Loader loading={this.state.isLoading} message={this.strings.loading_message} />
+                    <View style={{ paddingTop: insets?.top ?? 0 }}>
                         <Toolbar
                             back={true}
                             nextStep={false}
@@ -316,6 +319,7 @@ class EarningsPeriodScreen extends Component {
                             text={this.strings.reportDetail}
                             align="flex-start"
                         />
+                    </View>
                     <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                         <View style={{paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center'}}>
                             <Text style={styles.currentValueText}>{this.strings.currentBalance}</Text>
@@ -371,7 +375,7 @@ class EarningsPeriodScreen extends Component {
                 </View>
                 {/* Flex 1/10 */}
                 {this.state.provider_prepaid ?
-                    <View style={{ flex: 1, justifyContent: 'center' }}>{/* Flex vertical of 1/10 */}
+                    <View style={{ flex: 1, justifyContent: 'center', paddingBottom: (insets?.bottom ?? 0) + 8 }}>{/* Flex vertical of 1/10 */}
                         <TouchableOpacity
                             style={{ borderRadius: 3, padding: 10, elevation: 2,marginHorizontal: 30, backgroundColor: GLOBAL.color }}
                             onPress={() =>  this.openAddBalanceScreen()}
@@ -380,7 +384,9 @@ class EarningsPeriodScreen extends Component {
                         </TouchableOpacity>
                     </View>
                 : null}
-              </SafeAreaView>
+              </View>
+                )}
+            </SafeAreaInsetsContext.Consumer>
         )
     }
 }
