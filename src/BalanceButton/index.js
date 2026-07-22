@@ -51,10 +51,10 @@ const BalanceButton = React.forwardRef(({url, show, style, data, navigation = un
 
   return (
     <Container
-      style={{
+      style={(({ color, ...containerStyle }) => ({
         backgroundColor: style.backgroundColor || 'grey',
-         ...style
-      }}
+        ...containerStyle
+      }))(style)}
       onPress={loadData}
       onLongPress={handlePress}
     >

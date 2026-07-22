@@ -871,7 +871,6 @@ const styles = StyleSheet.create({
     },
     form: {
         height: 40,
-        fontSize: 16,
         marginHorizontal: 7,
         marginBottom: 15,
         borderBottomWidth: 0.2
