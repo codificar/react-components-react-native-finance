@@ -15,9 +15,12 @@ import {
     Linking,
     Clipboard
 } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 const listWidth = Dimensions.get('window').width - 60;
 
 import GLOBAL from './Functions/Global.js';
+import Toolbar from './Functions/Toolbar';
+import TitleHeader from './Functions/TitleHeader';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Images from "./img/Images";
 import Api from "./Functions/Api";
@@ -143,7 +146,7 @@ const DebitActiveScreen = (props) => {
 
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
             {!GLOBAL.navigation_v5 ? (
                 <NavigationEvents
                     onWillFocus={() => {
@@ -153,36 +156,21 @@ const DebitActiveScreen = (props) => {
             ) : null}
             <Loader loading={isLoading} message={strings.loading_message} />
 
-            {/* Ajustando layout padrão mobilidade */}
-            {GLOBAL.toolbar ? (
-                <View>
-                    <GLOBAL.toolbar
-                        back={true}
-                        handlePress={() => props.navigation.navigate('MainScreen')}
-                    />
-
-                    <GLOBAL.titleHeader
-                        text={strings.debit_active_balance}
-                        align="flex-start"
-                    />
-                </View>
-            ) :	(
-                <View style={{flexDirection: "row"}}>
-                    <TouchableOpacity
-                        onPress={() =>  props.navigation.goBack()}
-                    >
-                        <Text style={{fontSize: 20, paddingLeft: 20, paddingTop: 20, fontWeight: "bold"}}>X</Text>
-                    </TouchableOpacity>
-                    <View style={{
-                        position: 'absolute',
-                        width: Dimensions.get('window').width,
-                        justifyContent: 'center',
-                        alignItems: 'center'}}
-                    >
-                        <Text style={{ top: 20, fontWeight: "bold", fontSize: 20 }}>{strings.debit_active_balance}</Text>
-                    </View>
-                </View>
-            )}
+            {/* Padronizado para o padrao ScreenHeader do app (seta 24dp,
+                alvo 48dp, linha 56dp, inset via useSafeAreaInsets no Toolbar).
+                Mantem goBack como o antigo botao "X" fazia. marginHorizontal
+                negativo cancela o paddingHorizontal:25 do container raiz
+                (aqui e' seguro, nao ha ScrollView clipando o overflow). */}
+            <View style={{ marginHorizontal: -25 }}>
+                <Toolbar
+                    back={true}
+                    handlePress={() => props.navigation.goBack()}
+                />
+                <TitleHeader
+                    text={strings.debit_active_balance}
+                    align="flex-start"
+                />
+            </View>
 
             {/* flex 4/10 */}
             <View style={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -204,7 +192,7 @@ const DebitActiveScreen = (props) => {
                     </View>
                 ) : null}
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 

@@ -15,10 +15,11 @@ import {
     Linking,
     Clipboard
 } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
 const listWidth = Dimensions.get('window').width - 60;
 
 import GLOBAL from './Functions/Global.js';
+import Toolbar from './Functions/Toolbar';
+import TitleHeader from './Functions/TitleHeader';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Images from "./img/Images";
 import Api from "./Functions/Api";
@@ -433,39 +434,22 @@ const AddBalanceScreen = (props) => {
 
     const renderBalance = () => {
         return (
-            <SafeAreaView edges={['right', 'bottom', 'left']}>
-                {/* Ajustando layout padrão mobilidade */}
-                {GLOBAL.toolbar ? (
-                    <View>
-                        <GLOBAL.toolbar
-                            back={true}
-                            handlePress={() => props.navigation.navigate('MainScreen')}
-                        />
-
-                        <GLOBAL.titleHeader
-                            text={strings.add_balance}
-                            align="flex-start"
-                        />
-                    </View>
-                ) :
-                    <View style={{ flex: 1, flexDirection: "row" }}>
-                        <TouchableOpacity
-                            onPress={() => props.navigation.goBack()}
-                        >
-                            <Text style={{ fontSize: 20, paddingLeft: 20, paddingTop: 20, fontWeight: "bold" }}>X</Text>
-                        </TouchableOpacity>
-                        <View style={{
-                            position: 'absolute',
-                            width: Dimensions.get('window').width,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
-                        >
-                            <Text style={{ top: 20, fontWeight: "bold", fontSize: 20 }}>{strings.add_balance}</Text>
-                        </View>
-                    </View>
-                }
-            </SafeAreaView>
+            // marginHorizontal negativo cancela o paddingHorizontal:25 do
+            // container raiz (renderBalance vive dentro do ScrollView), para o
+            // header ocupar a largura toda e o Toolbar aplicar os proprios 16dp.
+            <View style={{ marginHorizontal: -25 }}>
+                {/* Padronizado para o padrao ScreenHeader do app (seta 24dp,
+                    alvo 48dp, linha 56dp, inset via useSafeAreaInsets no Toolbar).
+                    Mantem goBack como o antigo botao "X" fazia. */}
+                <Toolbar
+                    back={true}
+                    handlePress={() => props.navigation.goBack()}
+                />
+                <TitleHeader
+                    text={strings.add_balance}
+                    align="flex-start"
+                />
+            </View>
         );
     }
 
@@ -602,10 +586,15 @@ const AddBalanceScreen = (props) => {
                 </View>
             </Modal>
 
+            {/* Header FORA do ScrollView: o ScrollView recorta filhos que
+                ultrapassam sua caixa (o marginHorizontal:-25 do header ficava
+                clipado na borda do padding). Como filho direto do container
+                (View comum, sem overflow:hidden) a seta renderiza inteira. */}
+            {!isLoading && hasBalanceScreen == true ? renderBalance() : null}
+
             <ScrollView>
 
                 <Loader loading={isLoading} message={strings.loading_message} />
-                {!isLoading && hasBalanceScreen == true ? renderBalance() : null}
                 {/* flex 4/10 */}
 
                 <View style={{ flex: 4, marginTop: 5 }}>
