@@ -322,4 +322,38 @@ export default class Api {
         return fetch(app_url, params).then((response) => response.json());
     }
 
+    /**
+     * AppyPay top-up (driver app): what the driver can use right now.
+     */
+    GetAppyPayConfig(app_url, id, token) {
+        return fetch(
+            app_url + '/api/v3/provider/appypay/config?' + new URLSearchParams({ id, token }),
+            this.get
+        ).then((response) => response.json());
+    }
+
+    /**
+     * Opens an AppyPay charge: GPO (Multicaixa Express push) or REF (reference).
+     */
+    CreateAppyPayCharge(app_url, id, token, amount, method, phone_number) {
+        return fetch(
+            app_url + '/api/v3/provider/appypay/charges?' + new URLSearchParams({ id, token }),
+            { ...this.post, body: JSON.stringify({ amount, method, phone_number }) }
+        ).then((response) => response.json());
+    }
+
+    GetAppyPayCharges(app_url, id, token, page = 1) {
+        return fetch(
+            app_url + '/api/v3/provider/appypay/charges?' + new URLSearchParams({ id, token, page }),
+            this.get
+        ).then((response) => response.json());
+    }
+
+    GetAppyPayCharge(app_url, id, token, charge_id) {
+        return fetch(
+            app_url + '/api/v3/provider/appypay/charges/' + charge_id + '?' + new URLSearchParams({ id, token }),
+            this.get
+        ).then((response) => response.json());
+    }
+
 }
