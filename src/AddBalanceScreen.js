@@ -25,6 +25,8 @@ import { useIsFocused } from "@react-navigation/native";
 import Toast from "./Functions/Toast";
 import { languages } from './langs/index.js';
 import { handleException } from './Services/handlerException.js';
+import TopUpForm from './AppyPay/TopUpForm';
+import { resolveSession } from './Functions/appyPay';
 
 const AddBalanceScreen = (props) => {
   GLOBAL.lang = GLOBAL.lang ? GLOBAL.lang : props.lang;
@@ -49,6 +51,9 @@ const AddBalanceScreen = (props) => {
   const [cumulatedBalanceMonthly, setCumulatedBalanceMonthly] = useState(0);
   const [isCustomIndicationEnabled, setIsCustomIndicationEnabled] = useState(false);
   const [programName, setProgramName] = useState("");
+  // AppyPay top-up config; null until the server answers (or if it cannot).
+  const [appyPayConfig, setAppyPayConfig] = useState(null);
+  const [appyPayChecked, setAppyPayChecked] = useState(false);
 
   const [settings, setSettings] = useState({
     prepaid_min_billet_value: "0",
@@ -61,6 +66,9 @@ const AddBalanceScreen = (props) => {
   });
 
   const isUser = GLOBAL.type == "user";
+  const session = resolveSession(props);
+  const navigationParams = (props.navigation && props.navigation.state && props.navigation.state.params) || {};
+  const initialValue = props.initial_value || navigationParams.initial_value;
   const withDrawalScreen = props.withDrawalScreen ? props.withDrawalScreen : '';
 
   // i18n
@@ -110,9 +118,38 @@ const AddBalanceScreen = (props) => {
   }
 
   /**
+   * Whether this driver can top up through AppyPay. Any failure (feature
+   * off, older server without the endpoint) keeps the previous top-up link.
+   */
+  const getAppyPayConfig = () => {
+    if (GLOBAL.type != "provider") {
+      setAppyPayChecked(true);
+      return;
+    }
+    api.GetAppyPayConfig(session.appUrl, session.id, session.token)
+      .then((json) => {
+        setAppyPayConfig(json && json.success && json.enabled ? json : null);
+        setAppyPayChecked(true);
+      })
+      .catch(() => {
+        setAppyPayConfig(null);
+        setAppyPayChecked(true);
+      });
+  }
+
+  const openAppyPayCharge = (charge) => {
+    props.navigation.navigate('AppyPayChargeScreen', { charge, session });
+  }
+
+  const openAppyPayHistory = () => {
+    props.navigation.navigate('AppyPayHistoryScreen', { session });
+  }
+
+  /**
    * Get balance info & settings
    */
   const getCardsAndBalanceInfo = () => {
+    getAppyPayConfig();
     setIsLoading(true);
     api.GetCardsAndBalance(
       GLOBAL.appUrl,
@@ -185,7 +222,7 @@ const AddBalanceScreen = (props) => {
         />
       ) : null}
 
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps="handled">
         <Loader loading={isLoading} message={strings.loading_message} />
         {!isLoading && hasBalanceScreen == true ? (
           <SafeAreaView>
@@ -281,8 +318,20 @@ const AddBalanceScreen = (props) => {
             </View>
           ) : null}
 
+          {/* ====== AppyPay: Multicaixa Express or reference ====== */}
+          {hasBalanceScreen == true && appyPayConfig ? (
+            <TopUpForm
+              config={appyPayConfig}
+              session={session}
+              strings={strings}
+              initialAmount={initialValue}
+              onCreated={openAppyPayCharge}
+              onOpenHistory={openAppyPayHistory}
+            />
+          ) : null}
+
           {/* ====== BOTÃO ÚNICO (sem valor avulso) ====== */}
-          {hasBalanceScreen == true ? (
+          {hasBalanceScreen == true && appyPayChecked && !appyPayConfig ? (
             <TouchableOpacity
               style={styles.listTypes}
               onPress={() => Linking.openURL('https://formbricks.masterbiz.co/s/cmfh1hp410001qi01nvleqq45')}
@@ -295,7 +344,7 @@ const AddBalanceScreen = (props) => {
                   {strings.add_balance || 'Adicionar saldo'}
                 </Text>
                 <Text style={{ opacity: 0.7 }}>
-                  Você será redirecionado para o formulário
+                  {strings.appypay_legacy_hint}
                 </Text>
               </View>
             </TouchableOpacity>

@@ -10,6 +10,8 @@ import DebitActiveScreen from './src/DebitActiveScreen'
 import AddCardWebView from './src/AddCardWebView'
 import PixScreen from './src/PixScreen'
 import PixQrCode from './src/PixQrCode'
+import AppyPayChargeScreen from './src/AppyPayChargeScreen'
+import AppyPayHistoryScreen from './src/AppyPayHistoryScreen'
 
 const screens = {
     EarningsPeriodScreen: { screen: EarningsPeriodScreen },
@@ -20,7 +22,9 @@ const screens = {
     AddCardScreenLib: { screen: AddCardScreenLib },
     AddCardWebView: { screen: AddCardWebView },
     PixScreen: { screen: PixScreen },
-    PixQrCode: { screen: PixQrCode }
+    PixQrCode: { screen: PixQrCode },
+    AppyPayChargeScreen: { screen: AppyPayChargeScreen },
+    AppyPayHistoryScreen: { screen: AppyPayHistoryScreen }
 };
 
 export {
@@ -30,7 +34,9 @@ export {
     FilterScreen,
     AddBalanceScreen,
     EarningsPeriodScreen,
-    PixScreen
+    PixScreen,
+    AppyPayChargeScreen,
+    AppyPayHistoryScreen
 }
 
 export default screens;
